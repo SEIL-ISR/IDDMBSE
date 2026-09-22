@@ -12,6 +12,8 @@ rather than silently talking to nothing.
 No test here starts or contacts a server.
 """
 
+import importlib.util
+import itertools
 import json
 import pathlib
 
@@ -202,3 +204,44 @@ def test_weights_can_be_given_instead_of_derived():
     ddo = np.array([[0.0], [1.0]])
     order, _, _, _ = ddo_api.rank_designs(mbo, ddo, [-1], [1], weights=[0.9, 0.1])
     assert order[0] == 0
+
+
+# ------------------------------------------------------------------
+# the campaign script's --out
+
+CAMPAIGN_SCRIPT = (pathlib.Path(__file__).parents[1] / "case-studies" / "sensor-suite"
+                   / "run_ddo_campaign.py")
+
+
+def campaign_script():
+    spec = importlib.util.spec_from_file_location("run_ddo_campaign", CAMPAIGN_SCRIPT)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_campaign_script_writes_to_out_and_leaves_the_recorded_results(tmp_path, monkeypatch):
+    """--collect --out puts the three tables and the three figures under the given
+    directory; results/ and figures/, which hold the recorded campaign, are not
+    written. The trials are made up, one per design and scenario."""
+    C = campaign_script()
+    pairs = list(itertools.product(sorted(C.campaign_designs()), sorted(C.campaign_environments())))
+    rng = np.random.default_rng(0)
+    values = rng.uniform(0.1, 1.0, size=(len(pairs), len(C.DDO_METRICS) + len(C.MBO_METRICS)))
+    names = C.DDO_METRICS + C.MBO_METRICS
+    rows = [dict({"design": d, "environment": e, "experiment_id": i + 1, "trial_id": i + 1,
+                  "state": "TrialState.SUCCESSFUL|SHUT_DOWN", "wall_seconds": 1.0},
+                 **dict(zip(names, v)))
+            for i, ((d, e), v) in enumerate(zip(pairs, values.tolist()))]
+    monkeypatch.setattr(C.ddo_api, "collect", lambda server, tag: rows)
+    tracked = sorted(C.results.glob("*")) + sorted(C.figures.glob("ddo_*"))
+    before = [p.stat().st_mtime_ns for p in tracked]
+
+    out = tmp_path / "pipeline" / "sensor-suite"
+    assert C.main(["--collect", "--out", str(out)]) == 0
+    stems = ["ddo_success_heatmap", "ddo_mavf_ranking", "ddo_pareto_scatter"]
+    assert sorted(p.name for p in out.iterdir()) == sorted(
+        ["ddo_campaign.csv", "ddo_metrics.csv", "mavf_ddo_ranking.csv"]
+        + [s + ".svg" for s in stems] + [s + ".pdf" for s in stems])
+    assert len((out / "ddo_campaign.csv").read_text().splitlines()) == len(pairs) + 1
+    assert [p.stat().st_mtime_ns for p in tracked] == before

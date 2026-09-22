@@ -129,3 +129,24 @@ def test_the_budget_is_the_one_the_example_scenario_sets():
     assert cfg["straight_line"] == pytest.approx(np.hypot(56.0, 56.0))
     assert cfg["budget_factor"] == R.scenario_defaults()["budget_factor"]
     assert cfg["n_exec"] == R.N_EXEC
+
+
+def test_out_sends_the_tables_and_the_figures_there(tmp_path, monkeypatch):
+    """--collect --out writes everything under the given directory and nothing in
+    results/perfect or figures/, which hold the recorded campaign."""
+    rows = collected()
+    monkeypatch.setattr(R.ddo_api, "collect", lambda server, tag: rows)
+    # set to themselves so that monkeypatch puts them back after --out moves them
+    monkeypatch.setattr(R, "results", R.results)
+    monkeypatch.setattr(R, "figures", R.figures)
+    tracked = sorted(R.results.glob("*")) + sorted(R.figures.glob("perfect_*"))
+    before = [p.stat().st_mtime_ns for p in tracked]
+
+    out = tmp_path / "pipeline" / "rarrt"
+    assert R.main(["--collect", "--out", str(out)]) == 0
+    stems = ["perfect_paths_by_environment", "perfect_failure_and_worstcase",
+             "perfect_premium_against_protection"]
+    assert sorted(p.name for p in out.iterdir()) == sorted(
+        ["campaign.csv", "cells.csv", "summary.json"]
+        + [s + ".svg" for s in stems] + [s + ".pdf" for s in stems])
+    assert [p.stat().st_mtime_ns for p in tracked] == before

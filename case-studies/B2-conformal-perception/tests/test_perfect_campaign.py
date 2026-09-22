@@ -185,3 +185,28 @@ def test_the_score_of_a_shrunken_box_is_how_far_it_was_shrunk():
     rng = np.random.default_rng(1)
     table, pad = trial_rows(rng, "nominal", 20)
     assert R.scores_of(table, np.ones(20, dtype=bool)) == pytest.approx(pad)
+
+
+def test_out_sends_the_tables_and_the_figures_there(tmp_path, monkeypatch):
+    """--collect --out writes everything under the given directory and nothing in
+    results/perfect or figures/, which hold the recorded campaign. The closed-loop
+    sweep is stubbed: it runs 200 episodes per coverage level and is not what is
+    under test here."""
+    rows = collected()
+    monkeypatch.setattr(R.ddo_api, "collect", lambda server, tag: rows)
+    arm = {"q": 0.0, "collision_rate": 0.5, "success_rate": 0.5, "stall_rate": 0.0,
+           "mean_path_length": 20.0, "mean_waits": 0.0}
+    monkeypatch.setattr(R, "alpha_sweep", lambda qs: (arm, [dict(arm, q=q) for q in qs]))
+    # set to themselves so that monkeypatch puts them back after --out moves them
+    monkeypatch.setattr(R, "results", R.results)
+    monkeypatch.setattr(R, "figures", R.figures)
+    tracked = sorted(R.results.glob("*")) + sorted(R.figures.glob("perfect_*"))
+    before = [p.stat().st_mtime_ns for p in tracked]
+
+    out = tmp_path / "pipeline" / "conformal"
+    assert R.main(["--collect", "--out", str(out)]) == 0
+    stems = ["perfect_coverage", "perfect_tradeoff"]
+    assert sorted(p.name for p in out.iterdir()) == sorted(
+        ["calibration.csv", "episodes.csv", "coverage.csv", "alpha_sweep.csv", "summary.json"]
+        + [s + ".svg" for s in stems] + [s + ".pdf" for s in stems])
+    assert [p.stat().st_mtime_ns for p in tracked] == before

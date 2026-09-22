@@ -4,6 +4,7 @@
 #
 #   python run_ddo_campaign.py --submit --url http://127.0.0.1:5001
 #   python run_ddo_campaign.py --collect --url http://127.0.0.1:5001
+#   python run_ddo_campaign.py --collect --out <dir>    (tables and figures to <dir>)
 #
 # --submit loads the sensor library, creates the designs, the scenario template
 # and the scenarios, then creates one experiment per design and scenario with a
@@ -317,15 +318,26 @@ def draw_pareto(designs, names, order):
 
 # ------------------------------------------------------------------
 
+def send_output_to(out):
+    """--out: the tables and the figures go to `out` instead of results/ and figures/."""
+    global results, figures
+    results = figures = pathlib.Path(out)
+    results.mkdir(parents=True, exist_ok=True)
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--url", default=ddo_api.DEFAULT_URL, help="the PERFECT server")
     p.add_argument("--submit", action="store_true", help="create and run the campaign")
     p.add_argument("--collect", action="store_true", help="read it back and rank")
     p.add_argument("--wait", type=float, default=1800.0, help="seconds to wait for the trials")
+    p.add_argument("--out", help="write the tables and the figures to this directory "
+                   "instead of results/ and figures/")
     args = p.parse_args(argv)
     if not (args.submit or args.collect):
         p.error("give --submit, --collect, or both")
+    if args.out:
+        send_output_to(args.out)
 
     server = ddo_api.Server(args.url)
     if args.submit:

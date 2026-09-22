@@ -4,6 +4,7 @@
 #
 #   python run_perfect_campaign.py --submit --url http://127.0.0.1:5001
 #   python run_perfect_campaign.py --collect
+#   python run_perfect_campaign.py --collect --out <dir>    (tables and figures to <dir>)
 #
 # --submit loads the five planner implementations, creates the designs, the
 # environment template and the environments, then creates one experiment per
@@ -206,8 +207,8 @@ def do_collect(server):
     draw_failure_and_worstcase(cells)
     draw_premium_against_protection(cells)
     print()
-    print("results written to", results.relative_to(here))
-    print("figures written to", figures.relative_to(here))
+    print("results written to", shown(results))
+    print("figures written to", shown(figures))
     return len(successful), cells
 
 
@@ -324,15 +325,31 @@ def draw_premium_against_protection(cells):
 
 # ------------------------------------------------------------------
 
+def send_output_to(out):
+    """--out: the tables and the figures go to `out` instead of results/perfect and figures/."""
+    global results, figures
+    results = figures = pathlib.Path(out)
+    results.mkdir(parents=True, exist_ok=True)
+
+
+def shown(path):
+    """A path inside this directory relative to it, any other path as it is."""
+    return path.relative_to(here) if path.is_relative_to(here) else path
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description="the risk-sensitive planning campaign on PERFECT")
     p.add_argument("--url", default=ddo_api.DEFAULT_URL, help="the PERFECT server")
     p.add_argument("--submit", action="store_true", help="create and run the campaign")
     p.add_argument("--collect", action="store_true", help="read it back, tabulate and draw")
     p.add_argument("--wait", type=float, default=2400.0, help="seconds to wait for the trials")
+    p.add_argument("--out", help="write the tables and the figures to this directory "
+                   "instead of results/perfect and figures/")
     args = p.parse_args(argv)
     if not (args.submit or args.collect):
         p.error("give --submit, --collect, or both")
+    if args.out:
+        send_output_to(args.out)
 
     server = ddo_api.Server(args.url)
     if args.submit:
