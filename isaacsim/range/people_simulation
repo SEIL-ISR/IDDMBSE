@@ -1,0 +1,10 @@
+# Sample Command Guide
+
+Spawn Tom
+Spawn Jerry 
+
+Tom GoTo -46 28 0 45
+Jerry LookAround 5
+Jerry GoTo -46 28 0 45
+Tom GoTo -42.5 25 0 45
+Tom GoTo -39 29 0 45

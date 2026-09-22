@@ -1,0 +1,66 @@
+{
+  "source_obj": "terrain_low.obj",
+  "rows": 2048,
+  "cols": 2048,
+  "axis_convention": "OBJ is Y-up: column 0 is x, column 1 is height, column 2 is z; heights are stored in the OBJ's own units",
+  "row_axis": "x",
+  "col_axis": "z",
+  "x0": 0.0,
+  "dx": -2.0,
+  "z0": 0.0,
+  "dz": 2.0,
+  "x_extent": [
+    -4094.0,
+    0.0
+  ],
+  "z_extent": [
+    0.0,
+    4094.0
+  ],
+  "height_min": -132.22940063476562,
+  "height_max": 505.5401916503906,
+  "height_offset": 0.0,
+  "uv": "regenerated as (col/(cols-1), row/(rows-1)); max abs error against the OBJ's vt block at extraction time: 7.782120181598629e-08",
+  "prim_path_in_scene": "/World/terrain1/terrain_low/mesh",
+  "default_prim": "terrain",
+  "scene_xform": {
+    "prim": "/World/terrain1",
+    "xformOpOrder": [
+      "xformOp:translate",
+      "xformOp:orient",
+      "xformOp:scale",
+      "xformOp:rotateX:unitsResolve",
+      "xformOp:scale:unitsResolve"
+    ],
+    "translate": [
+      49.32903289251568,
+      49.11372589076184,
+      0.0
+    ],
+    "orient": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "scale": [
+      2.42,
+      2.37976,
+      1.0
+    ],
+    "rotateX_unitsResolve_deg": 90.0,
+    "scale_unitsResolve": [
+      0.01,
+      0.01,
+      0.01
+    ],
+    "obj_to_world": {
+      "x_from_obj_x": 0.0242,
+      "x_offset": 49.32903289251568,
+      "y_from_obj_z": -0.0237976,
+      "y_offset": 49.11372589076184,
+      "z_from_obj_y": 0.01,
+      "z_offset": 0.0
+    }
+  }
+}

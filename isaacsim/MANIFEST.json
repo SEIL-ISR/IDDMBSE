@@ -1,0 +1,159 @@
+{
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 256,
+      "sha256": "f8593e8dc7dd87adff16ebd688474e4f7b94fb614f3bf66e5b3b47b9412fae07"
+    },
+    {
+      "path": "range/doe/density_0p1.usda",
+      "bytes": 200909,
+      "sha256": "15969bab72d0c7c3568c8dcdaa3ef0720daae384bfd5385a4aa127412d4f55d2"
+    },
+    {
+      "path": "range/doe/density_0p4.usda",
+      "bytes": 845016,
+      "sha256": "9d8d914b0920621ad8df29d33552f1866fb0cd44ecb184e8411569010af90b9b"
+    },
+    {
+      "path": "range/doe/density_0p8.usda",
+      "bytes": 1731993,
+      "sha256": "e1449e7898971bfe7d1d970cb111c165d3cf1d84891da8e9e907eaaaeb7bc594"
+    },
+    {
+      "path": "range/doe/doe_manifest.json",
+      "bytes": 4105,
+      "sha256": "4859cacbca97af4850aef2dc7e50ddaad1f96be3d380c02af4e2f31a9edf8546"
+    },
+    {
+      "path": "range/people_simulation",
+      "bytes": 155,
+      "sha256": "4796b4d29bab8a3f5ba9a155a1cc7a9f38028b568f1ee4873c41bf27fc62ae1f"
+    },
+    {
+      "path": "range/rocks/Rock_1.usd",
+      "bytes": 73157,
+      "sha256": "3010beea6b98366ef541ad65454f771a93f25a99763671263f3090945c5f2907"
+    },
+    {
+      "path": "range/rocks/Rock_5.usd",
+      "bytes": 56391,
+      "sha256": "a8789e153dfec548850a533bcbe89547f24fdf439508fbc039781ad3f36ce785"
+    },
+    {
+      "path": "range/rocks/Rock_9.usd",
+      "bytes": 56635,
+      "sha256": "ed2fea06e90abd00166c74672513d5fcee548d5935f65fde22d8d554b3ef4f11"
+    },
+    {
+      "path": "range/sim_world2.usd",
+      "bytes": 9558,
+      "sha256": "65347e0fed05d09b9f1914052e19189df4b2b9237cb53fa9680cf59342fd08d6"
+    },
+    {
+      "path": "range/teleop.usd",
+      "bytes": 4459,
+      "sha256": "2ed73316cba6a4711a4ecfdc9cba7fbb15259218603e75d9f2115d1ffd63af42"
+    },
+    {
+      "path": "range/terrain/heightmap.npz",
+      "bytes": 14804748,
+      "sha256": "e4402ff59d83e467539c6fec9672b09039e8c96fac9cc86b02ed416c3e5f2209"
+    },
+    {
+      "path": "range/terrain/terrain_meta.json",
+      "bytes": 1463,
+      "sha256": "a686b14913d46d7c6ac468eff718b9299541a853f911646ee6a49d738e5549b1"
+    },
+    {
+      "path": "range/terrain1_world.usd",
+      "bytes": 383613,
+      "sha256": "d2b2448e03eb57dfcf756d68a9b99f69804d5ec2a95c164ff8ee3ae0f9f964a0"
+    },
+    {
+      "path": "showcases/warehouse_iros_v1.usd",
+      "bytes": 3167398,
+      "sha256": "106cdd0206e94cf90586527fbc88b94b419a7ba254c08b736111b659c07c23db"
+    },
+    {
+      "path": "showcases/warehouse_nvblox.usd",
+      "bytes": 5751,
+      "sha256": "97f4e239bf2bcb5f93a1f422826e6072cf779fa0c709e013a20178f51cbbd43a"
+    },
+    {
+      "path": "thumbnails/sim_world2.png",
+      "bytes": 112702,
+      "sha256": "027d6726739744e250dd30236f6595376662fd049e30b9ff05caa94335fafa03"
+    },
+    {
+      "path": "thumbnails/terrain1_world.png",
+      "bytes": 134427,
+      "sha256": "5e1d61e4c1fa6bb4ba906a69c2c6effa03f2ae416dd77e9be15fff072efb4a53"
+    },
+    {
+      "path": "thumbnails/terrain_mesh.png",
+      "bytes": 131515,
+      "sha256": "71725dc5e60fbd836c416b9258573a2eb296008f49e7b99a89c0836b07f5a868"
+    },
+    {
+      "path": "tools/build_terrain.py",
+      "bytes": 11269,
+      "sha256": "f0beaec566fbd35aae2794c8bddbddf7e7db02aff0247da1739cdc9e8e3f051b"
+    },
+    {
+      "path": "tools/compact.py",
+      "bytes": 2540,
+      "sha256": "8cfe8b03effac40bb3ff29bc7161368370bd6100c2b78025182f8535d993018e"
+    },
+    {
+      "path": "tools/fetch_assets.py",
+      "bytes": 18212,
+      "sha256": "8ee0ea62432ccad1a9041769c9329387a84d11a242ce368bc1eb60dcea34cf13"
+    },
+    {
+      "path": "tools/manifest.py",
+      "bytes": 1590,
+      "sha256": "5f1d14d17c784b61a793198a9d409a63bd275363b5e3724a776aa1eb679f0a1b"
+    },
+    {
+      "path": "tools/pyproject.toml",
+      "bytes": 339,
+      "sha256": "1bc68726ce9652fd12d824439d5b4645b802b1ac29dc3d14279f641406cd959f"
+    },
+    {
+      "path": "tools/range_doe.py",
+      "bytes": 22489,
+      "sha256": "3d3a262cb27c4d74f57023baad9f005d06d05acfc6b3ec192becec2e335c47f6"
+    },
+    {
+      "path": "tools/relink.py",
+      "bytes": 11247,
+      "sha256": "f9c3acd7ecd9e3fe39da7a125953ddcd1c3318ef2af492e810dabd77819571ff"
+    },
+    {
+      "path": "tools/set_attrs.py",
+      "bytes": 1724,
+      "sha256": "9fe56eafee6ee5db750e1fcb5c1bc7769525ef6f24e74188119c7b3382326a4f"
+    },
+    {
+      "path": "tools/tests/conftest.py",
+      "bytes": 96,
+      "sha256": "f33902d175ca95698750a28d0a698e46d5a7b2a4669cd814b90e09f7b9bd01bf"
+    },
+    {
+      "path": "tools/tests/test_build_terrain.py",
+      "bytes": 2936,
+      "sha256": "1cb82766b3618a65fc323f42d437e7a6b729e13338c4e04798a8cdc166143c32"
+    },
+    {
+      "path": "tools/tests/test_range_doe.py",
+      "bytes": 7610,
+      "sha256": "f85536634b3d7bc36f7ca2ec4bb71a79effd6330054623b79cee585bc987dffa"
+    },
+    {
+      "path": "tools/uv.lock",
+      "bytes": 52871,
+      "sha256": "2de8483836fa7463f1ffa363bf1a5c91f4a5412f6025ad5674b22448c591a52f"
+    }
+  ]
+}

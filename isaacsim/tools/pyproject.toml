@@ -1,0 +1,14 @@
+[project]
+name = "iddmbse-isaacsim-tools"
+version = "0.1.0"
+description = "Tools for the IDDMBSE Isaac Sim test range: asset fetching, relinking, terrain rebuilding and design-of-experiments layers"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.4.6",
+    "usd-core>=24.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]

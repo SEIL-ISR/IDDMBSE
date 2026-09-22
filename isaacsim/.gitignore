@@ -1,0 +1,9 @@
+# downloaded content: NVIDIA's and Poly Haven's, fetched by tools/fetch_assets.py
+range/assets/*
+!range/assets/MANIFEST.json
+range/HDRI/
+# built by tools/build_terrain.py from range/terrain/heightmap.npz
+range/generated/
+__pycache__/
+.venv/
+.pytest_cache/
