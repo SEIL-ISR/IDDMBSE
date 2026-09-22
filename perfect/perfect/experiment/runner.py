@@ -4,7 +4,8 @@ import json
 import signal
 
 import websockets
-from websockets.server import WebSocketServerProtocol
+from websockets.asyncio.server import ServerConnection
+from websockets.protocol import State
 
 import perfect.logging
 from perfect.experiment.experiment import BaseExperiment
@@ -36,7 +37,7 @@ class Runner:
             )
         )
 
-    async def _handle_msg(self, msg, websocket_: WebSocketServerProtocol):
+    async def _handle_msg(self, msg, websocket_: ServerConnection):
         op = msg.get("op")
         if op == "launch":
             if self._running:
@@ -58,8 +59,8 @@ class Runner:
                 id=str(websocket_.id),
                 local_address=websocket_.local_address,
                 remote_address=websocket_.remote_address,
-                open=websocket_.open,
-                closed=websocket_.closed,
+                open=websocket_.state is State.OPEN,
+                closed=websocket_.state is State.CLOSED,
                 close_code=websocket_.close_code,
                 close_reason=websocket_.close_reason,
                 is_running=self._running,

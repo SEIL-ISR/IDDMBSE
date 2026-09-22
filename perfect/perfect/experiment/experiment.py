@@ -12,7 +12,6 @@ from enum import Flag, auto
 from itertools import chain
 from typing import Any, Callable, Optional
 
-from pxr import Usd
 import yaml
 
 import perfect.logging
@@ -344,6 +343,7 @@ def edit_local_yaml(filepath, updates):
 
 
 def edit_local_usd(filepath, updates):
+    from pxr import Usd  # only needed for .usd files, and only Isaac Sim's Python has it
     stage = Usd.Stage.Open(filepath, Usd.Stage.LoadNone)
     for update in updates:
         prim = stage.GetPrimAtPath(update["prim"])

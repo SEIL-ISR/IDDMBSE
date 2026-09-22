@@ -101,7 +101,10 @@ def _load_component_implementations(filepath):
         valid_components,
     )
     db.session.commit()
-    current_app.logger.info(f"Committed {len(valid_components)} Components from {filepath}" + f". {num_invalid} were invalid" if num_invalid else "")
+    current_app.logger.info(
+        f"Committed {len(valid_components)} Components from {filepath}"
+        + (f". {num_invalid} were invalid" if num_invalid else "")
+    )
 
 
 def _create_implementation_from_form(form):

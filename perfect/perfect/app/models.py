@@ -283,13 +283,13 @@ class Trial(db.Model):
                 environment_id=self.experiment.environment_id,
             ),
         )
-        self.job_id = rq_job.get_id()
+        self.job_id = rq_job.id
         self.cancelled_by = None
         self.datetime = datetime.now()
         self.uri = None
         self.state = None
         self.start_age = None
-        current_app.logger.info(f"Enqueued job {rq_job.get_id()} for {self}")
+        current_app.logger.info(f"Enqueued job {rq_job.id} for {self}")
         db.session.commit()
 
     def add_update(self, data):

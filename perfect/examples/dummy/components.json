@@ -2,27 +2,53 @@
     {
         "name": "Widget A",
         "type": "widget",
-        "specification": {
-            "flange_depth": 123,
-            "gewgaw_frequency": -5
+        "implementation": {
+            "envvars": [
+                {
+                    "envvar": "DUMMY_WIDGET",
+                    "value": "A"
+                }
+            ],
+            "parameters": []
         }
     },
     {
         "name": "Widget B",
         "type": "widget",
-        "specification": {
-            "flange_depth": 456,
-            "gewgaw_frequency": 2
+        "implementation": {
+            "envvars": [
+                {
+                    "envvar": "DUMMY_WIDGET",
+                    "value": "B"
+                }
+            ],
+            "parameters": []
         }
     },
     {
         "name": "Dijkstra",
         "type": "ppa",
-        "specification": {}
+        "implementation": {
+            "envvars": [
+                {
+                    "envvar": "DUMMY_PLANNER",
+                    "value": "dijkstra"
+                }
+            ],
+            "parameters": []
+        }
     },
     {
         "name": "A*",
         "type": "ppa",
-        "specification": {}
+        "implementation": {
+            "envvars": [
+                {
+                    "envvar": "DUMMY_PLANNER",
+                    "value": "astar"
+                }
+            ],
+            "parameters": []
+        }
     }
 ]

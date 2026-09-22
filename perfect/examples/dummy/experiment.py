@@ -11,6 +11,8 @@ import perfect.logging
 logger = perfect.logging.getLogger("core")
 
 class DummyExperiment(BaseExperiment):
+    _files = {}  # the dummy experiment edits no files
+
     def __init__(self, *args, **kwargs):
         self.uuid = str(uuid.uuid1())
         super().__init__(*args, **kwargs)
