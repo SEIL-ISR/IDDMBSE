@@ -1,4 +1,7 @@
-using GLMakie
+# Small Makie animation demo. It used GLMakie, which needs an X display and is
+# no longer a dependency of this package; CairoMakie renders the same frames
+# off screen.
+using CairoMakie
 
 using Makie.Colors
 
@@ -14,5 +17,3 @@ record(fig, "append_animation.mp4", frames;
     new_point = Point2f(frame, frame)
     points[] = push!(points[], new_point)
 end
-
-

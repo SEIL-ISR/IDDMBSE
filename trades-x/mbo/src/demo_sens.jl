@@ -68,10 +68,9 @@ function coverage(l_rmax, vfov, b)
     return cov
 end
 
-coverage(100, 0.526, 0.5)
-
-
-ForwardDiff.gradient(x -> coverage(x[1], x[2], x[3]), [100, 0.526, 0.5])
+println("lidar coverage(100, 0.526, 0.5) = ", coverage(100, 0.526, 0.5))
+println("  gradient wrt (max_range, v_fov, b) = ",
+        ForwardDiff.gradient(x -> coverage(x[1], x[2], x[3]), [100.0, 0.526, 0.5]))
 
 
 function cam_coverage(c_rmax, hfov, vfov, b)
@@ -81,13 +80,13 @@ function cam_coverage(c_rmax, hfov, vfov, b)
     
 end
 
-cam_coverage(c_rmax, c_hfov, 1.273, 0.5)
+println("rgb camera cam_coverage(60, 1.047, 1.273, 0.5) = ", cam_coverage(60.0, c_hfov, 1.273, 0.5))
+println("  gradient wrt (max_range, h_fov, v_fov, b) = ",
+        ForwardDiff.gradient(x -> cam_coverage(x[1], x[2], x[3], x[4]), [60.0, 1.047, 1.273, 0.5]))
 
-ForwardDiff.gradient(x -> cam_coverage(x[1], x[2], x[3], x[4]), [60, 1.047, 1.273, 0.5])
-
-cam_coverage(d_rmax, d_hfov, d_vfov, 0.5)
-
-ForwardDiff.gradient(x -> cam_coverage(x[1], x[2], x[3], x[4]), [6, 1.501, 0.9948, 0.5])
+println("depth camera cam_coverage(6, 1.501, 0.9948, 0.5) = ", cam_coverage(d_rmax, d_hfov, d_vfov, 0.5))
+println("  gradient wrt (max_range, h_fov, v_fov, b) = ",
+        ForwardDiff.gradient(x -> cam_coverage(x[1], x[2], x[3], x[4]), [6.0, 1.501, 0.9948, 0.5]))
 
 function laser_coverage(la_hfov, la_rmax, b)
     sen_cov = (la_hfov / 2) * (la_rmax)^2 * b
@@ -96,6 +95,6 @@ function laser_coverage(la_hfov, la_rmax, b)
 end
 
 
-laser_coverage(la_hfov, la_rmax, 0.1)
-
-ForwardDiff.gradient(x -> laser_coverage(x[1], x[2], x[3]), [4.71, 20, 0.1])
+println("laser laser_coverage(4.71, 20, 0.1) = ", laser_coverage(la_hfov, la_rmax, 0.1))
+println("  gradient wrt (h_fov, max_range, b) = ",
+        ForwardDiff.gradient(x -> laser_coverage(x[1], x[2], x[3]), [4.71, 20.0, 0.1]))

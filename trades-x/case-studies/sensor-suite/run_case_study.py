@@ -2,6 +2,7 @@
 # Reproduces the recorded model-based optimization stage from plot4met.csv and
 # ranks the surviving designs with the MAVF.
 
+import itertools
 import pathlib
 import numpy as np
 import matplotlib
@@ -10,6 +11,8 @@ import matplotlib.pyplot as plt
 
 from tradesx.pareto import non_dominated, non_dominated_matlab_compat
 from tradesx.mavf import rank
+from tradesx import requirements as reqs
+from tradesx import sensitivity as sens
 
 here = pathlib.Path(__file__).parent
 data = here / "data"
@@ -100,6 +103,53 @@ ax2.set_title("Top 15 Pareto designs by MAVF")
 fig2.tight_layout()
 fig2.savefig(figures / "mavf_ranking.svg")
 fig2.savefig(figures / "mavf_ranking.pdf")
+
+# ------------------------------------------------------------------
+# the requirement partition the trade-off stage runs on
+rq = reqs.load(here / "requirements.yaml")
+mb, dd = reqs.partition(rq)
+stages = reqs.by_stage(rq)
+
+print()
+print("requirements:", len(rq), "model-based:", len(mb), "data-driven:", len(dd))
+print("by stage:", "MBO", len(stages["MBO"]), "DDO", len(stages["DDO"]),
+      "MAVF", len(stages["MAVF"]))
+print()
+print("id      class        stage metric    name")
+for line in reqs.table(rq):
+    print(line)
+
+# ------------------------------------------------------------------
+# sensitivity of the four local metrics to the design parameters, for the
+# MAVF-best design. Needs the `ad` extra (uv sync --extra ad); skipped without it.
+#
+# Row r of plot4met.csv is the r-th subset in Combinatorics.powerset order: by
+# size, then lexicographic, sizes 1 to 6.
+subsets = [t for k in range(1, 7) for t in itertools.combinations(range(13), k)]
+best_idx = int(idx[order[0]])
+best_design = np.zeros(13)
+best_design[list(subsets[best_idx])] = 1
+best_slots = [i + 1 for i in subsets[best_idx]]
+best_id = int(best_design @ 2.0 ** np.arange(12, -1, -1))
+
+print()
+print("MAVF best: row", best_idx + 1, "design id", best_id, "components", best_slots)
+
+try:
+    ranked = sens.rank_parameters(best_design, metric=3)
+except ImportError:
+    print()
+    print("jax not installed, sensitivity ranking skipped (uv sync --extra ad)")
+else:
+    print()
+    print("coverage sensitivity of the MAVF best design, p * d(-coverage)/dp [m^3]")
+    for metric_name, sensor, param, value in ranked[:6]:
+        print(" ", sensor, param, round(value, 3))
+
+    print()
+    print("requirements ranked by the sensitivity of the metric that checks them")
+    for rid, metric_name, score in sens.rank_requirements(best_design, reqs.metric_map(rq))[:8]:
+        print(" ", rid, metric_name, round(score, 3))
 
 print()
 print("figures written to", figures)

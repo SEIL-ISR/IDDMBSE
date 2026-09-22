@@ -38,9 +38,13 @@ lidar_dict = struct("model", Dmodel_tag, "update_rate", Drate)
 
 uri = matlab.net.URI("http://10.229.43.134:5000/run");
 method = matlab.net.http.RequestMethod.POST;
-%s = struct("launch_file", "/home/hunter/Projects/seil_autonomy_stack/seil_ws/src/hardware_launch/launch/navigation.launch", "timeout", 600, "launch_args", struct("rtabmap_viz", "true", "camera", "true", "lidar3d", "true", "slam2d", "true", "icp_odometry", "true"));
+%s = struct("launch_file", "<AUTO_STACK_WS>/src/hardware_launch/launch/navigation.launch", "timeout", 600, "launch_args", struct("rtabmap_viz", "true", "camera", "true", "lidar3d", "true", "slam2d", "true", "icp_odometry", "true"));
 
-s = struct("launch_file", "/home/praveen/auto_stack_ws/src/hardware_launch/launch/navigation_rosbridge.launch", "sensor_update", struct("laser_3d", lidar_dict, "camera", cam_dict, "laser_2d", las2d_dict,"depth_camera",rgbdepth_dict))
+ws = string(getenv("AUTO_STACK_WS"));
+if strlength(ws) == 0
+    ws = "~/auto_stack_ws";
+end
+s = struct("launch_file", ws + "/src/hardware_launch/launch/navigation_rosbridge.launch", "sensor_update", struct("laser_3d", lidar_dict, "camera", cam_dict, "laser_2d", las2d_dict,"depth_camera",rgbdepth_dict))
 
 options = weboptions("MediaType", "application/json", "Timeout", 2000);
 

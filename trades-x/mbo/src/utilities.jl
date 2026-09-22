@@ -67,12 +67,6 @@ end
 gif(anim, "pareto_optimal_designs.gif", fps = 10) 
 
 
-anim2 = @animate for k in 1:7
-    Plots.scatter([demo_des_results[(1:k), 1]], [demo_des_results[(1:k), 2]], [demo_des_results[(1:k), 3]], markersize=8, alpha=1 - (k / 7) / 5, xlim=(cost_min, cost_max), ylim=(ram_min, ram_max), zlim=(power_min, power_max), color=:red)
-end
-
-gif(anim2, "mosmo_approx_pareto.gif", fps=1)
-
 cost_min = minimum(par_val.Cost)
 cost_max = maximum(par_val.Cost)
 
@@ -81,3 +75,9 @@ ram_max = maximum(par_val.RAM)
 
 power_min = minimum(par_val.Power)
 power_max = maximum(par_val.Power)
+
+anim2 = @animate for k in 1:7
+    Plots.scatter([demo_des_results[(1:k), 1]], [demo_des_results[(1:k), 2]], [demo_des_results[(1:k), 3]], markersize=8, alpha=1 - (k / 7) / 5, xlim=(cost_min, cost_max), ylim=(ram_min, ram_max), zlim=(power_min, power_max), color=:red)
+end
+
+gif(anim2, "mosmo_approx_pareto.gif", fps=1)

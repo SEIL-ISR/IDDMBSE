@@ -1,0 +1,204 @@
+# The 23 SysML requirements of the AGR_stack model, split into the two classes
+# the IDDMBSE methodology asks for before any trade-off runs.
+#
+# Source: sysml/models/AGR_stack-MB-SensorTrade-mk6.mdzip, the `Id` and `Text`
+# tag values on the 23 `sysml:Requirement` elements. The `name` field is the
+# SysML element name; requirements 1 and 2 sit on unnamed classes in the model,
+# so the names given here are descriptive, not from the model.
+#
+# Fields
+#   class   model-based  satisfaction is checkable offline, from datasheets or
+#                        a first-principles model, before anything is simulated
+#           data-driven  satisfaction can only be established by running the
+#                        stack and measuring the outcome
+#   stage   MBO   checked by the model-based optimization oracles
+#           DDO   measured in the PERFECT simulation campaign
+#           MAVF  a roll-up, settled by the multi-attribute value function over
+#                 the metrics its children carry
+#   metric  which of the four local oracles bears on it, when one does
+#
+# Built for this release; the model carries no such split of its own.
+
+- id: Pr.1
+  name: System Cost
+  text: The overall AGR system cost shall be less than 75,000.
+  class: model-based
+  stage: MAVF
+  metric: cost
+  reason: Roll-up of the two cost requirements below, both priced from datasheets.
+
+- id: Pr.1.1
+  name: AGR Chassis Cost
+  text: The barebones AGR without the sensor package shall cost less than 30,000
+  class: model-based
+  stage: MBO
+  metric: null
+  reason: A fixed platform price, known before any design is chosen.
+
+- id: Pr.1.2
+  name: AGR Sensor Suite Cost
+  text: The sensor suite configuration cost shall be less than 45,000
+  class: model-based
+  stage: MBO
+  metric: cost
+  reason: The cost oracle sums catalogue prices, so every candidate is priced offline.
+
+- id: "1"
+  name: Lidar Cost
+  text: The cost of the Lidar shall be less than 2000.
+  class: model-based
+  stage: MBO
+  metric: cost
+  reason: A catalogue price, read straight off the datasheet.
+
+- id: "2"
+  name: RGB Camera Refresh Rate
+  text: The RGB Camera shall have refresh rate greater than 20 Hz
+  class: model-based
+  stage: MBO
+  metric: RAM
+  reason: Update rate is a catalogue field; it also sets the data rate the RAM oracle uses.
+
+- id: P.1
+  name: Global Performance Requirements
+  text: The AGR shall meet all the stated global performance metrics.
+  class: data-driven
+  stage: MAVF
+  metric: null
+  reason: Roll-up of the four measured global metrics below.
+
+- id: P.1.1
+  name: Tortuosity
+  text: The ratio of arc length to chord length over the entire path in the test environments shall not exceed 1.25
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: Needs a recorded trajectory; tradesx.bag_metrics.path_length gives the arc length.
+
+- id: P.1.2
+  name: Time to Completion
+  text: The AGR shall complete the entire path in the test environments in less than 180 seconds.
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: Only a run produces it; tradesx.bag_metrics.time_to_completion reads it off the bag.
+
+- id: P.1.3
+  name: Cumulative Elevation Gradient
+  text: The total elevation gradient experienced by the AGR along a successful trajectory in the test environment shall be less than 4 metres.
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: Depends on the path the planner actually took through the terrain.
+
+- id: P.1.4
+  name: AGR Battery State of Charge
+  text: The AGR Battery State of Charge during operation shall always be more than 0.6.
+  class: data-driven
+  stage: DDO
+  metric: power
+  reason: The power oracle bounds the draw offline, but the state of charge over a mission depends on how long the run takes.
+
+- id: P.2
+  name: Local Performance Requirements
+  text: The AGR shall meet all the stated local performance metrics.
+  class: model-based
+  stage: MAVF
+  metric: coverage
+  reason: Roll-up of the local metrics the four oracles produce, coverage among them.
+
+- id: P.2.1
+  name: Perception Requirements
+  text: The AGR shall meet the Perception Pipeline Requirements
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: Roll-up of the seven measured perception scores below.
+
+- id: P.2.1.1
+  name: LIDAR Segmentation Accuracy
+  text: The Mean Intersection over Union (MIoU) score on the RELLIS dataset shall be more than 40
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: A trained model's score on held-out data; no model-based form of it exists.
+
+- id: P.2.1.2
+  name: Image Segmentation Accuracy
+  text: The Mean Intersection over Union (MIoU) score on the RELLIS dataset shall be more than 60
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: Same, for the RGB segmentation network.
+
+- id: P.2.1.3
+  name: RGB Object Detection Accuracy
+  text: The mean Average Detection (mAD) over the RELLIS dataset shall be more than 80%
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: Measured over a dataset, not derivable from the sensor specification.
+
+- id: P.2.1.4
+  name: RGB Object Tracking
+  text: The mean Average Precision (mAP) over the RELLIS dataset shall be more than 50%
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: Measured over a dataset, not derivable from the sensor specification.
+
+- id: P.2.1.5
+  name: LIDAR segmentation FPS
+  text: The LIDAR segmentation shall have an average Frames Per Second (FPS) value more than 10 Hz.
+  class: data-driven
+  stage: DDO
+  metric: RAM
+  reason: Throughput on the target computer; the RAM oracle bounds the input data rate but not the achieved rate.
+
+- id: P.2.1.6
+  name: RGB Segmentation FPS
+  text: The RGB segmentation shall have an average Frames Per Second (FPS) value more than 50 Hz.
+  class: data-driven
+  stage: DDO
+  metric: RAM
+  reason: Same, for the RGB pipeline.
+
+- id: P.2.1.7
+  name: RGB Object Detection and Tracking
+  text: The Object Detection and Tracking shall have an average Frames Per Second (FPS) value more than 10 Hz.
+  class: data-driven
+  stage: DDO
+  metric: RAM
+  reason: Same, for detection and tracking.
+
+- id: P.2.2
+  name: Estimation and SLAM Requirements
+  text: The AGR shall meet the SLAM and Estimation Requirements
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: Localisation error is a property of a run in a particular environment.
+
+- id: P.2.3
+  name: Symbolic Planning Requirements
+  text: The AGR shall meet the Symbolic Planning Requirements
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: Behaviour-tree outcomes show up only when the tree is executed.
+
+- id: P.2.4
+  name: Metric Planning Requirements
+  text: The AGR shall meet the Metric Planning Requirements
+  class: data-driven
+  stage: DDO
+  metric: null
+  reason: Planner behaviour depends on the map and the controller, so it is measured.
+
+- id: SH4
+  name: Smart Battery Management System
+  text: The AGR shall have a smart battery management system to prolong battery life.
+  class: model-based
+  stage: MBO
+  metric: power
+  reason: A structural requirement, satisfied by the presence of the block in the architecture.
