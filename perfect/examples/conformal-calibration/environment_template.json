@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Contested arena crossing, conformal calibration",
+        "specification": {
+            "files": [
+                {
+                    "file": "scenario.yaml",
+                    "updates": [
+                        {"keys": "clutter", "value": "$clutter"},
+                        {"keys": "seed", "value": "$seed"},
+                        {"keys": "n_episodes", "value": "$n_episodes"}
+                    ]
+                }
+            ]
+        }
+    }
+]

@@ -1,0 +1,28 @@
+# The scenario, written by the environment.
+#
+# PERFECT copies this file into the trial's working directory and then applies
+# the `files` updates the environment specification carries, so the three values
+# at the top are the ones the environment under test chose and the rest are the
+# defaults a trial gets when the environment says nothing.
+#
+#   clutter      which entry of `bands` the arena is filled from
+#   seed         picks the arena and every draw the detector makes in it
+#   n_episodes   closed-loop episodes this trial runs
+clutter: nominal
+seed: 0
+n_episodes: 1
+
+# How many obstacles stand in the arena, as [fewest, most]. The environment
+# picks one band by name; nothing rewrites this table.
+bands:
+  sparse: [3, 5]
+  nominal: [5, 9]
+  dense: [9, 13]
+
+# Keep one control frame in `frame_every` in the detection table. One keeps
+# every frame the robot actually saw.
+frame_every: 1
+
+# The seed of the trial is base_seed + seed, so two environments that differ
+# only in `seed` see different arenas and different detector draws.
+base_seed: 700000

@@ -1,0 +1,14 @@
+# The planner policy, written by the design.
+#
+# PERFECT copies this file into the trial's working directory and then applies
+# the `files` updates of every component implementation in the design. The
+# design under test holds exactly one implementation of the `planner` component,
+# so after the copy these three values name that policy.
+#
+#   policy  the name it is reported under
+#   risk    euclidean (plain RRT*, the edge cost is the segment length) or
+#           cvar (RA-RRT*, the edge cost is CVaR_alpha of the segment cost)
+#   alpha   the CVaR confidence level, ignored when risk is euclidean
+policy: rrtstar
+risk: euclidean
+alpha: 0.0

@@ -1,0 +1,46 @@
+# The scenario, written by the environment.
+#
+# PERFECT copies this file into the trial's working directory and then applies
+# the `files` updates the environment specification carries, so the four values
+# at the top are the ones the environment under test chose and the rest are the
+# defaults a trial gets when the environment says nothing.
+#
+#   environment  which entry of `coverages` the rock field is drawn from
+#   sigma        traversal-noise scale
+#   seed         picks the rock field, and offsets the three seeds below
+#   n_exec       executions of the planned path under fresh noise
+environment: medium
+sigma: 0.1
+seed: 0
+n_exec: 400
+
+# The three rock fields of the study, by the fraction of the domain the discs
+# cover. The environment picks one by name; nothing rewrites this table.
+coverages:
+  easy: 0.08
+  medium: 0.16
+  hard: 0.26
+
+# The planner.
+iterations: 1500
+step: 3.0
+goal_bias: 0.05
+half_width: 32.0
+
+# The cost model: a Gaussian traversal noise plus a rare, severe hazard whose
+# chance rises as a segment passes closer to a rock.
+n_samples: 2048
+kappa: 20.0
+d_hazard: 2.0
+p_max: 0.15
+
+# A traversal costing more than budget_factor times the straight-line distance
+# from start to goal counts as over budget.
+budget_factor: 1.5
+
+# Base seeds. Each is offset by `seed`, so one seed names one whole trial: the
+# rock field, the planner's common random numbers, its sampling, and the fresh
+# noise the plan is executed under.
+crn_seed: 1000
+plan_seed: 50000
+exec_seed: 90000

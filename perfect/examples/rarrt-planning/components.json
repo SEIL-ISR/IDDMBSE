@@ -1,0 +1,82 @@
+[
+    {
+        "name": "rrtstar",
+        "type": "planner",
+        "implementation": {
+            "files": [
+                {
+                    "file": "policy.yaml",
+                    "updates": [
+                        {"keys": "policy", "value": "rrtstar"},
+                        {"keys": "risk", "value": "euclidean"},
+                        {"keys": "alpha", "value": 0.0}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "neutral",
+        "type": "planner",
+        "implementation": {
+            "files": [
+                {
+                    "file": "policy.yaml",
+                    "updates": [
+                        {"keys": "policy", "value": "neutral"},
+                        {"keys": "risk", "value": "cvar"},
+                        {"keys": "alpha", "value": 0.0}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "cvar0.1",
+        "type": "planner",
+        "implementation": {
+            "files": [
+                {
+                    "file": "policy.yaml",
+                    "updates": [
+                        {"keys": "policy", "value": "cvar0.1"},
+                        {"keys": "risk", "value": "cvar"},
+                        {"keys": "alpha", "value": 0.1}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "cvar0.5",
+        "type": "planner",
+        "implementation": {
+            "files": [
+                {
+                    "file": "policy.yaml",
+                    "updates": [
+                        {"keys": "policy", "value": "cvar0.5"},
+                        {"keys": "risk", "value": "cvar"},
+                        {"keys": "alpha", "value": 0.5}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "cvar0.9",
+        "type": "planner",
+        "implementation": {
+            "files": [
+                {
+                    "file": "policy.yaml",
+                    "updates": [
+                        {"keys": "policy", "value": "cvar0.9"},
+                        {"keys": "risk", "value": "cvar"},
+                        {"keys": "alpha", "value": 0.9}
+                    ]
+                }
+            ]
+        }
+    }
+]

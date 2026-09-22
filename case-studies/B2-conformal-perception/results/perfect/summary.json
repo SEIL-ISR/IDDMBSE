@@ -1,0 +1,129 @@
+{
+  "campaign": {
+    "trials": 270,
+    "episodes": 270,
+    "detections": 24704,
+    "detectors": [
+      "sharp",
+      "nominal",
+      "degraded"
+    ],
+    "clutter_bands": [
+      "sparse",
+      "nominal",
+      "dense"
+    ],
+    "seeds": 30,
+    "calibration_detector": "nominal",
+    "calibration_rows": 5399,
+    "holdout_rows": 2441
+  },
+  "operating_point": {
+    "alpha": 0.1,
+    "q_m": 0.6478000000000002,
+    "holdout_coverage": 0.9156083572306432,
+    "holdout_coverage_interval": [
+      0.8792737493451142,
+      0.9440666339372752
+    ],
+    "coverage_by_detector": {
+      "sharp": 0.9629830753914381,
+      "nominal": 0.9049744897959183,
+      "degraded": 0.7824591573516767
+    }
+  },
+  "closed_loop": {
+    "test_episodes": 200,
+    "clutter": "nominal",
+    "nominal": {
+      "q": 0.0,
+      "success_rate": 0.185,
+      "collision_rate": 0.815,
+      "stall_rate": 0.0,
+      "mean_path_length": 25.85698195325573,
+      "mean_waits": 0.0
+    },
+    "sweep": [
+      {
+        "q": 0.22919999999999963,
+        "success_rate": 0.645,
+        "collision_rate": 0.355,
+        "stall_rate": 0.0,
+        "mean_path_length": 27.537076721561274,
+        "mean_waits": 0.045,
+        "alpha": 0.3
+      },
+      {
+        "q": 0.29190000000000005,
+        "success_rate": 0.695,
+        "collision_rate": 0.305,
+        "stall_rate": 0.0,
+        "mean_path_length": 27.871867156064404,
+        "mean_waits": 0.04,
+        "alpha": 0.2
+      },
+      {
+        "q": 0.41930000000000067,
+        "success_rate": 0.735,
+        "collision_rate": 0.265,
+        "stall_rate": 0.0,
+        "mean_path_length": 27.92207397110395,
+        "mean_waits": 0.04,
+        "alpha": 0.15
+      },
+      {
+        "q": 0.6478000000000002,
+        "success_rate": 0.88,
+        "collision_rate": 0.11,
+        "stall_rate": 0.01,
+        "mean_path_length": 28.969057434478795,
+        "mean_waits": 0.02,
+        "alpha": 0.1
+      },
+      {
+        "q": 0.804199999999998,
+        "success_rate": 0.95,
+        "collision_rate": 0.02,
+        "stall_rate": 0.03,
+        "mean_path_length": 29.75739156259849,
+        "mean_waits": 0.05,
+        "alpha": 0.05
+      },
+      {
+        "q": 0.9278000000000004,
+        "success_rate": 0.945,
+        "collision_rate": 0.005,
+        "stall_rate": 0.05,
+        "mean_path_length": 30.5232202764414,
+        "mean_waits": 0.235,
+        "alpha": 0.02
+      },
+      {
+        "q": 0.9845000000000006,
+        "success_rate": 0.94,
+        "collision_rate": 0.0,
+        "stall_rate": 0.06,
+        "mean_path_length": 30.378541280957187,
+        "mean_waits": 0.75,
+        "alpha": 0.01
+      }
+    ]
+  },
+  "collision_rate_by_clutter": {
+    "sharp": [
+      0.3,
+      0.6333333333333333,
+      0.7666666666666667
+    ],
+    "nominal": [
+      0.5,
+      0.8666666666666667,
+      0.9
+    ],
+    "degraded": [
+      0.7666666666666667,
+      1.0,
+      1.0
+    ]
+  }
+}

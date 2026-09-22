@@ -1,0 +1,18 @@
+[
+    {
+        "name": "Rock field crossing, risk-sensitive planning",
+        "specification": {
+            "files": [
+                {
+                    "file": "scenario.yaml",
+                    "updates": [
+                        {"keys": "environment", "value": "$environment"},
+                        {"keys": "sigma", "value": "$sigma"},
+                        {"keys": "seed", "value": "$seed"},
+                        {"keys": "n_exec", "value": "$n_exec"}
+                    ]
+                }
+            ]
+        }
+    }
+]

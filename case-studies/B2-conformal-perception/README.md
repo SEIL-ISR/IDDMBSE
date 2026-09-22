@@ -44,7 +44,9 @@ checked for collision against the **true** obstacles. Five steps:
    with the ground-truth box beside it. The table it writes has the shape a
    PERFECT Trial result carries (flat per-detection rows keyed by episode and
    frame), so a campaign export in that shape drops in unchanged. Written to
-   `results/campaign.csv`.
+   `results/campaign.csv`. **Through PERFECT** below runs the same step as a
+   real PERFECT campaign, over three detector configurations and three clutter
+   bands, and calibrates on what the trials wrote back.
 2. **Calibrate** (`cpnav/conformal.py`). Split conformal prediction on boxes.
    The nonconformity score of a detection `d` against the truth `t` is the
    smallest uniform outward inflation that makes `d` cover `t`:
@@ -81,10 +83,14 @@ The script is seeded (`SEED` at the top of `run_case_study.py`) and writes
 `figures/trajectories.{svg,pdf}`, `figures/tradeoff.{svg,pdf}`,
 `results/campaign.csv`, `results/alpha_sweep.csv` and `results/summary.json`.
 
+`run_perfect_campaign.py` runs the calibration campaign against a live PERFECT
+server instead, and writes into `results/perfect/` and the `perfect_*` figures.
+**Through PERFECT** below records it.
+
 ## Results
 
 One seeded run, `SEED = 20260922`, measured 2026-09-22. `uv run pytest -q` is
-19 passed. The script took between 104 s and 121 s over four runs of this
+30 passed. The script took between 104 s and 121 s over four runs of this
 workstation, which was sharing its cores with another job; consecutive runs
 write byte-identical `results/` files.
 
@@ -147,6 +153,146 @@ at x = 7.5 m and across at y = 12.5 m, to the goal. The boxes drawn are one
 frame, step 20; the trajectory is the whole episode. `figures/tradeoff.svg` and
 `.pdf` are the coverage check with its bootstrap intervals and the collision
 rate and path length against the coverage level.
+
+## Through PERFECT
+
+`run_perfect_campaign.py` generates the calibration data as a real PERFECT
+campaign against a live server. The detector configuration is the design
+variable — one design per configuration — the clutter band and the seed are the
+environment, and a trial is one closed-loop episode that writes back every
+detection it made with the ground-truth box beside it. The experiment class and
+the two working files it fills are `perfect/examples/conformal-calibration`; the
+perception stack and the planner are this directory's `cpnav` package, called
+from the trial.
+
+```
+cd case-studies/B2-conformal-perception
+uv run python run_perfect_campaign.py --submit --url http://127.0.0.1:5001
+uv run python run_perfect_campaign.py --collect --url http://127.0.0.1:5001
+```
+
+The three designs are the nominal detector, a sharper one (`shift = -0.6`: less
+jitter, less shrink) and a degraded one (`shift = 1.0`: twice the jitter and a
+further 15 % shrink). The degraded arm is the distribution shift the paper asks
+PERFECT to re-run the campaign under.
+
+Recorded run, 2026-09-22, one runner taking the trials one at a time: 3 designs
+x 90 environments = 270 trials, 6 min 22 s from the first trial starting to the
+last shutting down.
+
+```
+detectors: 3 environments: 90 trials: 270
+experiments: 270 trials enqueued: 270
+finished: 270 of 270
+
+trials collected: 270 states: ['TrialState.SUCCESSFUL|SHUT_DOWN']
+SUCCESSFUL trials: 270
+episodes: 270 detections: 24704
+```
+
+### The calibration, on the campaign's own rows
+
+The split is taken over whole trials, because detections inside one episode see
+the same objects from nearby poses and are not exchangeable with each other. The
+nominal detector's first twenty seeds in each clutter band calibrate; its last
+ten are held out. The two right-hand columns evaluate the same quantile on the
+detections the other two designs made.
+
+```
+calibrated on 5399 detections of the nominal detector, held out 2441
+alpha  target   q (m)   held-out coverage   90% episode-bootstrap interval   sharp   nominal   degraded
+  0.3    0.7    0.229    0.721    0.6802 0.7532    0.8701  0.7066  0.016
+  0.2    0.8    0.292    0.8341    0.7934 0.8677    0.8715  0.8107  0.0752
+  0.15    0.85    0.419    0.8841    0.842 0.9179    0.888  0.8607  0.3981
+  0.1    0.9    0.648    0.9156    0.8793 0.9441    0.963  0.905  0.7825
+  0.05    0.95    0.804    0.9537    0.931 0.9724    0.9925  0.9513  0.8681
+  0.02    0.98    0.928    0.9795    0.9682 0.9886    0.9986  0.98  0.9101
+  0.01    0.99    0.985    0.9877    0.9799 0.9935    0.9994  0.9894  0.9261
+```
+
+Held-out coverage sits on the target at every level — 0.721 against 0.7, 0.9156
+against 0.9, 0.9877 against 0.99 — which is the marginal guarantee doing what it
+promises on data the calibration never saw. The sharper detector is covered more
+often than asked, and the degraded one is not covered at all at the loose end
+(1.6 % at a 70 % target) and still short at the tight end (92.6 % at 99 %). That
+is the point of running the campaign under a shift: a quantile calibrated on one
+detector does not carry over to a different one, and the campaign is what
+measures by how much.
+
+### What the coverage costs
+
+The quantiles above are then spent in the closed loop, on 200 arenas the
+campaign never drew, one arm per level plus the raw-detection arm:
+
+```
+arm          q (m)  collisions  success  stalls  mean path (m)  mean waits
+  nominal     0.0   163    0.185     0      25.86      0.0
+  alpha=0.3   0.229  71    0.645     0      27.54      0.04
+  alpha=0.2   0.292  61    0.695     0      27.87      0.04
+  alpha=0.15  0.419  53    0.735     0      27.92      0.04
+  alpha=0.1   0.648  22    0.88      2      28.97      0.02
+  alpha=0.05  0.804   4    0.95      6      29.76      0.05
+  alpha=0.02  0.928   1    0.945    10      30.52      0.23
+  alpha=0.01  0.985   0    0.94     12      30.38      0.75
+```
+
+Raw detections collide in 163 of 200 episodes. Inflating them to the 90 %
+conformal region brings that to 22, at 3.1 m of extra path; the 99 % region
+brings it to none at all, and the cost turns into timeouts — 12 episodes run out
+of steps rather than crash. That is the coverage level working as a design
+variable.
+
+The campaign's own episodes, which all ran on raw detections, say the same thing
+across the grid:
+
+```
+detector      sparse   nominal     dense
+sharp            0.3     0.633     0.767
+nominal          0.5     0.867       0.9
+degraded       0.767       1.0       1.0
+```
+
+Outputs: `results/perfect/calibration.csv` (24 704 detection rows, one per
+detection per frame, with the trial, detector, clutter band and seed beside it),
+`results/perfect/episodes.csv` (one row per trial), `results/perfect/coverage.csv`,
+`results/perfect/alpha_sweep.csv`, `results/perfect/summary.json`, and the figure
+pairs `figures/perfect_coverage.{svg,pdf}` and `figures/perfect_tradeoff.{svg,pdf}`.
+Two collections of the same campaign write byte-identical tables and print
+identical output.
+
+### What VERITAS makes of it
+
+`veritas/datadriven/report.py` reads the campaign database directly. A trial
+counts as a failure when its episode ended in a collision, and `coverage_margin`
+— the worst nonconformity score of the trial, negated, so it is positive exactly
+when every detection already covered its object with no inflation — is the
+number summarised beside it:
+
+```
+uv run python datadriven/report.py --db campaign.db --out . \
+    --metric coverage_margin --failure-metric collisions --failure-above 0.0 \
+    --group-by design
+```
+
+| design | trials | failures | rate | exact interval | Wilson interval | exact upper | trials for target |
+|---|---|---|---|---|---|---|---|
+| degraded | 90 | 83 | 0.9222 | [0.8463, 0.9682] | [0.8481, 0.9618] | 0.9629 | 1985 |
+| nominal | 90 | 68 | 0.7556 | [0.6536, 0.84] | [0.6575, 0.8327] | 0.8283 | 1657 |
+| sharp | 90 | 51 | 0.5667 | [0.458, 0.6708] | [0.4636, 0.6642] | 0.6554 | 1282 |
+
+| design | n | mean coverage margin | min | violated | 0.05 quantile |
+|---|---|---|---|---|---|
+| degraded | 90 | -1.1116 | -1.7732 | 1.0 | -1.553 |
+| nominal | 90 | -0.7542 | -1.3594 | 1.0 | -1.1827 |
+| sharp | 90 | -0.5533 | -1.0782 | 1.0 | -0.9994 |
+
+The three exact intervals for the collision rate are ordered and the outer two
+do not overlap, so 90 episodes per detector are enough to separate the sharp
+detector from the degraded one at 95 % confidence. The coverage margin is
+negative in every trial of every design: there is always at least one detection
+that misses its object outright, which is why the region has to be inflated at
+all. The report, its figure pair and the campaign database are in
+`veritas/datadriven/results/conformal/`.
 
 ## What each piece is
 

@@ -1,0 +1,14 @@
+# The detector configuration, written by the design.
+#
+# PERFECT copies this file into the trial's working directory and then applies
+# the `files` updates of every component implementation in the design. The
+# design under test holds exactly one implementation of the `detector`
+# component, so after the copy these two values name that configuration.
+#
+#   configuration  the name it is reported under
+#   shift          the distribution-shift knob of the detector model: it scales
+#                  the centre jitter by (1 + shift) and shrinks the reported box
+#                  further as it grows. 0 is the nominal detector, a negative
+#                  value a sharper one, a positive value a degraded one.
+configuration: nominal
+shift: 0.0

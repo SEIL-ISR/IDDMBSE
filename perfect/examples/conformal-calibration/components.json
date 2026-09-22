@@ -1,0 +1,47 @@
+[
+    {
+        "name": "sharp",
+        "type": "detector",
+        "implementation": {
+            "files": [
+                {
+                    "file": "detector.yaml",
+                    "updates": [
+                        {"keys": "configuration", "value": "sharp"},
+                        {"keys": "shift", "value": -0.6}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "nominal",
+        "type": "detector",
+        "implementation": {
+            "files": [
+                {
+                    "file": "detector.yaml",
+                    "updates": [
+                        {"keys": "configuration", "value": "nominal"},
+                        {"keys": "shift", "value": 0.0}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "degraded",
+        "type": "detector",
+        "implementation": {
+            "files": [
+                {
+                    "file": "detector.yaml",
+                    "updates": [
+                        {"keys": "configuration", "value": "degraded"},
+                        {"keys": "shift", "value": 1.0}
+                    ]
+                }
+            ]
+        }
+    }
+]

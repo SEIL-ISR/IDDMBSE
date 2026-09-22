@@ -147,21 +147,22 @@ that index, so comparisons across policies are paired.
 * **plan time** -- wall clock per planner run.
 
 
-## How PERFECT would run this
+## How PERFECT runs this
 
 The campaign is 3 environments x 4 noise levels x 5 policies x 50 runs = 3000
 planner runs. Mapped onto PERFECT's own objects (`perfect/README.md`):
 
 | here | PERFECT |
 |---|---|
-| a policy (`rrtstar` ... `cvar0.9`) | a `ComponentImplementation` of the planner component; one `Design` each, `designs create <name> <planner> -i` |
-| a (clutter, noise) pair | an `Environment`, `environments create_explicit <name> '{"coverage": ..., "sigma": ...}' -t <tag>` |
-| a cell of the grid | an `Experiment`, created by tag matching: `experiments create <design-tag> <env-tag>` gives 5 x 12 = 60 experiments |
-| one run with its seed | a `Trial` of that experiment, 50 per experiment |
+| a policy (`rrtstar` ... `cvar0.9`) | a `ComponentImplementation` of the planner component; one `Design` each, `designs create <name> -i` |
+| a (rock field, noise level, seed) triple | an `Environment` off a template, `environments create_from_template 1 environment:=hard sigma:=0.5 seed:=0 n_exec:=400` |
+| a design against an environment | an `Experiment`, created by tag matching: `experiments create <design-tag> <env-tag>` |
+| one run with its seed | a `Trial` of that experiment |
 | the process pool | the RQ workers and the runner, `experiments run <tag>` enqueueing to Redis, results in the SQLite database |
 
-The campaign here runs as a `multiprocessing` pool of worker processes on one
-machine; the table above is the mapping onto PERFECT's objects.
+`run_case_study.py` runs the 3000 runs as a `multiprocessing` pool on one
+machine. `run_perfect_campaign.py` runs the same comparison as a real PERFECT
+campaign against a live server; **Through PERFECT** below records it.
 
 
 ## Results
@@ -323,6 +324,125 @@ manuscript describes: moving right (a longer nominal path) buys moving down (a
 lighter tail), and the risk level is the dial.
 
 
+## Through PERFECT
+
+`run_perfect_campaign.py` submits the same comparison to a live PERFECT server
+over its JSON API, one design per policy and one environment per (rock field,
+noise level, seed) triple, and reads the results back out of PERFECT's trial
+table. The experiment class and the two working files it fills are
+`perfect/examples/rarrt-planning`; the planner is this directory's `rarrt`
+package, called from the trial.
+
+```
+cd case-studies/A2-risk-sensitive-planning
+uv run python run_perfect_campaign.py --submit --url http://127.0.0.1:5001
+uv run python run_perfect_campaign.py --collect --url http://127.0.0.1:5001
+```
+
+Recorded run, 2026-09-22, one runner taking the trials one at a time: 5 designs
+x 60 environments = 300 trials, five seeds per cell instead of the fifty the
+standalone campaign runs.
+
+```
+policies: 5 environments: 60 trials: 300
+experiments: 300 trials enqueued: 300
+   300 / 300 shut down
+finished: 300 of 300
+```
+
+Wall clock from the first trial starting to the last shutting down: 7 min 44 s.
+Collecting it back:
+
+```
+trials collected: 300 states: ['TrialState.SUCCESSFUL|SHUT_DOWN']
+SUCCESSFUL trials: 300
+planner found a path in 300 of 300
+```
+
+The per-cell aggregates are computed by this directory's own
+`rarrt.campaign.summarise`, given the rows and the pooled executions the trials
+reported, so they are the same quantities the standalone table carries. All 60
+cells are in `results/perfect/cells.csv` and `results/perfect/summary.json`; the
+highest noise level, where the policies separate:
+
+```
+over budget above 118.8 m
+env     sigma  policy    success  failure  hazard  mean len  worst p95   max   clearance  plan s
+easy      0.5   rrtstar      1.0    0.208    0.42     79.9      206.0   474.2     0.58     0.17
+easy      0.5   neutral      1.0    0.078   0.215     82.1      136.0   362.3     3.61     0.53
+easy      0.5   cvar0.1      1.0   0.0735    0.21     82.1      135.6   327.7     3.61      0.9
+easy      0.5   cvar0.5      1.0    0.078   0.205     82.4      138.7   333.0     3.61     0.91
+easy      0.5   cvar0.9      1.0   0.0675   0.184     85.9      128.5   470.2     3.85     0.85
+medium    0.5   rrtstar      1.0   0.3005    0.53     80.2      232.2   509.0     0.19     0.17
+medium    0.5   neutral      1.0   0.1465   0.339     85.3      167.1   443.1     3.04     0.48
+medium    0.5   cvar0.1      1.0   0.1505   0.337     85.3      168.1   443.1     3.04     0.83
+medium    0.5   cvar0.5      1.0    0.153   0.346     85.8      165.7   395.4     3.04     0.83
+medium    0.5   cvar0.9      1.0   0.1475   0.324     87.9      163.9   579.4     3.04     0.78
+hard      0.5   rrtstar      1.0   0.4225   0.682     80.8      266.1   567.4      0.1     0.17
+hard      0.5   neutral      1.0   0.2575   0.553     85.0      208.9   529.3     1.36     0.41
+hard      0.5   cvar0.1      1.0    0.259   0.552     85.0      210.1   529.3     1.36     0.69
+hard      0.5   cvar0.5      1.0    0.254   0.515     87.6      200.9   486.0      1.7     0.71
+hard      0.5   cvar0.9      1.0   0.2535   0.534     91.0      185.3   383.2     1.85     0.66
+```
+
+The trade the manuscript describes is in those rows. In the hard field at
+`sigma = 0.5`, plain RRT\* fails 42.3% of its executions and its worst case is
+266.1 m; CVaR 0.9 fails 25.4% and its worst case is 185.3 m, for a nominal path
+10.2 m longer. The risk-aware policies are close to each other and well
+separated from plain RRT\*, which is what the standalone campaign's fifty runs
+per cell also show.
+
+The figures are drawn from the trials:
+`figures/perfect_failure_and_worstcase.{svg,pdf}` and
+`figures/perfect_premium_against_protection.{svg,pdf}` from the per-cell
+aggregates, `figures/perfect_paths_by_environment.{svg,pdf}` from the planned
+polylines the trials relayed, over the rock fields their seeds define. The seed
+of a trial fixes the rock field, the planner's common random numbers, its
+sampling and the fresh noise its plan is executed under, so a trial is
+reproducible from its environment alone: the seed-0 CVaR 0.9 path the campaign
+returned for the hard field is equal, to the last bit of every coordinate, to
+the one `rarrt.rrtstar.plan` produces here from the same seeds.
+
+Two collections of the same campaign write byte-identical
+`results/perfect/campaign.csv`, `cells.csv` and `summary.json`, and print
+identical output.
+
+### What VERITAS makes of it
+
+`veritas/datadriven/report.py` reads the campaign database directly. A trial
+counts as a failure when any of its 400 executions went over the traversal
+budget, and `hazard_rate` is the number summarised beside it:
+
+```
+uv run python datadriven/report.py --db campaign.db --out . \
+    --metric hazard_rate --failure-metric over_budget --failure-above 0.0 \
+    --group-by design
+```
+
+| design | trials | failures | rate | exact interval | Wilson interval | exact upper | trials for target |
+|---|---|---|---|---|---|---|---|
+| cvar0.1 | 60 | 33 | 0.55 | [0.4161, 0.6788] | [0.4249, 0.6691] | 0.6602 | 877 |
+| cvar0.5 | 60 | 32 | 0.5333 | [0.4, 0.6633] | [0.4089, 0.6537] | 0.6444 | 855 |
+| cvar0.9 | 60 | 33 | 0.55 | [0.4161, 0.6788] | [0.4249, 0.6691] | 0.6602 | 877 |
+| neutral | 60 | 34 | 0.5667 | [0.4324, 0.6941] | [0.441, 0.6843] | 0.6758 | 900 |
+| rrtstar | 60 | 37 | 0.6167 | [0.4821, 0.7393] | [0.4902, 0.7291] | 0.7219 | 968 |
+
+| design | n | mean hazard rate | min | 0.05 quantile |
+|---|---|---|---|---|
+| cvar0.1 | 60 | 0.4541 | 0.1475 | 0.1724 |
+| cvar0.5 | 60 | 0.4401 | 0.1025 | 0.1624 |
+| cvar0.9 | 60 | 0.3783 | 0.1325 | 0.157 |
+| neutral | 60 | 0.4612 | 0.1575 | 0.1867 |
+| rrtstar | 60 | 0.5438 | 0.235 | 0.235 |
+
+Each design row pools all four noise levels and all three rock fields, which is
+why the intervals overlap: 60 trials per policy is enough to order the mean
+hazard rates -- plain RRT\* takes a hazard in 54.4% of its executions, CVaR 0.9
+in 37.8% -- and the "trials for target" column says how many trials a 0.05
+upper bound at 95% confidence would take. The report, its figure pair and the
+campaign database are in `veritas/datadriven/results/rarrt/`.
+
+
 ## Run it
 
 ```
@@ -340,6 +460,10 @@ aggregates plus the configuration) and the three figure pairs.
 Everything is seeded. Two runs of `run_case_study.py` produce byte-identical
 values in every column except `plan_time`; `tests/test_campaign.py` pins that on
 a small grid.
+
+`run_perfect_campaign.py` runs the same comparison against a live PERFECT server
+instead, and writes into `results/perfect/` and the `perfect_*` figures.
+**Through PERFECT** above records it.
 
 
 ## Implementation notes
@@ -379,7 +503,7 @@ a small grid.
 
 ## Tests
 
-`uv run pytest -q` -- 37 tests. The ones that matter:
+`uv run pytest -q` -- 45 tests. The ones that matter:
 
 * CVaR of 2 000 000 Gaussian samples against `phi(z_alpha)/(1-alpha)` at five
   levels, tolerance 0.01; VaR against `Phi^-1(alpha)`, same tolerance; EVaR
@@ -397,6 +521,10 @@ a small grid.
   exactly the expected positive clearance.
 * The campaign runner on a 2 x 1 x 2 x 2 grid writes the CSV with the expected
   columns, and reproduces exactly on a second run.
+* The PERFECT campaign driver, with no server: the grid it submits is every
+  policy against every environment, the collected trials become one cell per
+  policy and noise level, a cell's worst case pools every execution of the
+  cell, and two writes of the same collection are byte-identical.
 
 
 ## Sources
