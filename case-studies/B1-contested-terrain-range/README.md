@@ -2,8 +2,7 @@
 
 ## What the paper claims
 
-Section IV-B.1 of the manuscript (`sections/case_studies.tex` lines 35-58,
-`\label{sssec:range}`) describes a high-fidelity test range built in NVIDIA
+Section IV-B.1 of the paper describes a high-fidelity test range built in NVIDIA
 Isaac Sim and released as USD assets with the tool chain. It "supports
 multiple AGRs, a full multi-modal sensor payload, and contested off-road
 terrain with slopes up to $15^\circ$ and obstacle densities swept from $10$
@@ -20,38 +19,44 @@ the range as designed; it is not a claim verified by this directory.**
 
 ## Where the range actually is
 
-The range is released under `isaacsim/` in this repository, not here.
-`isaacsim/README.md` is authoritative for it: what USD files ship, what is
-fetched separately as a release asset, how to open the scene, and what is and
-is not verified about it. In particular, as of this writing `isaacsim/README.md`
-states there is **no parameterising script and no obstacle-density sweep
-shipped** — the range is one fixed scene, not the family the paper's DOE
-describes — and that terrain slopes have not been characterised numerically.
+The range is released under [`isaacsim/`](../../isaacsim/README.md), not here.
+That README is authoritative: what ships (the compacted scene layers, the rock
+meshes, a 14.8 MB heightmap of the terrain, three design-of-experiments layers
+and two showcase scenes — 34 files, 24 MB), what is fetched to your machine
+instead of redistributed (NVIDIA's vegetation, materials, characters and the
+Carter robot from NVIDIA's content CDN; the sky HDRI from Poly Haven), and
+what was and was not checked.
 
-## Requirements
+## Requirements and steps
 
-Isaac Sim (a local install, with a GPU) is required. **Nothing in this
-directory runs without it.** This directory holds no scripts of its own; it
-points at the steps that belong in `isaacsim/`:
+Isaac Sim (a local install, with a GPU) is required to open the scene. The
+tools under `isaacsim/tools/` need only `usd-core` and numpy. This directory
+holds no scripts of its own; the steps, verbatim from `isaacsim/README.md`:
 
-1. Fetch the NVIDIA and Poly Haven assets locally with a fetch script,
-   `isaacsim/tools/fetch_assets.py` `[planned; verify against
-   isaacsim/README.md]`.
-2. Build the terrain from the shipped heightmap with
-   `isaacsim/tools/build_terrain.py` `[planned; verify against
-   isaacsim/README.md]`, then open the assembled scene in Isaac Sim.
-3. Generate DOE variants over the terrain conditions with
-   `isaacsim/tools/range_doe.py` `[planned; verify against
-   isaacsim/README.md]`.
+```bash
+cd isaacsim/tools
+uv sync
+uv run python fetch_assets.py --group range   # ~4.9 GiB from NVIDIA's CDN and Poly Haven, hash-verified
+uv run python build_terrain.py                # rebuilds range/generated/terrain_low.usd from the heightmap
+```
 
-The `isaacsim/` layout was being finalised when this README was written
-(2026-09-22), so those three script names are as planned, not as verified
-present — check them against the `isaacsim/README.md` current at read time.
-As of this same date, `isaacsim/README.md` documents working asset-fetch
-tooling under a different name, `isaacsim/tools/download_assets.sh`, and
-generic USD-relink/manifest tooling (`tools/relink.py`, `tools/manifest.py`);
-it states plainly that there is **no parameterising script and no
-obstacle-density sweep shipped yet** — the range is one fixed scene. So step 1
-above may already be covered by `download_assets.sh` rather than
-`fetch_assets.py`; steps 2 and 3 are not yet covered by anything shipped
-there.
+Then open `isaacsim/range/sim_world2.usd` in Isaac Sim. A design point over
+the paper's parameters (obstacle density, slope, PhysX friction and
+restitution, extra robots, sensor payload) is one call to
+`isaacsim/tools/range_doe.py`, which writes a layer that sublayers the base
+scene; the flags and the three shipped design points are in
+`isaacsim/README.md`.
+
+## What was checked here (2026-09-22)
+
+- `isaacsim/tools`: 22 tests pass (`uv run pytest -q`); the heightmap round
+  trip reproduces the terrain mesh to a maximum point error of 1.5e-5.
+- One headless load of the base scene and of one design-of-experiments layer
+  in Isaac Sim 6.0.1: 22 978 prims, 0 unresolved references, the Carter
+  articulation found with 7 degrees of freedom. The RTX 3D lidar of the
+  2023-era Carter does not initialise under Isaac Sim 6.0 (stated in
+  `isaacsim/README.md`); no campaign was run in the range.
+- The paper's numbers against what is measured: the authored terrain is
+  steeper than the 15° the paper names (the DOE script rescales it to a target
+  slope); obstacle coverage is realised within 0.0004 of the request; the
+  design-of-experiments is not wired to PERFECT in this release.
