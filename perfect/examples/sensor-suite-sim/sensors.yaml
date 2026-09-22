@@ -1,0 +1,8 @@
+# The robot's sensor suite, written by the design.
+#
+# PERFECT copies this file into the trial's working directory and then applies
+# every `files` update the design's component implementations carry. Each sensor
+# in catalogue.py appends one entry to `suite`, so after the copy this list
+# holds exactly the sensors of the design under test. An empty list is a robot
+# with no sensors, which is a legal design and a useful baseline.
+suite: []

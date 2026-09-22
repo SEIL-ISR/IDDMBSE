@@ -20,8 +20,10 @@ import json
 from flask import Blueprint, current_app, jsonify, request, url_for
 
 from perfect.app import db, models
+from perfect.app.routes import components as components_routes
 from perfect.app.routes import designs as designs_routes
 from perfect.app.routes import experiments as experiments_routes
+from perfect.app.routes import utils
 
 bp = Blueprint("api", __name__, url_prefix="/api/v1")
 
@@ -78,6 +80,15 @@ def _environment_dict(environment):
         "tag": environment.tag,
         "template_id": environment.template_id,
         "specification": _specification(environment),
+    }
+
+
+def _environment_template_dict(template):
+    return {
+        "id": template.id,
+        "name": template.name,
+        "specification": template.specification,
+        "arguments": template.get_argument_list(),
     }
 
 
@@ -161,6 +172,12 @@ def environment_detail(id):
     return jsonify(_environment_dict(environment))
 
 
+@bp.route("/environment_templates")
+def environment_templates():
+    rows = db.session.query(models.EnvironmentTemplate).all()
+    return jsonify([_environment_template_dict(t) for t in rows])
+
+
 @bp.route("/experiments", methods=["GET"])
 def experiments():
     rows = db.session.query(models.Experiment).all()
@@ -193,6 +210,130 @@ def trial_detail(id):
     # deletes the rows it returns, this leaves the Update rows in place.
     d["updates"] = [{"timestamp": u.timestamp, "data": u.get_data()} for u in updates]
     return jsonify(d)
+
+
+# ------------------------------------------------------------------
+# create the library, the designs and the environments
+#
+# The CLI (perfect/app/routes/components.py, designs.py, environments.py) is the
+# other way to do all of this. These routes exist so that a design-space
+# exploration tool can set a campaign up over HTTP without a shell on the
+# server's machine. Each one reuses the CLI's own create function, and each one
+# is idempotent on the name: a second POST with a name that is already in the
+# table returns that row with "created": false instead of raising on the unique
+# constraint. That is what makes a campaign script safe to re-run.
+
+@bp.route("/component_implementations", methods=["POST"])
+def create_component_implementations():
+    body = request.get_json(silent=True)
+    entries = body.get("components") if isinstance(body, dict) else body
+    if not isinstance(entries, list):
+        return jsonify({"error": "Body must be a list of components, or an object with a 'components' list"}), 400
+    created, existing, invalid = [], [], []
+    for entry in entries:
+        name = entry.get("name")
+        row = db.session.query(models.ComponentImplementation).filter(
+            models.ComponentImplementation.name == name).first()
+        if row is not None:
+            existing.append(_component_implementation_dict(row))
+            continue
+        # _create_component validates against schema/implementation_schema.json
+        # and logs the reason when it does not pass.
+        if components_routes._create_component(name, entry.get("type"), entry.get("implementation")):
+            row = db.session.query(models.ComponentImplementation).filter(
+                models.ComponentImplementation.name == name).one()
+            created.append(_component_implementation_dict(row))
+        else:
+            invalid.append(name)
+    status = 400 if invalid and not created else 201
+    return jsonify({"created": created, "existing": existing, "invalid": invalid}), status
+
+
+@bp.route("/designs", methods=["POST"])
+def create_design():
+    body = request.get_json(silent=True) or {}
+    name = body.get("name")
+    if name:
+        design = db.session.query(models.Design).filter(models.Design.name == name).first()
+        if design is not None:
+            return jsonify({"design": _design_dict(design), "created": False}), 200
+    implementations = "component_implementation_ids" in body or "component_implementation_names" in body
+    ids = body.get("component_implementation_ids") or body.get("component_ids") or []
+    names = body.get("component_implementation_names") or body.get("component_names") or []
+    if names:
+        model = models.ComponentImplementation if implementations else models.Component
+        rows = db.session.query(model).filter(model.name.in_(names)).all()
+        by_name = {r.name: r.id for r in rows}
+        missing = [n for n in names if n not in by_name]
+        if missing:
+            return jsonify({"error": f"No {model.__name__} named {missing}"}), 400
+        ids = [by_name[n] for n in names]
+    if not ids:
+        return jsonify({"error": "Give component_implementation_ids, component_ids, "
+                                 "component_implementation_names or component_names"}), 400
+    design = designs_routes._create_design(
+        {"groups": {"UNGROUPED": list(ids)}},
+        user_parameters=body.get("parameters"),
+        name=name,
+        tag=body.get("tag"),
+        implementations=implementations,
+    )
+    return jsonify({"design": _design_dict(design), "created": True}), 201
+
+
+@bp.route("/environment_templates", methods=["POST"])
+def create_environment_template():
+    body = request.get_json(silent=True) or {}
+    name = body.get("name")
+    template = db.session.query(models.EnvironmentTemplate).filter(
+        models.EnvironmentTemplate.name == name).first()
+    if template is not None:
+        return jsonify({"template": _environment_template_dict(template), "created": False}), 200
+    specification = body.get("specification")
+    if not isinstance(specification, (dict, list)):
+        return jsonify({"error": "specification must be a JSON object or array"}), 400
+    template = models.EnvironmentTemplate()
+    template.name = name
+    template.specification = specification
+    db.session.add(template)
+    db.session.commit()
+    return jsonify({"template": _environment_template_dict(template), "created": True}), 201
+
+
+@bp.route("/environments", methods=["POST"])
+def create_environment():
+    body = request.get_json(silent=True) or {}
+    name = body.get("name")
+    if name:
+        environment = db.session.query(models.Environment).filter(
+            models.Environment.name == name).first()
+        if environment is not None:
+            return jsonify({"environment": _environment_dict(environment), "created": False}), 200
+    template_id = body.get("template_id")
+    if template_id is not None:
+        template = db.session.get(models.EnvironmentTemplate, template_id)
+        if template is None:
+            return jsonify({"error": f"No environment template with id {template_id}"}), 404
+        try:
+            # Same substitution the HTML form and the CLI use: every "$name" in
+            # the template is replaced by arguments["name"].
+            specification = utils.fill_specification_kwargs(template.specification, body.get("arguments") or {})
+        except KeyError as e:
+            return jsonify({"error": str(e)}), 400
+    else:
+        specification = body.get("specification")
+        if not isinstance(specification, (dict, list)):
+            return jsonify({"error": "Give either template_id plus arguments, or an explicit specification"}), 400
+    environment = models.Environment()
+    environment.name = name
+    environment.tag = body.get("tag")
+    # Trial.run does json.loads on this column, so it is stored as a string,
+    # exactly as environments.create_explicit and _create_from_template store it.
+    environment.specification = json.dumps(specification)
+    environment.template_id = template_id
+    db.session.add(environment)
+    db.session.commit()
+    return jsonify({"environment": _environment_dict(environment), "created": True}), 201
 
 
 # ------------------------------------------------------------------

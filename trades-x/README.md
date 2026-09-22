@@ -9,9 +9,12 @@ IDDMBSE tool chain. It narrows a large design space in two steps:
    the sensor-suite study: effective coverage (maximised), cost, RAM and power
    (minimised).
 2. **Data-driven optimization (DDO).** The survivors go into a campaign of
-   simulated runs executed by PERFECT. Global metrics come out of the recorded
-   trajectories: time to completion, path length, cumulative elevation
-   gradient.
+   simulated runs executed by PERFECT, and the metrics come out of the runs:
+   how often the design reached its goal, how long it took, how far it
+   detoured, how early it saw what was in its way. `tradesx/ddo_api.py` submits
+   the campaign to a running PERFECT server over its JSON API and reads the
+   trial table back; `tradesx/bag_metrics.py` computes path length, time to
+   completion and cumulative elevation gradient from a trajectory.
 
 A Multi-Attribute Value Function (MAVF) then normalises every metric onto
 [0, 1] and combines them into a single weighted score, which gives the ranking
@@ -24,6 +27,7 @@ and the recommended design.
 | `tradesx/pareto.py` | vectorised non-dominated filter, plus the MATLAB-compatible variant |
 | `tradesx/mavf.py` | SAVF normalisation and weighted-sum MAVF ranking |
 | `tradesx/ddo.py` | emits (or runs) the PERFECT CLI sequence for a DDO campaign |
+| `tradesx/ddo_api.py` | submits a DDO campaign to a live PERFECT server over `/api/v1`, collects the trials and ranks the designs |
 | `tradesx/bag_metrics.py` | path length, time to completion, cumulative elevation gradient from a trajectory |
 | `tradesx/sensitivity.py` | the four local oracles in Python (numpy batch, JAX derivatives) and the requirement-sensitivity ranking |
 | `tradesx/requirements.py` | loads the model-based / data-driven requirement split |
@@ -44,7 +48,7 @@ uv sync
 uv run pytest -q
 ```
 
-42 tests pass as of 2026-09-22. The JAX derivatives are an optional extra; add
+57 tests pass as of 2026-09-22. The JAX derivatives are an optional extra; add
 them with `uv sync --extra ad`. Without it `tests/test_sensitivity.py` skips and
 the rest still runs.
 
@@ -98,7 +102,7 @@ uv run python case-studies/sensor-suite/run_full_enumeration.py
 ```
 
 8191 designs, 120 non-dominated. The case-study README has the counts table
-against the recorded 4095-design run and against the paper's figures.
+beside the recorded 4095-design run.
 
 ## Run a DDO campaign
 
@@ -122,15 +126,49 @@ Every command it emits maps to a real PERFECT CLI command:
 | `experiments create <design tag> <env tag> --tag` | `perfect/perfect/app/routes/experiments.py:86` |
 | `experiments run <tag>` | `perfect/perfect/app/routes/experiments.py:113` |
 
-`--execute` runs them instead of printing. That needs a running PERFECT stack —
-Redis, an RQ worker, the experiment runner and the Flask server — and a
-simulator behind it. Nothing here starts any of those.
+`--execute` runs them instead of printing, against a PERFECT stack that is
+already up: Redis, an RQ worker, the experiment runner and the Flask server.
 
 The default environment template is PERFECT's `Navigate to Goal Pose`
 (`perfect/perfect/common/templates/nav2_operation_plans/navigate_to_goal_pose.json`),
-which parametrises only `$x_goal` and `$y_goal`. `--start-grid` also emits
-`x_start:=` / `y_start:=`, which needs a template that declares those
-arguments; the stock one does not.
+which parametrises `$x_goal` and `$y_goal`. `--start-grid` also emits
+`x_start:=` / `y_start:=`, for a template that declares those arguments.
+
+### Over the API, with the results read back
+
+`tradesx/ddo_api.py` does the same thing over PERFECT's JSON API and then
+collects what the campaign measured:
+
+| step | route |
+|---|---|
+| load the sensor library | `POST /api/v1/component_implementations` |
+| create the designs | `POST /api/v1/designs` |
+| create the scenario template and the scenarios | `POST /api/v1/environment_templates`, `POST /api/v1/environments` |
+| create one experiment per design and scenario, each with a trial enqueued | `POST /api/v1/experiments` |
+| watch it run | `GET /api/v1/experiments` |
+| read the results | `GET /api/v1/experiments/<id>`, `GET /api/v1/trials/<id>` |
+
+Every create route is idempotent on the name, so re-running a submission
+against a database that already holds the campaign returns the ids that are
+already there. `POST /api/v1/experiments` has no name to be idempotent on, so
+`create_experiments` reads the experiments already carrying the tag and creates
+only the design-and-scenario pairs that are missing. The HTTP client is
+`urllib.request` from the standard library.
+
+An experiment reports what it measured with
+`await self._relay_update("metrics", {...})`, which PERFECT stores as an
+`Update` row on the trial; `ddo_api.collect` pulls those rows into one row per
+trial, `metric_table` folds them into a designs x scenarios x metrics array and
+`rank_designs` hands that to the MAVF together with the model-based attributes.
+The weights come from the requirement partition in
+`case-studies/sensor-suite/requirements.yaml`: the model-based requirements
+carry the attributes known from the catalogue before anything runs (price,
+power, RAM) and the data-driven ones carry the measured attributes, each class
+weighted by how many requirements it holds.
+
+`case-studies/sensor-suite/run_ddo_campaign.py` is the study that uses it, and
+`case-studies/sensor-suite/README.md` records a 180-trial campaign against
+the `perfect/examples/sensor-suite-sim` example.
 
 ## Built for this release
 
@@ -152,19 +190,18 @@ written on 2026-09-22 and are marked as such wherever they appear:
   **`tradesx/requirements.py`** — the model-based / data-driven requirement
   split, over the 23 SysML requirements of the AGR_stack model. The SysML model
   carries no such split.
-
-Still not implemented here: reading rosbags. `bag_metrics.py` takes arrays; its
-docstring says how to get them out of a ROS 1 bag or a ROS 2 mcap. And no DDO
-campaign has been run from this repository — nothing here starts a PERFECT
-stack.
+- **`tradesx/ddo_api.py`** and
+  **`case-studies/sensor-suite/run_ddo_campaign.py`** — the data-driven stage
+  against a live PERFECT server, with the PERFECT example it runs on at
+  `perfect/examples/sensor-suite-sim`.
 
 ## Provenance
 
 - `mbo/`, `mbo-matlab-alt/` and `pyjulia-example/` were moved out of
   `perfect/perfect_MBO/` and `perfect/pyjulia_example/` on 2026-09-22.
-  `run_mbo.jl` and this README are new, and `mbo/README.md` was replaced because
-  the old one described genetic algorithms, simulated annealing and particle
-  swarm, none of which are in the code. The Julia sources came over unchanged
+  `run_mbo.jl` and this README are new, and `mbo/README.md` was rewritten to
+  describe the enumeration, the oracles and the greedy submodular search that
+  the code actually implements. The Julia sources came over unchanged
   and were then edited, the same day, to run on Julia 1.12 without a display:
   `mbo.jl` (headless GR, the greedy call, a stray backtick literal removed, two
   forward references fixed), `utilities.jl` (a forward reference fixed),
@@ -178,8 +215,9 @@ stack.
   `sysml/workbench/rosbag/*.m`.
 - `tradesx/ddo.py` is a port of `examples/SEILR1/robustness.bash`, updated from
   the old `simulations` command group to today's `experiments`. That bash script
-  itself was updated to the current command names on 2026-09-22 and has not been
-  re-run since.
+  was updated to the current command names on 2026-09-22.
+- `tradesx/ddo_api.py` is new on 2026-09-22 and talks to the `/api/v1`
+  blueprint in `perfect/perfect/app/routes/api.py`.
 
 ## Citation
 

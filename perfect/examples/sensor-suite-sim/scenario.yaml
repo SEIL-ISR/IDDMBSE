@@ -1,0 +1,14 @@
+# The scenario, written by the environment.
+#
+# PERFECT copies this file into the trial's working directory and then applies
+# the `files` updates the environment specification carries, so these values are
+# the defaults a trial gets when the environment says nothing.
+#
+#   clutter     0..1, how many rocks stand in the field
+#   visibility  0..1, ambient light; scales the light-sensitive sensors
+#   seed        picks the rock field
+#   n_draws     independent noise draws over that one rock field
+clutter: 0.5
+visibility: 1.0
+seed: 1
+n_draws: 12

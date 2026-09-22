@@ -1,0 +1,2564 @@
+{
+ "recorded": "a live PERFECT stack on the sensor-suite-sim example, 2026-09-22",
+ "note": "the /experiments replies are trimmed to this campaign's own rows; the transcript is split into the submission and the collection, each replayed on its own",
+ "components": [
+  {
+   "name": "VLP-16-A",
+   "type": "laser_3d",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "VLP-16-A",
+         "kind": "lidar",
+         "update_rate": 15.0,
+         "h_fov": 6.283185,
+         "ares": 0.00335103,
+         "max_range": 100.0,
+         "cost": 10000.0,
+         "power": 80.000001,
+         "ram": 33.75,
+         "light_sensitive": 0
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "VLP-16-B",
+   "type": "laser_3d",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "VLP-16-B",
+         "kind": "lidar",
+         "update_rate": 20.0,
+         "h_fov": 6.283185,
+         "ares": 0.00335103,
+         "max_range": 100.0,
+         "cost": 12000.0,
+         "power": 80.000001,
+         "ram": 60.0,
+         "light_sensitive": 0
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "HDL-32E-A",
+   "type": "laser_3d",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "HDL-32E-A",
+         "kind": "lidar",
+         "update_rate": 15.0,
+         "h_fov": 6.283185,
+         "ares": 0.00287297,
+         "max_range": 120.0,
+         "cost": 15000.0,
+         "power": 100.000002,
+         "ram": 78.732,
+         "light_sensitive": 0
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "HDL-32E-B",
+   "type": "laser_3d",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "HDL-32E-B",
+         "kind": "lidar",
+         "update_rate": 20.0,
+         "h_fov": 6.283185,
+         "ares": 0.00287297,
+         "max_range": 120.0,
+         "cost": 16000.0,
+         "power": 100.000003,
+         "ram": 139.968,
+         "light_sensitive": 0
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "LMS111-a2",
+   "type": "laser_2d",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "LMS111-a2",
+         "kind": "laser",
+         "update_rate": 25.0,
+         "h_fov": 4.71,
+         "ares": 0.00654167,
+         "max_range": 20.0,
+         "cost": 1000.0,
+         "power": 30.0,
+         "ram": 4.5,
+         "light_sensitive": 0
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "LMS111-b1",
+   "type": "laser_2d",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "LMS111-b1",
+         "kind": "laser",
+         "update_rate": 50.0,
+         "h_fov": 4.71,
+         "ares": 0.00654167,
+         "max_range": 20.0,
+         "cost": 1500.0,
+         "power": 30.0,
+         "ram": 18.0,
+         "light_sensitive": 0
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "LMS151-a2",
+   "type": "laser_2d",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "LMS151-a2",
+         "kind": "laser",
+         "update_rate": 25.0,
+         "h_fov": 4.71,
+         "ares": 0.00654167,
+         "max_range": 50.0,
+         "cost": 1500.0,
+         "power": 50.0,
+         "ram": 4.5,
+         "light_sensitive": 0
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "LMS151-b2",
+   "type": "laser_2d",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "LMS151-b2",
+         "kind": "laser",
+         "update_rate": 50.0,
+         "h_fov": 4.71,
+         "ares": 0.00654167,
+         "max_range": 50.0,
+         "cost": 2000.0,
+         "power": 50.0,
+         "ram": 18.0,
+         "light_sensitive": 0
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "D415",
+   "type": "depth_camera",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "D415",
+         "kind": "depth",
+         "update_rate": 60.0,
+         "h_fov": 1.1345,
+         "ares": 0.00210093,
+         "max_range": 6.0,
+         "cost": 2000.0,
+         "power": 8.000024,
+         "ram": 3499.2,
+         "light_sensitive": 1
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "D435",
+   "type": "depth_camera",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "D435",
+         "kind": "depth",
+         "update_rate": 30.0,
+         "h_fov": 1.5184,
+         "ares": 0.00118625,
+         "max_range": 6.0,
+         "cost": 2500.0,
+         "power": 8.000057,
+         "ram": 4147.2,
+         "light_sensitive": 1
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "D455",
+   "type": "depth_camera",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "D455",
+         "kind": "depth",
+         "update_rate": 15.0,
+         "h_fov": 1.501,
+         "ares": 0.00078177,
+         "max_range": 6.0,
+         "cost": 3000.0,
+         "power": 10.000064,
+         "ram": 2332.8,
+         "light_sensitive": 1
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "Blackfly-A",
+   "type": "camera",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "Blackfly-A",
+         "kind": "camera",
+         "update_rate": 30.0,
+         "h_fov": 1.047,
+         "ares": 0.00145417,
+         "max_range": 50.0,
+         "cost": 1500.0,
+         "power": 3.000048,
+         "ram": 3499.2,
+         "light_sensitive": 1
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "Blackfly-B",
+   "type": "camera",
+   "implementation": {
+    "files": [
+     {
+      "file": "sensors.yaml",
+      "updates": [
+       {
+        "keys": "suite",
+        "value": {
+         "name": "Blackfly-B",
+         "kind": "camera",
+         "update_rate": 15.0,
+         "h_fov": 1.047,
+         "ares": 0.00067987,
+         "max_range": 60.0,
+         "cost": 3000.0,
+         "power": 6.000103,
+         "ram": 3742.2,
+         "light_sensitive": 1
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "campaign": {
+  "tag": "fx3",
+  "designs": {
+   "fx3-lidar": [
+    "HDL-32E-A"
+   ],
+   "fx3-suite": [
+    "VLP-16-A",
+    "D435"
+   ]
+  },
+  "environments": {
+   "fx3-c0.3-v1.0": {
+    "clutter": 0.3,
+    "visibility": 1.0,
+    "seed": 6,
+    "n_draws": 4
+   },
+   "fx3-c0.7-v0.3": {
+    "clutter": 0.7,
+    "visibility": 0.3,
+    "seed": 6,
+    "n_draws": 4
+   }
+  },
+  "template_name": "Rock field crossing (fx3)",
+  "template": {
+   "files": [
+    {
+     "file": "scenario.yaml",
+     "updates": [
+      {
+       "keys": "clutter",
+       "value": "$clutter"
+      },
+      {
+       "keys": "visibility",
+       "value": "$visibility"
+      },
+      {
+       "keys": "seed",
+       "value": "$seed"
+      },
+      {
+       "keys": "n_draws",
+       "value": "$n_draws"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "calls_submit": [
+  {
+   "method": "POST",
+   "path": "/component_implementations",
+   "body": {
+    "components": [
+     {
+      "name": "VLP-16-A",
+      "type": "laser_3d",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "VLP-16-A",
+            "kind": "lidar",
+            "update_rate": 15.0,
+            "h_fov": 6.283185,
+            "ares": 0.00335103,
+            "max_range": 100.0,
+            "cost": 10000.0,
+            "power": 80.000001,
+            "ram": 33.75,
+            "light_sensitive": 0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "VLP-16-B",
+      "type": "laser_3d",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "VLP-16-B",
+            "kind": "lidar",
+            "update_rate": 20.0,
+            "h_fov": 6.283185,
+            "ares": 0.00335103,
+            "max_range": 100.0,
+            "cost": 12000.0,
+            "power": 80.000001,
+            "ram": 60.0,
+            "light_sensitive": 0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "HDL-32E-A",
+      "type": "laser_3d",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "HDL-32E-A",
+            "kind": "lidar",
+            "update_rate": 15.0,
+            "h_fov": 6.283185,
+            "ares": 0.00287297,
+            "max_range": 120.0,
+            "cost": 15000.0,
+            "power": 100.000002,
+            "ram": 78.732,
+            "light_sensitive": 0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "HDL-32E-B",
+      "type": "laser_3d",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "HDL-32E-B",
+            "kind": "lidar",
+            "update_rate": 20.0,
+            "h_fov": 6.283185,
+            "ares": 0.00287297,
+            "max_range": 120.0,
+            "cost": 16000.0,
+            "power": 100.000003,
+            "ram": 139.968,
+            "light_sensitive": 0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "LMS111-a2",
+      "type": "laser_2d",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "LMS111-a2",
+            "kind": "laser",
+            "update_rate": 25.0,
+            "h_fov": 4.71,
+            "ares": 0.00654167,
+            "max_range": 20.0,
+            "cost": 1000.0,
+            "power": 30.0,
+            "ram": 4.5,
+            "light_sensitive": 0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "LMS111-b1",
+      "type": "laser_2d",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "LMS111-b1",
+            "kind": "laser",
+            "update_rate": 50.0,
+            "h_fov": 4.71,
+            "ares": 0.00654167,
+            "max_range": 20.0,
+            "cost": 1500.0,
+            "power": 30.0,
+            "ram": 18.0,
+            "light_sensitive": 0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "LMS151-a2",
+      "type": "laser_2d",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "LMS151-a2",
+            "kind": "laser",
+            "update_rate": 25.0,
+            "h_fov": 4.71,
+            "ares": 0.00654167,
+            "max_range": 50.0,
+            "cost": 1500.0,
+            "power": 50.0,
+            "ram": 4.5,
+            "light_sensitive": 0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "LMS151-b2",
+      "type": "laser_2d",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "LMS151-b2",
+            "kind": "laser",
+            "update_rate": 50.0,
+            "h_fov": 4.71,
+            "ares": 0.00654167,
+            "max_range": 50.0,
+            "cost": 2000.0,
+            "power": 50.0,
+            "ram": 18.0,
+            "light_sensitive": 0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "D415",
+      "type": "depth_camera",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "D415",
+            "kind": "depth",
+            "update_rate": 60.0,
+            "h_fov": 1.1345,
+            "ares": 0.00210093,
+            "max_range": 6.0,
+            "cost": 2000.0,
+            "power": 8.000024,
+            "ram": 3499.2,
+            "light_sensitive": 1
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "D435",
+      "type": "depth_camera",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "D435",
+            "kind": "depth",
+            "update_rate": 30.0,
+            "h_fov": 1.5184,
+            "ares": 0.00118625,
+            "max_range": 6.0,
+            "cost": 2500.0,
+            "power": 8.000057,
+            "ram": 4147.2,
+            "light_sensitive": 1
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "D455",
+      "type": "depth_camera",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "D455",
+            "kind": "depth",
+            "update_rate": 15.0,
+            "h_fov": 1.501,
+            "ares": 0.00078177,
+            "max_range": 6.0,
+            "cost": 3000.0,
+            "power": 10.000064,
+            "ram": 2332.8,
+            "light_sensitive": 1
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "Blackfly-A",
+      "type": "camera",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "Blackfly-A",
+            "kind": "camera",
+            "update_rate": 30.0,
+            "h_fov": 1.047,
+            "ares": 0.00145417,
+            "max_range": 50.0,
+            "cost": 1500.0,
+            "power": 3.000048,
+            "ram": 3499.2,
+            "light_sensitive": 1
+           }
+          }
+         ]
+        }
+       ]
+      }
+     },
+     {
+      "name": "Blackfly-B",
+      "type": "camera",
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "name": "Blackfly-B",
+            "kind": "camera",
+            "update_rate": 15.0,
+            "h_fov": 1.047,
+            "ares": 0.00067987,
+            "max_range": 60.0,
+            "cost": 3000.0,
+            "power": 6.000103,
+            "ram": 3742.2,
+            "light_sensitive": 1
+           }
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "reply": {
+    "created": [],
+    "existing": [
+     {
+      "component_id": null,
+      "id": 1,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00335103,
+            "cost": 10000.0,
+            "h_fov": 6.283185,
+            "kind": "lidar",
+            "light_sensitive": 0,
+            "max_range": 100.0,
+            "name": "VLP-16-A",
+            "power": 80.000001,
+            "ram": 33.75,
+            "update_rate": 15.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "VLP-16-A",
+      "type": "laser_3d"
+     },
+     {
+      "component_id": null,
+      "id": 2,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00335103,
+            "cost": 12000.0,
+            "h_fov": 6.283185,
+            "kind": "lidar",
+            "light_sensitive": 0,
+            "max_range": 100.0,
+            "name": "VLP-16-B",
+            "power": 80.000001,
+            "ram": 60.0,
+            "update_rate": 20.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "VLP-16-B",
+      "type": "laser_3d"
+     },
+     {
+      "component_id": null,
+      "id": 3,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00287297,
+            "cost": 15000.0,
+            "h_fov": 6.283185,
+            "kind": "lidar",
+            "light_sensitive": 0,
+            "max_range": 120.0,
+            "name": "HDL-32E-A",
+            "power": 100.000002,
+            "ram": 78.732,
+            "update_rate": 15.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "HDL-32E-A",
+      "type": "laser_3d"
+     },
+     {
+      "component_id": null,
+      "id": 4,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00287297,
+            "cost": 16000.0,
+            "h_fov": 6.283185,
+            "kind": "lidar",
+            "light_sensitive": 0,
+            "max_range": 120.0,
+            "name": "HDL-32E-B",
+            "power": 100.000003,
+            "ram": 139.968,
+            "update_rate": 20.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "HDL-32E-B",
+      "type": "laser_3d"
+     },
+     {
+      "component_id": null,
+      "id": 5,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00654167,
+            "cost": 1000.0,
+            "h_fov": 4.71,
+            "kind": "laser",
+            "light_sensitive": 0,
+            "max_range": 20.0,
+            "name": "LMS111-a2",
+            "power": 30.0,
+            "ram": 4.5,
+            "update_rate": 25.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "LMS111-a2",
+      "type": "laser_2d"
+     },
+     {
+      "component_id": null,
+      "id": 6,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00654167,
+            "cost": 1500.0,
+            "h_fov": 4.71,
+            "kind": "laser",
+            "light_sensitive": 0,
+            "max_range": 20.0,
+            "name": "LMS111-b1",
+            "power": 30.0,
+            "ram": 18.0,
+            "update_rate": 50.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "LMS111-b1",
+      "type": "laser_2d"
+     },
+     {
+      "component_id": null,
+      "id": 7,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00654167,
+            "cost": 1500.0,
+            "h_fov": 4.71,
+            "kind": "laser",
+            "light_sensitive": 0,
+            "max_range": 50.0,
+            "name": "LMS151-a2",
+            "power": 50.0,
+            "ram": 4.5,
+            "update_rate": 25.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "LMS151-a2",
+      "type": "laser_2d"
+     },
+     {
+      "component_id": null,
+      "id": 8,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00654167,
+            "cost": 2000.0,
+            "h_fov": 4.71,
+            "kind": "laser",
+            "light_sensitive": 0,
+            "max_range": 50.0,
+            "name": "LMS151-b2",
+            "power": 50.0,
+            "ram": 18.0,
+            "update_rate": 50.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "LMS151-b2",
+      "type": "laser_2d"
+     },
+     {
+      "component_id": null,
+      "id": 9,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00210093,
+            "cost": 2000.0,
+            "h_fov": 1.1345,
+            "kind": "depth",
+            "light_sensitive": 1,
+            "max_range": 6.0,
+            "name": "D415",
+            "power": 8.000024,
+            "ram": 3499.2,
+            "update_rate": 60.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "D415",
+      "type": "depth_camera"
+     },
+     {
+      "component_id": null,
+      "id": 10,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00118625,
+            "cost": 2500.0,
+            "h_fov": 1.5184,
+            "kind": "depth",
+            "light_sensitive": 1,
+            "max_range": 6.0,
+            "name": "D435",
+            "power": 8.000057,
+            "ram": 4147.2,
+            "update_rate": 30.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "D435",
+      "type": "depth_camera"
+     },
+     {
+      "component_id": null,
+      "id": 11,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00078177,
+            "cost": 3000.0,
+            "h_fov": 1.501,
+            "kind": "depth",
+            "light_sensitive": 1,
+            "max_range": 6.0,
+            "name": "D455",
+            "power": 10.000064,
+            "ram": 2332.8,
+            "update_rate": 15.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "D455",
+      "type": "depth_camera"
+     },
+     {
+      "component_id": null,
+      "id": 12,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00145417,
+            "cost": 1500.0,
+            "h_fov": 1.047,
+            "kind": "camera",
+            "light_sensitive": 1,
+            "max_range": 50.0,
+            "name": "Blackfly-A",
+            "power": 3.000048,
+            "ram": 3499.2,
+            "update_rate": 30.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "Blackfly-A",
+      "type": "camera"
+     },
+     {
+      "component_id": null,
+      "id": 13,
+      "implementation": {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00067987,
+            "cost": 3000.0,
+            "h_fov": 1.047,
+            "kind": "camera",
+            "light_sensitive": 1,
+            "max_range": 60.0,
+            "name": "Blackfly-B",
+            "power": 6.000103,
+            "ram": 3742.2,
+            "update_rate": 15.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      "name": "Blackfly-B",
+      "type": "camera"
+     }
+    ],
+    "invalid": []
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/designs",
+   "body": {
+    "name": "fx3-lidar",
+    "tag": "fx3",
+    "component_implementation_names": [
+     "HDL-32E-A"
+    ]
+   },
+   "reply": {
+    "created": true,
+    "design": {
+     "components": [],
+     "id": 16,
+     "implementation": [
+      {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00287297,
+            "cost": 15000.0,
+            "h_fov": 6.283185,
+            "kind": "lidar",
+            "light_sensitive": 0,
+            "max_range": 120.0,
+            "name": "HDL-32E-A",
+            "power": 100.000002,
+            "ram": 78.732,
+            "update_rate": 15.0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "name": "fx3-lidar",
+     "tag": "fx3",
+     "template_id": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/designs",
+   "body": {
+    "name": "fx3-suite",
+    "tag": "fx3",
+    "component_implementation_names": [
+     "VLP-16-A",
+     "D435"
+    ]
+   },
+   "reply": {
+    "created": true,
+    "design": {
+     "components": [],
+     "id": 17,
+     "implementation": [
+      {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00335103,
+            "cost": 10000.0,
+            "h_fov": 6.283185,
+            "kind": "lidar",
+            "light_sensitive": 0,
+            "max_range": 100.0,
+            "name": "VLP-16-A",
+            "power": 80.000001,
+            "ram": 33.75,
+            "update_rate": 15.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00118625,
+            "cost": 2500.0,
+            "h_fov": 1.5184,
+            "kind": "depth",
+            "light_sensitive": 1,
+            "max_range": 6.0,
+            "name": "D435",
+            "power": 8.000057,
+            "ram": 4147.2,
+            "update_rate": 30.0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "name": "fx3-suite",
+     "tag": "fx3",
+     "template_id": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/environment_templates",
+   "body": {
+    "name": "Rock field crossing (fx3)",
+    "specification": {
+     "files": [
+      {
+       "file": "scenario.yaml",
+       "updates": [
+        {
+         "keys": "clutter",
+         "value": "$clutter"
+        },
+        {
+         "keys": "visibility",
+         "value": "$visibility"
+        },
+        {
+         "keys": "seed",
+         "value": "$seed"
+        },
+        {
+         "keys": "n_draws",
+         "value": "$n_draws"
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "reply": {
+    "created": true,
+    "template": {
+     "arguments": [
+      "clutter",
+      "n_draws",
+      "seed",
+      "visibility"
+     ],
+     "id": 5,
+     "name": "Rock field crossing (fx3)",
+     "specification": {
+      "files": [
+       {
+        "file": "scenario.yaml",
+        "updates": [
+         {
+          "keys": "clutter",
+          "value": "$clutter"
+         },
+         {
+          "keys": "visibility",
+          "value": "$visibility"
+         },
+         {
+          "keys": "seed",
+          "value": "$seed"
+         },
+         {
+          "keys": "n_draws",
+          "value": "$n_draws"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/environments",
+   "body": {
+    "name": "fx3-c0.3-v1.0",
+    "tag": "fx3",
+    "template_id": 5,
+    "arguments": {
+     "clutter": 0.3,
+     "visibility": 1.0,
+     "seed": 6,
+     "n_draws": 4
+    }
+   },
+   "reply": {
+    "created": true,
+    "environment": {
+     "id": 24,
+     "name": "fx3-c0.3-v1.0",
+     "specification": {
+      "files": [
+       {
+        "file": "scenario.yaml",
+        "updates": [
+         {
+          "keys": "clutter",
+          "value": 0.3
+         },
+         {
+          "keys": "visibility",
+          "value": 1.0
+         },
+         {
+          "keys": "seed",
+          "value": 6.0
+         },
+         {
+          "keys": "n_draws",
+          "value": 4.0
+         }
+        ]
+       }
+      ]
+     },
+     "tag": "fx3",
+     "template_id": 5
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/environments",
+   "body": {
+    "name": "fx3-c0.7-v0.3",
+    "tag": "fx3",
+    "template_id": 5,
+    "arguments": {
+     "clutter": 0.7,
+     "visibility": 0.3,
+     "seed": 6,
+     "n_draws": 4
+    }
+   },
+   "reply": {
+    "created": true,
+    "environment": {
+     "id": 25,
+     "name": "fx3-c0.7-v0.3",
+     "specification": {
+      "files": [
+       {
+        "file": "scenario.yaml",
+        "updates": [
+         {
+          "keys": "clutter",
+          "value": 0.7
+         },
+         {
+          "keys": "visibility",
+          "value": 0.3
+         },
+         {
+          "keys": "seed",
+          "value": 6.0
+         },
+         {
+          "keys": "n_draws",
+          "value": 4.0
+         }
+        ]
+       }
+      ]
+     },
+     "tag": "fx3",
+     "template_id": 5
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/experiments",
+   "reply": []
+  },
+  {
+   "method": "POST",
+   "path": "/experiments",
+   "body": {
+    "design_ids": [
+     16,
+     17
+    ],
+    "environment_ids": [
+     24,
+     25
+    ],
+    "tag": "fx3",
+    "run": true
+   },
+   "reply": {
+    "experiment_ids": [
+     194,
+     195,
+     196,
+     197
+    ],
+    "experiments": [
+     {
+      "design_id": 16,
+      "environment_id": 24,
+      "experiment_id": 194,
+      "status_url": "http://127.0.0.1:5002/api/v1/experiments/194",
+      "trial_ids": [
+       190
+      ]
+     },
+     {
+      "design_id": 16,
+      "environment_id": 25,
+      "experiment_id": 195,
+      "status_url": "http://127.0.0.1:5002/api/v1/experiments/195",
+      "trial_ids": [
+       191
+      ]
+     },
+     {
+      "design_id": 17,
+      "environment_id": 24,
+      "experiment_id": 196,
+      "status_url": "http://127.0.0.1:5002/api/v1/experiments/196",
+      "trial_ids": [
+       192
+      ]
+     },
+     {
+      "design_id": 17,
+      "environment_id": 25,
+      "experiment_id": 197,
+      "status_url": "http://127.0.0.1:5002/api/v1/experiments/197",
+      "trial_ids": [
+       193
+      ]
+     }
+    ],
+    "trial_ids": [
+     190,
+     191,
+     192,
+     193
+    ]
+   }
+  }
+ ],
+ "calls_collect": [
+  {
+   "method": "GET",
+   "path": "/experiments",
+   "reply": [
+    {
+     "design_id": 16,
+     "environment_id": 24,
+     "id": 194,
+     "last_trial_id": 190,
+     "last_trial_state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+     "tag": "fx3"
+    },
+    {
+     "design_id": 16,
+     "environment_id": 25,
+     "id": 195,
+     "last_trial_id": 191,
+     "last_trial_state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+     "tag": "fx3"
+    },
+    {
+     "design_id": 17,
+     "environment_id": 24,
+     "id": 196,
+     "last_trial_id": 192,
+     "last_trial_state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+     "tag": "fx3"
+    },
+    {
+     "design_id": 17,
+     "environment_id": 25,
+     "id": 197,
+     "last_trial_id": 193,
+     "last_trial_state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+     "tag": "fx3"
+    }
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/experiments/194",
+   "reply": {
+    "design": {
+     "components": [],
+     "id": 16,
+     "implementation": [
+      {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00287297,
+            "cost": 15000.0,
+            "h_fov": 6.283185,
+            "kind": "lidar",
+            "light_sensitive": 0,
+            "max_range": 120.0,
+            "name": "HDL-32E-A",
+            "power": 100.000002,
+            "ram": 78.732,
+            "update_rate": 15.0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "name": "fx3-lidar",
+     "tag": "fx3",
+     "template_id": null
+    },
+    "design_id": 16,
+    "environment": {
+     "id": 24,
+     "name": "fx3-c0.3-v1.0",
+     "specification": {
+      "files": [
+       {
+        "file": "scenario.yaml",
+        "updates": [
+         {
+          "keys": "clutter",
+          "value": 0.3
+         },
+         {
+          "keys": "visibility",
+          "value": 1.0
+         },
+         {
+          "keys": "seed",
+          "value": 6.0
+         },
+         {
+          "keys": "n_draws",
+          "value": 4.0
+         }
+        ]
+       }
+      ]
+     },
+     "tag": "fx3",
+     "template_id": 5
+    },
+    "environment_id": 24,
+    "id": 194,
+    "last_trial_id": 190,
+    "last_trial_state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+    "tag": "fx3",
+    "trials": [
+     {
+      "cancelled_by": null,
+      "datetime": "2026-09-22T12:41:48.078435",
+      "experiment_id": 194,
+      "id": 190,
+      "job_id": null,
+      "sim_time": 39.06460133335179,
+      "start_age": 1.001236915588379,
+      "state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+      "uri": "ws://localhost:8004"
+     }
+    ]
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/trials/190?updates=500",
+   "reply": {
+    "cancelled_by": null,
+    "datetime": "2026-09-22T12:41:48.078435",
+    "experiment_id": 194,
+    "id": 190,
+    "job_id": null,
+    "sim_time": 39.06460133335179,
+    "start_age": 1.001236915588379,
+    "state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+    "updates": [
+     {
+      "data": {
+       "data": "ws://localhost:8004",
+       "trial_id": 190,
+       "update": "uri"
+      },
+      "timestamp": 1790095308.3150687
+     },
+     {
+      "data": {
+       "data": "TrialState.INITIALIZING",
+       "trial_id": 190,
+       "update": "state"
+      },
+      "timestamp": 1790095308.3342633
+     },
+     {
+      "data": {
+       "data": "TrialState.INITIALIZED",
+       "trial_id": 190,
+       "update": "state"
+      },
+      "timestamp": 1790095308.3505588
+     },
+     {
+      "data": {
+       "data": "TrialState.READY",
+       "trial_id": 190,
+       "update": "state"
+      },
+      "timestamp": 1790095308.3650887
+     },
+     {
+      "data": {
+       "data": "TrialState.RUNNING",
+       "trial_id": 190,
+       "update": "state"
+      },
+      "timestamp": 1790095308.3809588
+     },
+     {
+      "data": {
+       "data": {
+        "battery_soc": 0.934892329808927,
+        "clutter": 0.3,
+        "collision_rate": 0.0,
+        "cost": 15000.0,
+        "detection_distance": 14.191802902418155,
+        "detection_rate": 0.98,
+        "n_draws": 4,
+        "n_rocks": 25,
+        "n_sensors": 1,
+        "path_length": 39.06460133335179,
+        "power": 100.000002,
+        "ram": 78.732,
+        "replans": 9,
+        "seed": 6,
+        "sim_time": 39.06460133335179,
+        "stall_rate": 0.0,
+        "success_rate": 1.0,
+        "time_to_goal": 39.06460133335179,
+        "tortuosity": 1.083248804202435,
+        "visibility": 1.0
+       },
+       "trial_id": 190,
+       "update": "metrics"
+      },
+      "timestamp": 1790095308.4859931
+     },
+     {
+      "data": {
+       "data": 39.06460133335179,
+       "trial_id": 190,
+       "update": "sim_time"
+      },
+      "timestamp": 1790095308.5023098
+     },
+     {
+      "data": {
+       "data": 1.0012335777282715,
+       "trial_id": 190,
+       "update": "init_age"
+      },
+      "timestamp": 1790095309.335856
+     },
+     {
+      "data": {
+       "data": 1.001236915588379,
+       "trial_id": 190,
+       "update": "start_age"
+      },
+      "timestamp": 1790095309.352074
+     },
+     {
+      "data": {
+       "data": "TrialState.RUNNING|SUCCESSFUL",
+       "trial_id": 190,
+       "update": "state"
+      },
+      "timestamp": 1790095309.3688438
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL",
+       "trial_id": 190,
+       "update": "state"
+      },
+      "timestamp": 1790095309.3843849
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL|SHUTTING_DOWN",
+       "trial_id": 190,
+       "update": "state"
+      },
+      "timestamp": 1790095309.400669
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL|SHUT_DOWN",
+       "trial_id": 190,
+       "update": "state"
+      },
+      "timestamp": 1790095309.4159548
+     }
+    ],
+    "uri": "ws://localhost:8004"
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/experiments/195",
+   "reply": {
+    "design": {
+     "components": [],
+     "id": 16,
+     "implementation": [
+      {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00287297,
+            "cost": 15000.0,
+            "h_fov": 6.283185,
+            "kind": "lidar",
+            "light_sensitive": 0,
+            "max_range": 120.0,
+            "name": "HDL-32E-A",
+            "power": 100.000002,
+            "ram": 78.732,
+            "update_rate": 15.0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "name": "fx3-lidar",
+     "tag": "fx3",
+     "template_id": null
+    },
+    "design_id": 16,
+    "environment": {
+     "id": 25,
+     "name": "fx3-c0.7-v0.3",
+     "specification": {
+      "files": [
+       {
+        "file": "scenario.yaml",
+        "updates": [
+         {
+          "keys": "clutter",
+          "value": 0.7
+         },
+         {
+          "keys": "visibility",
+          "value": 0.3
+         },
+         {
+          "keys": "seed",
+          "value": 6.0
+         },
+         {
+          "keys": "n_draws",
+          "value": 4.0
+         }
+        ]
+       }
+      ]
+     },
+     "tag": "fx3",
+     "template_id": 5
+    },
+    "environment_id": 25,
+    "id": 195,
+    "last_trial_id": 191,
+    "last_trial_state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+    "tag": "fx3",
+    "trials": [
+     {
+      "cancelled_by": null,
+      "datetime": "2026-09-22T12:41:48.117506",
+      "experiment_id": 195,
+      "id": 191,
+      "job_id": null,
+      "sim_time": 120.0,
+      "start_age": 1.0016803741455078,
+      "state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+      "uri": "ws://localhost:8004"
+     }
+    ]
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/trials/191?updates=500",
+   "reply": {
+    "cancelled_by": null,
+    "datetime": "2026-09-22T12:41:48.117506",
+    "experiment_id": 195,
+    "id": 191,
+    "job_id": null,
+    "sim_time": 120.0,
+    "start_age": 1.0016803741455078,
+    "state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+    "updates": [
+     {
+      "data": {
+       "data": "ws://localhost:8004",
+       "trial_id": 191,
+       "update": "uri"
+      },
+      "timestamp": 1790095309.6830995
+     },
+     {
+      "data": {
+       "data": "TrialState.INITIALIZING",
+       "trial_id": 191,
+       "update": "state"
+      },
+      "timestamp": 1790095309.7106738
+     },
+     {
+      "data": {
+       "data": "TrialState.INITIALIZED",
+       "trial_id": 191,
+       "update": "state"
+      },
+      "timestamp": 1790095309.727026
+     },
+     {
+      "data": {
+       "data": "TrialState.READY",
+       "trial_id": 191,
+       "update": "state"
+      },
+      "timestamp": 1790095309.7476137
+     },
+     {
+      "data": {
+       "data": "TrialState.RUNNING",
+       "trial_id": 191,
+       "update": "state"
+      },
+      "timestamp": 1790095309.7685475
+     },
+     {
+      "data": {
+       "data": {
+        "battery_soc": 0.799999996,
+        "clutter": 0.7,
+        "collision_rate": 0.0,
+        "cost": 15000.0,
+        "detection_distance": 14.09707653398136,
+        "detection_rate": 0.975609756097561,
+        "n_draws": 4,
+        "n_rocks": 41,
+        "n_sensors": 1,
+        "path_length": 120.0,
+        "power": 100.000002,
+        "ram": 78.732,
+        "replans": 20,
+        "seed": 6,
+        "sim_time": 120.0,
+        "stall_rate": 1.0,
+        "success_rate": 0.0,
+        "time_to_goal": 120.0,
+        "tortuosity": 3.327561323230812,
+        "visibility": 0.3
+       },
+       "trial_id": 191,
+       "update": "metrics"
+      },
+      "timestamp": 1790095309.9623497
+     },
+     {
+      "data": {
+       "data": 120.0,
+       "trial_id": 191,
+       "update": "sim_time"
+      },
+      "timestamp": 1790095309.9871635
+     },
+     {
+      "data": {
+       "data": 1.0016679763793945,
+       "trial_id": 191,
+       "update": "init_age"
+      },
+      "timestamp": 1790095310.7125802
+     },
+     {
+      "data": {
+       "data": 1.0016803741455078,
+       "trial_id": 191,
+       "update": "start_age"
+      },
+      "timestamp": 1790095310.7370973
+     },
+     {
+      "data": {
+       "data": "TrialState.RUNNING|SUCCESSFUL",
+       "trial_id": 191,
+       "update": "state"
+      },
+      "timestamp": 1790095310.753269
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL",
+       "trial_id": 191,
+       "update": "state"
+      },
+      "timestamp": 1790095310.768299
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL|SHUTTING_DOWN",
+       "trial_id": 191,
+       "update": "state"
+      },
+      "timestamp": 1790095310.784598
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL|SHUT_DOWN",
+       "trial_id": 191,
+       "update": "state"
+      },
+      "timestamp": 1790095310.8049297
+     }
+    ],
+    "uri": "ws://localhost:8004"
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/experiments/196",
+   "reply": {
+    "design": {
+     "components": [],
+     "id": 17,
+     "implementation": [
+      {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00335103,
+            "cost": 10000.0,
+            "h_fov": 6.283185,
+            "kind": "lidar",
+            "light_sensitive": 0,
+            "max_range": 100.0,
+            "name": "VLP-16-A",
+            "power": 80.000001,
+            "ram": 33.75,
+            "update_rate": 15.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00118625,
+            "cost": 2500.0,
+            "h_fov": 1.5184,
+            "kind": "depth",
+            "light_sensitive": 1,
+            "max_range": 6.0,
+            "name": "D435",
+            "power": 8.000057,
+            "ram": 4147.2,
+            "update_rate": 30.0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "name": "fx3-suite",
+     "tag": "fx3",
+     "template_id": null
+    },
+    "design_id": 17,
+    "environment": {
+     "id": 24,
+     "name": "fx3-c0.3-v1.0",
+     "specification": {
+      "files": [
+       {
+        "file": "scenario.yaml",
+        "updates": [
+         {
+          "keys": "clutter",
+          "value": 0.3
+         },
+         {
+          "keys": "visibility",
+          "value": 1.0
+         },
+         {
+          "keys": "seed",
+          "value": 6.0
+         },
+         {
+          "keys": "n_draws",
+          "value": 4.0
+         }
+        ]
+       }
+      ]
+     },
+     "tag": "fx3",
+     "template_id": 5
+    },
+    "environment_id": 24,
+    "id": 196,
+    "last_trial_id": 192,
+    "last_trial_state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+    "tag": "fx3",
+    "trials": [
+     {
+      "cancelled_by": null,
+      "datetime": "2026-09-22T12:41:48.150112",
+      "experiment_id": 196,
+      "id": 192,
+      "job_id": null,
+      "sim_time": 39.06460133335179,
+      "start_age": 1.0011816024780273,
+      "state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+      "uri": "ws://localhost:8004"
+     }
+    ]
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/trials/192?updates=500",
+   "reply": {
+    "cancelled_by": null,
+    "datetime": "2026-09-22T12:41:48.150112",
+    "experiment_id": 196,
+    "id": 192,
+    "job_id": null,
+    "sim_time": 39.06460133335179,
+    "start_age": 1.0011816024780273,
+    "state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+    "updates": [
+     {
+      "data": {
+       "data": "ws://localhost:8004",
+       "trial_id": 192,
+       "update": "uri"
+      },
+      "timestamp": 1790095311.0720644
+     },
+     {
+      "data": {
+       "data": "TrialState.INITIALIZING",
+       "trial_id": 192,
+       "update": "state"
+      },
+      "timestamp": 1790095311.10123
+     },
+     {
+      "data": {
+       "data": "TrialState.INITIALIZED",
+       "trial_id": 192,
+       "update": "state"
+      },
+      "timestamp": 1790095311.1178045
+     },
+     {
+      "data": {
+       "data": "TrialState.READY",
+       "trial_id": 192,
+       "update": "state"
+      },
+      "timestamp": 1790095311.1328967
+     },
+     {
+      "data": {
+       "data": "TrialState.RUNNING",
+       "trial_id": 192,
+       "update": "state"
+      },
+      "timestamp": 1790095311.153291
+     },
+     {
+      "data": {
+       "data": {
+        "battery_soc": 0.9427052136153027,
+        "clutter": 0.3,
+        "collision_rate": 0.0,
+        "cost": 12500.0,
+        "detection_distance": 13.249129868284458,
+        "detection_rate": 0.93,
+        "n_draws": 4,
+        "n_rocks": 25,
+        "n_sensors": 2,
+        "path_length": 39.06460133335179,
+        "power": 88.000058,
+        "ram": 4180.95,
+        "replans": 10,
+        "seed": 6,
+        "sim_time": 39.06460133335179,
+        "stall_rate": 0.0,
+        "success_rate": 1.0,
+        "time_to_goal": 39.06460133335179,
+        "tortuosity": 1.083248804202435,
+        "visibility": 1.0
+       },
+       "trial_id": 192,
+       "update": "metrics"
+      },
+      "timestamp": 1790095311.2529373
+     },
+     {
+      "data": {
+       "data": 39.06460133335179,
+       "trial_id": 192,
+       "update": "sim_time"
+      },
+      "timestamp": 1790095311.2694447
+     },
+     {
+      "data": {
+       "data": 1.0011625289916992,
+       "trial_id": 192,
+       "update": "init_age"
+      },
+      "timestamp": 1790095312.1029308
+     },
+     {
+      "data": {
+       "data": 1.0011816024780273,
+       "trial_id": 192,
+       "update": "start_age"
+      },
+      "timestamp": 1790095312.1274242
+     },
+     {
+      "data": {
+       "data": "TrialState.RUNNING|SUCCESSFUL",
+       "trial_id": 192,
+       "update": "state"
+      },
+      "timestamp": 1790095312.1432474
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL",
+       "trial_id": 192,
+       "update": "state"
+      },
+      "timestamp": 1790095312.1584427
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL|SHUTTING_DOWN",
+       "trial_id": 192,
+       "update": "state"
+      },
+      "timestamp": 1790095312.1743062
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL|SHUT_DOWN",
+       "trial_id": 192,
+       "update": "state"
+      },
+      "timestamp": 1790095312.1893532
+     }
+    ],
+    "uri": "ws://localhost:8004"
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/experiments/197",
+   "reply": {
+    "design": {
+     "components": [],
+     "id": 17,
+     "implementation": [
+      {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00335103,
+            "cost": 10000.0,
+            "h_fov": 6.283185,
+            "kind": "lidar",
+            "light_sensitive": 0,
+            "max_range": 100.0,
+            "name": "VLP-16-A",
+            "power": 80.000001,
+            "ram": 33.75,
+            "update_rate": 15.0
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "files": [
+        {
+         "file": "sensors.yaml",
+         "updates": [
+          {
+           "keys": "suite",
+           "value": {
+            "ares": 0.00118625,
+            "cost": 2500.0,
+            "h_fov": 1.5184,
+            "kind": "depth",
+            "light_sensitive": 1,
+            "max_range": 6.0,
+            "name": "D435",
+            "power": 8.000057,
+            "ram": 4147.2,
+            "update_rate": 30.0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ],
+     "name": "fx3-suite",
+     "tag": "fx3",
+     "template_id": null
+    },
+    "design_id": 17,
+    "environment": {
+     "id": 25,
+     "name": "fx3-c0.7-v0.3",
+     "specification": {
+      "files": [
+       {
+        "file": "scenario.yaml",
+        "updates": [
+         {
+          "keys": "clutter",
+          "value": 0.7
+         },
+         {
+          "keys": "visibility",
+          "value": 0.3
+         },
+         {
+          "keys": "seed",
+          "value": 6.0
+         },
+         {
+          "keys": "n_draws",
+          "value": 4.0
+         }
+        ]
+       }
+      ]
+     },
+     "tag": "fx3",
+     "template_id": 5
+    },
+    "environment_id": 25,
+    "id": 197,
+    "last_trial_id": 193,
+    "last_trial_state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+    "tag": "fx3",
+    "trials": [
+     {
+      "cancelled_by": null,
+      "datetime": "2026-09-22T12:41:48.182398",
+      "experiment_id": 197,
+      "id": 193,
+      "job_id": null,
+      "sim_time": 120.0,
+      "start_age": 1.0019681453704834,
+      "state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+      "uri": "ws://localhost:8004"
+     }
+    ]
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/trials/193?updates=500",
+   "reply": {
+    "cancelled_by": null,
+    "datetime": "2026-09-22T12:41:48.182398",
+    "experiment_id": 197,
+    "id": 193,
+    "job_id": null,
+    "sim_time": 120.0,
+    "start_age": 1.0019681453704834,
+    "state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+    "updates": [
+     {
+      "data": {
+       "data": "ws://localhost:8004",
+       "trial_id": 193,
+       "update": "uri"
+      },
+      "timestamp": 1790095312.453897
+     },
+     {
+      "data": {
+       "data": "TrialState.INITIALIZING",
+       "trial_id": 193,
+       "update": "state"
+      },
+      "timestamp": 1790095312.4821677
+     },
+     {
+      "data": {
+       "data": "TrialState.INITIALIZED",
+       "trial_id": 193,
+       "update": "state"
+      },
+      "timestamp": 1790095312.498442
+     },
+     {
+      "data": {
+       "data": "TrialState.READY",
+       "trial_id": 193,
+       "update": "state"
+      },
+      "timestamp": 1790095312.519323
+     },
+     {
+      "data": {
+       "data": "TrialState.RUNNING",
+       "trial_id": 193,
+       "update": "state"
+      },
+      "timestamp": 1790095312.5396457
+     },
+     {
+      "data": {
+       "data": {
+        "battery_soc": 0.823999884,
+        "clutter": 0.7,
+        "collision_rate": 0.0,
+        "cost": 12500.0,
+        "detection_distance": 12.797264069643333,
+        "detection_rate": 0.9695121951219512,
+        "n_draws": 4,
+        "n_rocks": 41,
+        "n_sensors": 2,
+        "path_length": 120.0,
+        "power": 88.000058,
+        "ram": 4180.95,
+        "replans": 22,
+        "seed": 6,
+        "sim_time": 120.0,
+        "stall_rate": 1.0,
+        "success_rate": 0.0,
+        "time_to_goal": 120.0,
+        "tortuosity": 3.327561323230812,
+        "visibility": 0.3
+       },
+       "trial_id": 193,
+       "update": "metrics"
+      },
+      "timestamp": 1790095312.7849157
+     },
+     {
+      "data": {
+       "data": 120.0,
+       "trial_id": 193,
+       "update": "sim_time"
+      },
+      "timestamp": 1790095312.8091009
+     },
+     {
+      "data": {
+       "data": 1.0019476413726807,
+       "trial_id": 193,
+       "update": "init_age"
+      },
+      "timestamp": 1790095313.4843392
+     },
+     {
+      "data": {
+       "data": 1.0019681453704834,
+       "trial_id": 193,
+       "update": "start_age"
+      },
+      "timestamp": 1790095313.508696
+     },
+     {
+      "data": {
+       "data": "TrialState.RUNNING|SUCCESSFUL",
+       "trial_id": 193,
+       "update": "state"
+      },
+      "timestamp": 1790095313.524958
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL",
+       "trial_id": 193,
+       "update": "state"
+      },
+      "timestamp": 1790095313.5400467
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL|SHUTTING_DOWN",
+       "trial_id": 193,
+       "update": "state"
+      },
+      "timestamp": 1790095313.556138
+     },
+     {
+      "data": {
+       "data": "TrialState.SUCCESSFUL|SHUT_DOWN",
+       "trial_id": 193,
+       "update": "state"
+      },
+      "timestamp": 1790095313.571267
+     }
+    ],
+    "uri": "ws://localhost:8004"
+   }
+  }
+ ]
+}

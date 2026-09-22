@@ -1,0 +1,366 @@
+[
+    {
+        "name": "VLP-16-A",
+        "type": "laser_3d",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "VLP-16-A",
+                                "kind": "lidar",
+                                "update_rate": 15.0,
+                                "h_fov": 6.283185,
+                                "ares": 0.00335103,
+                                "max_range": 100.0,
+                                "cost": 10000.0,
+                                "power": 80.000001,
+                                "ram": 33.75,
+                                "light_sensitive": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "VLP-16-B",
+        "type": "laser_3d",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "VLP-16-B",
+                                "kind": "lidar",
+                                "update_rate": 20.0,
+                                "h_fov": 6.283185,
+                                "ares": 0.00335103,
+                                "max_range": 100.0,
+                                "cost": 12000.0,
+                                "power": 80.000001,
+                                "ram": 60.0,
+                                "light_sensitive": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "HDL-32E-A",
+        "type": "laser_3d",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "HDL-32E-A",
+                                "kind": "lidar",
+                                "update_rate": 15.0,
+                                "h_fov": 6.283185,
+                                "ares": 0.00287297,
+                                "max_range": 120.0,
+                                "cost": 15000.0,
+                                "power": 100.000002,
+                                "ram": 78.732,
+                                "light_sensitive": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "HDL-32E-B",
+        "type": "laser_3d",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "HDL-32E-B",
+                                "kind": "lidar",
+                                "update_rate": 20.0,
+                                "h_fov": 6.283185,
+                                "ares": 0.00287297,
+                                "max_range": 120.0,
+                                "cost": 16000.0,
+                                "power": 100.000003,
+                                "ram": 139.968,
+                                "light_sensitive": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "LMS111-a2",
+        "type": "laser_2d",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "LMS111-a2",
+                                "kind": "laser",
+                                "update_rate": 25.0,
+                                "h_fov": 4.71,
+                                "ares": 0.00654167,
+                                "max_range": 20.0,
+                                "cost": 1000.0,
+                                "power": 30.0,
+                                "ram": 4.5,
+                                "light_sensitive": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "LMS111-b1",
+        "type": "laser_2d",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "LMS111-b1",
+                                "kind": "laser",
+                                "update_rate": 50.0,
+                                "h_fov": 4.71,
+                                "ares": 0.00654167,
+                                "max_range": 20.0,
+                                "cost": 1500.0,
+                                "power": 30.0,
+                                "ram": 18.0,
+                                "light_sensitive": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "LMS151-a2",
+        "type": "laser_2d",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "LMS151-a2",
+                                "kind": "laser",
+                                "update_rate": 25.0,
+                                "h_fov": 4.71,
+                                "ares": 0.00654167,
+                                "max_range": 50.0,
+                                "cost": 1500.0,
+                                "power": 50.0,
+                                "ram": 4.5,
+                                "light_sensitive": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "LMS151-b2",
+        "type": "laser_2d",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "LMS151-b2",
+                                "kind": "laser",
+                                "update_rate": 50.0,
+                                "h_fov": 4.71,
+                                "ares": 0.00654167,
+                                "max_range": 50.0,
+                                "cost": 2000.0,
+                                "power": 50.0,
+                                "ram": 18.0,
+                                "light_sensitive": 0
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "D415",
+        "type": "depth_camera",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "D415",
+                                "kind": "depth",
+                                "update_rate": 60.0,
+                                "h_fov": 1.1345,
+                                "ares": 0.00210093,
+                                "max_range": 6.0,
+                                "cost": 2000.0,
+                                "power": 8.000024,
+                                "ram": 3499.2,
+                                "light_sensitive": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "D435",
+        "type": "depth_camera",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "D435",
+                                "kind": "depth",
+                                "update_rate": 30.0,
+                                "h_fov": 1.5184,
+                                "ares": 0.00118625,
+                                "max_range": 6.0,
+                                "cost": 2500.0,
+                                "power": 8.000057,
+                                "ram": 4147.2,
+                                "light_sensitive": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "D455",
+        "type": "depth_camera",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "D455",
+                                "kind": "depth",
+                                "update_rate": 15.0,
+                                "h_fov": 1.501,
+                                "ares": 0.00078177,
+                                "max_range": 6.0,
+                                "cost": 3000.0,
+                                "power": 10.000064,
+                                "ram": 2332.8,
+                                "light_sensitive": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "Blackfly-A",
+        "type": "camera",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "Blackfly-A",
+                                "kind": "camera",
+                                "update_rate": 30.0,
+                                "h_fov": 1.047,
+                                "ares": 0.00145417,
+                                "max_range": 50.0,
+                                "cost": 1500.0,
+                                "power": 3.000048,
+                                "ram": 3499.2,
+                                "light_sensitive": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "Blackfly-B",
+        "type": "camera",
+        "implementation": {
+            "files": [
+                {
+                    "file": "sensors.yaml",
+                    "updates": [
+                        {
+                            "keys": "suite",
+                            "value": {
+                                "name": "Blackfly-B",
+                                "kind": "camera",
+                                "update_rate": 15.0,
+                                "h_fov": 1.047,
+                                "ares": 0.00067987,
+                                "max_range": 60.0,
+                                "cost": 3000.0,
+                                "power": 6.000103,
+                                "ram": 3742.2,
+                                "light_sensitive": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+]
