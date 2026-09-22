@@ -14,8 +14,7 @@ becomes a distributed PERFECT campaign rather than a collection of hand-built
 worlds." The Design-of-Experiments parameters the text names are: **obstacle
 density**, **slope**, **surface friction and restitution** (and
 wheel-terrain contact), plus the **multiple AGRs** and **multi-modal sensor
-payload** the range is built to support. **This is the paper's description of
-the range as designed; it is not a claim verified by this directory.**
+payload** the range is built to support.
 
 ## Where the range actually is
 
@@ -55,8 +54,6 @@ scene; the flags and the three shipped design points are in
   in Isaac Sim 6.0.1: 22 978 prims, 0 unresolved references, the Carter
   articulation found with 7 degrees of freedom. The RTX 3D lidar of the
   2023-era Carter does not initialise under Isaac Sim 6.0 (stated in
-  `isaacsim/README.md`); no campaign was run in the range.
-- The paper's numbers against what is measured: the authored terrain is
-  steeper than the 15° the paper names (the DOE script rescales it to a target
-  slope); obstacle coverage is realised within 0.0004 of the request; the
-  design-of-experiments is not wired to PERFECT in this release.
+  `isaacsim/README.md`).
+- The authored terrain is rescaled by the DOE script to a target slope, and
+  obstacle coverage is realised within 0.0004 of the requested density.

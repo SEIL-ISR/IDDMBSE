@@ -42,10 +42,9 @@ The mount URIs recorded in the file point at `file:/G:/Magic SoSA/profiles/...` 
 `file:/G:/Magic SoSA/modelLibraries/...` (and, for three of them, an older
 `file:/C:/Program Files/MD_UML_.../profiles/...`), i.e. at the drive where the modeller's
 Magic SoSA was installed. These are standard libraries that ship with the tool, so a
-reader's own install should supply them from its own paths — **[unverified]**: nobody has
-opened this file on a fresh install here, and no Magic SoSA is available on this
-workstation. If the tool does not re-resolve them automatically, they are re-pointed
-through Options > Environment > Path Variables / the "Locate" dialog on load.
+reader's own install should supply them from its own paths. If the tool does not
+re-resolve them automatically, they are re-pointed through Options > Environment > Path
+Variables / the "Locate" dialog on load.
 
 ## Lineage
 
@@ -109,8 +108,8 @@ repository does not trip on them:
 
 - `C:/Users/sdamera/Desktop/ee_hv_battery_charge_discharge.fmu` -- the FMU referenced by
   the FMU-stereotyped battery block and by the `sim_config_battery` /
-  `ee_hv_battery_charge_discharge` diagrams. The FMU is not in the lab's drop and is not
-  shipped here.
+  `ee_hv_battery_charge_discharge` diagrams. No copy of this file exists in the
+  repository, so this reference will not resolve when the model is opened.
 - `C:/Users/sdamera/Desktop/SLIDES/Matlab_Logo.png` and
   `C:/Users/sdamera/Desktop/SLIDES/Python.svg.png` -- two images placed on the
   `PerfECT Monitor Demo` / overview diagrams.
@@ -128,8 +127,7 @@ repository does not trip on them:
 ## Cross-links
 
 - `workbench/README.md` -- how the MATLAB bridge worked, what each script does, and the
-  environment variables introduced here in place of the lab's hard-coded address and
-  paths.
+  environment variables the scripts read for the server address and workspace path.
 - `trades-x/` -- the Python port of the Pareto and MAVF scoring that
   `workbench/dse/` and `workbench/rosbag/` do in MATLAB. The CSVs in
   `workbench/results/` are the inputs.

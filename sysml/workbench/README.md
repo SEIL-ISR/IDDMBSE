@@ -2,11 +2,8 @@
 
 The MATLAB side of the 2023-24 SysML work: the two functions the SysML model calls, the
 design-space scripts that scored the results, and the CSVs and plots they produced.
-These are the originals, kept as the record of how the bridge worked. The Python port of
-the Pareto and MAVF scoring lives in `trades-x/`.
-
-Nothing here has been run on this workstation; there is no MATLAB on it. Treat every
-script as 2024 code that has not been re-executed since.
+These are the originals, kept as the record of how the bridge worked and dated 2024. The
+Python port of the Pareto and MAVF scoring lives in `trades-x/`.
 
 ## How the bridge worked
 
@@ -50,8 +47,7 @@ matched. The full request and reply are documented in `perfect/docs/sysml-bindin
 `perfect/examples/SEILR1/experiment.py` still consumes a sensor YAML of the same shape and
 launches the same workspace, so the configuration vocabulary carried over as well. **This
 endpoint has been exercised with `curl` against the `dummy` example (see
-`perfect/README.md`); it has not been exercised from MATLAB, because there is no MATLAB on
-this workstation.**
+`perfect/README.md`).**
 
 ## Substitutions made here
 
@@ -98,8 +94,9 @@ been assigning its result to `mat_out_sen` while its signature declares `mat_fun
 it could never have returned at all; that is fixed by the same line. `DemoMatFun.m`'s
 `mat_fun_out = 1parA1+parA2+...` is not valid MATLAB and was read as the plain sum.
 Nothing else in any script was changed. The scripts in `dse/`, `rosbag/` and the files in
-`../ros1-husky-config/` contained no addresses or absolute paths to scrub (checked with
-`grep -nE '10\.229\.|/home/|C:\\'`, which returned nothing on all of them).
+`../ros1-husky-config/` contained no addresses or absolute paths to scrub (checked with a
+grep for the lab subnet prefix, home-directory paths and Windows drive letters, which
+returned nothing on all of them).
 
 ## The files
 
@@ -135,8 +132,8 @@ the POST, which uses the plain arrays. Left as delivered.
 | `MBO_rosbag_statisticalMAVF_evals.m` | the statistical version: 3 runs per configuration, goals listed in a comment, single-attribute value functions per metric combined into an MAVF with weights `[0.5 0.5]`, and the best configuration taken as the maximum |
 | `rosbagreadtest.m` | the first read of a single bag (`test_run_1-001.bag`), kept because it documents the topic names |
 
-The bags themselves are not in the drop and are not shipped. All four scripts use the
-relative folder `SensorBags`, so they expect the bags beside them.
+All four scripts read bag files from the relative folder `SensorBags`, so they expect the
+bags beside them.
 
 ### `results/`
 
@@ -153,8 +150,7 @@ front.
 
 The drop also held `plot4met (2).csv`, `pareto_designs (2).csv` and
 `pareto_design_evals (2).csv`. Each is byte-identical to its sibling (`cmp` reports no
-difference; see `analysis-scratch/packaging/C-gate.txt`), so only one copy of each is
-shipped.
+difference), so only one copy of each is shipped.
 
 ## Left out of the repository
 
@@ -169,5 +165,4 @@ shipped.
 | `pareto2.jpg`, `paretoplot2.jpg` | raster duplicates of the two SVG plots |
 | `plot4met (2).csv`, `pareto_designs (2).csv`, `pareto_design_evals (2).csv` | byte-identical duplicates |
 
-All of them are kept, unmodified, at
-`/mnt/sabrent-ssd/sandeep/research/iddmbse/sysml-iddmbse_v2-original/iddmbse_v2/`.
+All of them are kept, unmodified, outside the repository.

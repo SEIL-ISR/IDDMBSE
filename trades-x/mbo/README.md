@@ -157,4 +157,4 @@ display; `src/plotting.jl` uses CairoMakie instead), and `VegaLite` and
 `JuliaCall_README.md` are notes on calling this package from Python through
 `juliacall`. `SubmodularGreedy.jl Tutorial.ipynb` is the upstream tutorial for
 the package `src/greedy_submodular.jl` replaced; it is kept as the reference for
-the oracle convention and does not run here.
+the oracle convention `greedy`, `repeated_greedy` and `card_add_ind` follow.

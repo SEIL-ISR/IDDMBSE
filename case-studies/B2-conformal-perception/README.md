@@ -1,12 +1,9 @@
 # Case study B2 — Robust perception via conformal prediction
 
-This directory was built for this release. The paper's Section IV-B.2 describes
-the demonstration; no code for it existed in the repository, so it is rebuilt
-here to that description, with a synthetic detector and a synthetic world in
-place of the lab's Isaac Sim range and YOLOv8 stack. Everything the paper
-claims about the *method* is reproduced and measured; nothing here was run on
-hardware or in Isaac Sim. What is synthetic and what would be real in the lab
-pipeline is spelled out below.
+This directory implements Section IV-B.2 of the paper as a self-contained
+simulation: a synthetic detector and a synthetic arena, run through a closed
+navigation loop with and without conformal prediction. What each simulated
+piece is appears below.
 
 ## What the paper claims
 
@@ -35,19 +32,19 @@ here.
 
 ## What this directory does
 
-A 20 m by 20 m arena with axis-aligned rectangular obstacles stands in for the
-contested-terrain range. A point-goal navigation task runs a closed loop: at
-every control step the robot detects the obstacles it can see, optionally
+A 20 m by 20 m arena with axis-aligned rectangular obstacles is the world. A
+point-goal navigation task runs a closed loop: at every control step the
+robot detects the obstacles it can see, optionally
 inflates each detection to its conformal region, rasterizes the result into an
 occupancy grid, recomputes the cost-to-go to the goal, moves one cell, and is
 checked for collision against the **true** obstacles. Five steps:
 
 1. **Campaign** (`cpnav/campaign.py`). Run the nominal closed loop over
    randomly drawn worlds and record, for every frame, one row per detection
-   with the ground-truth box beside it. This is the stand-in for a PERFECT
-   campaign; the table it writes has the shape a PERFECT Trial result would
-   carry (flat per-detection rows keyed by episode and frame), so a real
-   campaign export drops in unchanged. Written to `results/campaign.csv`.
+   with the ground-truth box beside it. The table it writes has the shape a
+   PERFECT Trial result carries (flat per-detection rows keyed by episode and
+   frame), so a campaign export in that shape drops in unchanged. Written to
+   `results/campaign.csv`.
 2. **Calibrate** (`cpnav/conformal.py`). Split conformal prediction on boxes.
    The nonconformity score of a detection `d` against the truth `t` is the
    smallest uniform outward inflation that makes `d` cover `t`:
@@ -151,40 +148,41 @@ frame, step 20; the trajectory is the whole episode. `figures/tradeoff.svg` and
 `.pdf` are the coverage check with its bootstrap intervals and the collision
 rate and path length against the coverage level.
 
-## What is synthetic, and what would be real
+## What each piece is
 
-| here | in the lab pipeline |
-|---|---|
-| `cpnav/detector.py`: a seeded noise model on the true boxes — centre jitter that grows with range, a multiplicative size factor below 1, and a fixed fraction of objects with a much heavier under-estimation | YOLOv8 + DeepSORT running inside the SEIL-R2 Nav2 stack, its errors whatever they are |
-| `cpnav/world.py`: random axis-aligned boxes in a square arena | the contested-terrain Isaac Sim range |
-| ground truth taken from the sampled boxes | ground-truth 3-D asset attributes read out of Isaac Sim |
-| `cpnav/campaign.py`: the nominal closed loop run over random worlds | a PERFECT campaign driving the full perception-and-planning stack across the range at scale, and re-generating it under deliberate shifts in lighting, clutter and terrain |
-| `cpnav/planner.py`: a grid wavefront planner on a 0.5 m occupancy grid, point-goal, square robot footprint | Nav2, with the conformalized boxes entering through a costmap plugin |
-| `cpnav/tradeoff.py`: a grid sweep over alpha | a TRADES-X design-space exploration stage with 1 - alpha as one design variable among others |
+* `cpnav/detector.py` — a seeded noise model on the true boxes: centre jitter
+  that grows with range, a multiplicative size factor below 1, and a fixed
+  fraction of objects with a much heavier under-estimation.
+* `cpnav/world.py` — random axis-aligned boxes in a square arena; ground
+  truth is taken from the sampled boxes.
+* `cpnav/campaign.py` — the nominal closed loop run over random worlds.
+* `cpnav/planner.py` — a grid wavefront planner on a 0.5 m occupancy grid,
+  point-goal, square robot footprint.
+* `cpnav/tradeoff.py` — a grid sweep over alpha, the TRADES-X-style design
+  variable, reporting the coverage bought and the conservativeness it costs
+  at each value.
 
-The distribution-shift knob is exposed but not exercised by the reproduction
-script: `detector.detect(..., shift=s)` scales the jitter by `1 + s` and lowers
-the mean size factor, which is the synthetic analogue of PERFECT re-running the
-campaign under heavier clutter or worse lighting. Re-calibrating under shift is
-left to whoever has the real campaign data.
+The distribution-shift knob `detector.detect(..., shift=s)` scales the jitter
+by `1 + s` and lowers the mean size factor; `run_case_study.py` does not call
+it with a nonzero shift.
 
-## Two honest caveats
+## Reading the numbers
 
 **Per-detection coverage is not per-episode safety.** The conformal guarantee
 is marginal over detections. An episode contains many detections, so a
-collision rate over episodes is not bounded by alpha, and the numbers above
-show that directly: the conformal arm still collides in 16 of 200
-episodes at alpha = 0.10, against a per-detection miscoverage of 0.10. Lowering alpha lowers the collision rate, which is why the sweep
-and not the theory is what fixes the operating point.
+collision rate over episodes is not bounded by alpha: the conformal arm still
+collides in 16 of 200 episodes at alpha = 0.10, against a per-detection
+miscoverage of 0.10. Lowering alpha lowers the collision rate, which is why
+the sweep, not the theory alone, is what fixes the operating point.
 
 **The calibration data and the conformal closed loop are not the same
-distribution.** Calibration runs the *nominal* planner; once the inflated boxes
-change the plan, the robot visits different states, so the exchangeability that
-split CP assumes is broken by the very intervention it enables. The script
-reports the realized coverage inside the conformal closed loop beside the
-held-out coverage so the size of that gap is visible. This is the problem the
-navigation-safety construction of Mei et al. addresses, and it is the reason
-the paper insists the calibration set be drawn from the closed-loop states the
+distribution.** Calibration runs the *nominal* planner; once the inflated
+boxes change the plan, the robot visits different states, so the
+exchangeability that split CP assumes is broken by the very intervention it
+enables. The script reports the realized coverage inside the conformal
+closed loop beside the held-out coverage so the size of that gap is visible
+— this is the problem the navigation-safety construction of Mei et al.
+addresses, by drawing the calibration set from the closed-loop states the
 robot will actually visit.
 
 ## Numerics

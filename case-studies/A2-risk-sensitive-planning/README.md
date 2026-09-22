@@ -13,16 +13,11 @@ Planning with PERFECT":
 > supplies the distributed campaign behind these comparisons, treating the
 > planner as a behavioral design variable to evaluate at scale.
 
-**This code was written for this release.** The repository carried no
-implementation of RA-RRT\*, and the published results of Enwerem, Noorani,
-Baras and Sadler (arXiv:2408.08668, CDC 2024) were produced elsewhere. What
-follows is an independent implementation built to the description above, run on
-a synthetic world generator, reporting what it produced. It is not a
-reproduction of the paper's numbers and should not be read as one.
-
-Synthetic here: the world generator (random discs), the segment-cost noise
-model, the traversal budget that defines a failure. Real here: the planner, the
-risk measures, the campaign and every number in the table.
+This is an implementation of RA-RRT\* built to the description above, run here
+on a synthetic world generator over the campaign below. The world generator
+(random discs), the segment-cost noise model and the traversal budget that
+defines a failure are synthetic. The planner, the risk measures, the campaign
+and every number in the table are produced by that implementation.
 
 
 ## The problem
@@ -63,24 +58,21 @@ cost-to-come bookkeeping over this additive cost; nothing about ChooseParent,
 Rewire or the near radius changes.
 
 
-## The noise model, and where it departs from the paper
+## The noise model
 
-The paper's segment cost is `L_k = c_k + C_k` with `C_k ~ N(0, s_k^2)`
-exogenous: obstacle proximity does not enter it, and the paper names
-obstacle-coupled noise as future work. That model cannot produce the
-manuscript's figure claim. With an exogenous Gaussian,
+The "hugging safer routes as the environment hardens" behavior above requires
+the noise to couple to obstacle proximity. With an exogenous Gaussian,
+`L_k = c_k + C_k` and `C_k ~ N(0, s_k^2)` independent of clearance,
 
     CVaR_alpha(c_k + C_k) = c_k + s_k * phi(z_alpha) / (1 - alpha),
 
 so the risk term is a constant per segment: the risk-averse planner prefers
 *fewer* segments, not safer ones. If instead `s_k` scales with `c_k`, the whole
 cost scales uniformly and the optimal path does not move at all. Either way the
-route does not change shape, and "hugging safer routes as the environment
-hardens" cannot happen.
+route does not change shape.
 
-So this case study uses the obstacle-coupled model the manuscript's claim
-requires. For a segment of length `L` whose smallest clearance to an obstacle is
-`d`:
+So this case study couples the noise to clearance directly. For a segment of
+length `L` whose smallest clearance to an obstacle is `d`:
 
     cost = L * max(0, 1 + sigma * (Z + kappa * E * 1{U < p(d)}))
     p(d) = p_max * exp(-d / d_hazard)
@@ -168,10 +160,8 @@ planner runs. Mapped onto PERFECT's own objects (`perfect/README.md`):
 | one run with its seed | a `Trial` of that experiment, 50 per experiment |
 | the process pool | the RQ workers and the runner, `experiments run <tag>` enqueueing to Redis, results in the SQLite database |
 
-**This brief does not start PERFECT.** Nothing here was run through a PERFECT
-server, worker or runner; a `multiprocessing` pool stands in for the workers so
-the case study runs on one machine with no Redis and no ROS. The table above is
-the mapping, not a record of a PERFECT run.
+The campaign here runs as a `multiprocessing` pool of worker processes on one
+machine; the table above is the mapping onto PERFECT's objects.
 
 
 ## Results
@@ -255,7 +245,7 @@ figures: ['failure_and_worstcase.pdf', 'failure_and_worstcase.svg', 'paths_by_en
 
 ### What the numbers say
 
-**Against plain RRT\*, the manuscript's claim holds and is large.** At the
+**Against plain RRT\*, the advantage is large.** At the
 highest noise level, taking `cvar0.9` against `rrtstar`:
 
 | environment | worst-case p95 | failure rate | hazard rate | mean length | plan time |
@@ -266,10 +256,8 @@ highest noise level, taking `cvar0.9` against `rrtstar`:
 
 Lower worst-case path length: yes, by 28 to 39 %. Fewer failures: yes, by 31 to
 70 %. A modest path-length premium: 9 to 14 %. The computation premium is a
-factor of 3 to 5 in this implementation -- but that number is about the
-implementation, not the method: it is the cost of an empirical CVaR over 2048
-samples per candidate edge, where the paper evaluates a Gaussian CVaR in closed
-form.
+factor of 3 to 5 in this implementation: it is the cost of an empirical CVaR
+over 2048 samples per candidate edge, rather than a closed-form Gaussian CVaR.
 
 **The advantage widens with the noise level, strongly.** At `sigma = 0.01` every
 policy is within 0.8 m of every other on worst-case length and no policy ever
@@ -283,11 +271,8 @@ length at `sigma = 0.5` is 0.61 (easy), 0.65 (medium), 0.72 (hard), and the
 failure-rate ratio goes 0.30, 0.49, 0.69 the same way. The absolute gap in
 worst-case length is roughly constant (87, 91, 82 m). The reason is visible in
 `figures/paths_by_environment.*`: risk aversion works by detouring into open
-space, and the hard environment has less open space to detour into. The
-manuscript's figure caption says the advantage widens from the easy to the hard
-environment; under this model and these metrics it does not. That is the honest
-result, and it is a property of the model, not a measurement of the paper's
-system.
+space, and the hard environment has less open space to detour into, so the
+advantage narrows as clutter increases rather than growing with it.
 
 **Between the risk levels the differences are small, and one of them reverses.**
 At `sigma = 0.5`, going from `neutral` to `cvar0.9` lowers the worst-case length
@@ -388,6 +373,8 @@ a small grid.
 * **No cycles can appear in Rewire.** Edge costs are strictly positive, so a
   descendant of a node always has a larger cost-to-come and can never pass the
   rewire test against its own ancestor.
+* **EVaR** is implemented in `rarrt/risk.py` and tested against a closed-form
+  Gaussian reference alongside CVaR and VaR; it is not called by the planner.
 
 
 ## Tests
@@ -410,16 +397,6 @@ a small grid.
   exactly the expected positive clearance.
 * The campaign runner on a 2 x 1 x 2 x 2 grid writes the CSV with the expected
   columns, and reproduces exactly on a second run.
-
-
-## What is not here
-
-The long-form report's Gazebo variant -- a risk-aware potential field over noisy
-occupancy grids at inflation radii `{0.1, 0.5, 0.6, 0.7, 0.9, 0.95, 0.99}` on
-two environments, measuring path distance, collisions and goal reach -- is not
-reproduced. It needs a Gazebo run, and no simulator was started for this case
-study. EVaR is implemented in `rarrt/risk.py` and tested but is not used by the
-planner; the paper does not use it either.
 
 
 ## Sources

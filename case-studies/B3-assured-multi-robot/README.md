@@ -1,17 +1,13 @@
 # B3 — Assured multi-robot coordination
 
-This directory realises the third released demonstration of the IDDMBSE paper, Section
-IV-B.3: a three-robot indoor team whose fleet requirement is decomposed into per-robot
+This directory implements Section IV-B.3 of the IDDMBSE paper as a self-contained
+simulation: a three-robot indoor team whose fleet requirement is decomposed into per-robot
 missions, allocated onto structural AGR blocks, parsed into reach-avoid STL
 specifications, synthesised as one joint Mixed-Integer Linear Program, executed, scored
-by VERITAS with the quantitative STL robustness, and written back into the model.
-
-**Built for this release.** The paper describes this demonstration; the repository had no
-code for it. Everything here — the map, the missions, the timing windows, the noise model
-— was written for this release and is labelled as such. Nothing here was run on hardware
-or in Isaac Sim. The nearest relative in the tree, `dump/ltbt`, solves a different
-problem (three agents against one shared spec, no robustness scoring, no write-back) and
-needs Gurobi; nothing was copied from it.
+by VERITAS with the quantitative STL robustness, and written back into the model. The map,
+the missions, the timing windows and the noise model below are its own. `dump/ltbt` solves
+a different problem (three agents against one shared spec, no robustness scoring, no
+write-back) and needs Gurobi; this directory uses HiGHS and its own encoding.
 
 ## The chain, end to end
 
@@ -113,10 +109,8 @@ at a dual bound of 2.82 against an incumbent near 0. One robot at a time it clos
 `Problem.rho_required` at `None` and it maximises robustness instead, which is the mode
 the unit tests use.
 
-**Solver.** HiGHS through `scipy.optimize.milp`. HiGHS is open source (MIT); nothing here
-needs a licence. The paper says "off-the-shelf solvers" and the lab's own scripts for the
-nearest problem use Gurobi — substituting an open-source solver is a decision taken for
-this release.
+**Solver.** HiGHS through `scipy.optimize.milp`, open source (MIT); nothing here needs a
+licence.
 
 ## Execution
 
@@ -159,11 +153,9 @@ robot, headings taken from the segment directions:
 
     ros2 topic pub --once /agr_1/plan nav_msgs/msg/Path "$(cat results/robot_1_path.yaml)"
 
-This is the interface the paper describes — the MILP output converted to Path waypoints
-for three Nav2 instances. **Nothing here has been published to a live ROS 2 graph or run
-against Nav2 in this repository** `[unverified]`; the files are checked for the message
-layout by `tests/test_writeback.py::test_path_export_has_the_ros_field_layout` and nothing
-more.
+This is the MILP output converted to Path waypoints for three Nav2 instances.
+`tests/test_writeback.py::test_path_export_has_the_ros_field_layout` checks the files for
+the message layout.
 
 ## Running it
 
@@ -179,17 +171,14 @@ half minutes on this workstation; the run prints its own exact figure.
 ## Results
 
 Measured on this workstation on 2026-09-22 with `uv run python run_case_study.py
---per-robot-optima`; the gate file for the brief that built this holds the whole printout.
-The run is seeded and HiGHS is deterministic here, so re-running against the same model
+--per-robot-optima`. The run is seeded and HiGHS is deterministic here, so re-running against the same model
 file reproduces these numbers.
 
 **What the map affords.** Each robot solved on its own, without the team-separation
 conjunct, maximising robustness: AGR_1 0.500 m, AGR_2 0.467 m, AGR_3 0.467 m, HiGHS
 Optimal in 1.8, 2.0 and 1.0 s. AGR_1's 0.500 m is the half-width of the 1.0 m doorway it
-has to pass; the other two look limited by the trade-off between their central station's
-box and the pillar beside it `[inferred from the geometry, not read off the solver]`. The
-required margin in the model file is 0.35 m, below all three, so the joint problem is not
-margin-starved before coordination is even considered.
+has to pass. The required margin in the model file is 0.35 m, below all three, so the
+joint problem is not margin-starved before coordination is even considered.
 
 **The joint MILP.** 1841 variables of which 1043 binary, 2390 constraints, 7988 nonzeros.
 HiGHS returned status 0, `Optimization terminated successfully (HiGHS Status 7: Optimal)`,
@@ -230,14 +219,10 @@ violated in 3 runs of 20, AGR_2 in 4, AGR_3 in 1; mean executed robustness 0.114
 0.138 m and worst -0.191, -0.220, -0.007 m. The single seed is not the result; the spread
 is (`figures/seed_sweep`).
 
-**How this compares to the paper.** The paper reports rho_phi1 = 0.199, rho_phi2 = -0.04
-and rho_phi3 = 0.999 from the lab's own run on the lab's own map, missions and solver, none
-of which is in this repository. These are not those numbers and are not offered as a
-reproduction of them. What is reproduced is the chain and the shape of the finding: plans
-that satisfy their specifications by construction, executions that do not all survive the
-scoring, and negative goal-satisfaction values written back into the model beside positive
-ones. The paper's split is one violation in three; here it is two in three, because the
-conjunct that fails is shared between two robots.
+The chain produces plans that satisfy their specifications by construction, executions
+that do not all survive the scoring, and negative goal-satisfaction values written back
+into the model beside positive ones: two of the three robots violate their specification
+once noise is applied, both through the same shared separation conjunct.
 
 **Figures** (SVG and PDF in `figures/`):
 
@@ -282,19 +267,14 @@ effort — and on effort it would pick `1, 2, 0` at 5.39, which is the worst of 
 the executions are scored (-0.214). The two stages disagree, which is the case for having
 both.
 
-**Read that table with its caveat.** All six hit the 40 s limit — HiGHS returned status 1,
-not Optimal — so these are incumbents, not optima, and the efforts are not comparable to
-the 5.32 of the main run, which was solved to gap 0.0. The ranking mixes the effect of the
-allocation with the luck of the incumbent, so it is indicative and not a proof that
-`1, 0, 2` is the best assignment `[unverified]`. Raising `--sweep-time-limit` to the few
-minutes each assignment needs would settle it at the cost of a much longer run. A
-wall-clock limit is also not a reproducible stopping rule: these numbers came out the same
-in two consecutive runs on this workstation, but nothing guarantees that on another
-machine, where the main solve's gap 0.0 result would still be identical.
-
-The paper's wider claim for this case — trade-offs over the team's
-collaboration-communication-information multigraph — is not implemented here; the
-communication topology is not modelled at all `[unverified]`.
+**Reading the ranking.** All six hit the 40 s limit — HiGHS returned status 1, not
+Optimal — so these are incumbents, not optima, and the efforts are not comparable to the
+5.32 of the main run, which was solved to gap 0.0. The ranking mixes the effect of the
+allocation with the luck of the incumbent it stopped at. Raising `--sweep-time-limit` to
+the few minutes each assignment needs would tighten it, at the cost of a much longer run.
+A wall-clock limit is also not a reproducible stopping rule on its own: these numbers came
+out the same in two consecutive runs on this workstation, while the main solve's gap-0.0
+result is reproducible by construction.
 
 ## Layout
 

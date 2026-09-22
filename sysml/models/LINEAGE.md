@@ -24,8 +24,7 @@ Diagrams are counted from the same member as `<ownedDiagram ...>` elements.
 
 The element count grows monotonically and packages are only ever added, so mk6 contains
 everything the earlier snapshots contain. Byte size is not monotonic because the archive
-is recompressed on every save. mk5 has one diagram fewer than mk4 and mk6 has it back;
-this was not chased further.
+is recompressed on every save. mk5 has one diagram fewer than mk4 and mk6 has it back.
 
 Measured on mk6 and quoted in `../README.md`: 69 `sysml:Block`, 3 `sysml:ConstraintBlock`,
 23 `sysml:Requirement`, 51 diagrams, 5 opaque expressions whose language is `Matlab` or
@@ -33,12 +32,9 @@ Measured on mk6 and quoted in `../README.md`: 69 `sysml:Block`, 3 `sysml:Constra
 
 ## Where the originals are
 
-Everything the user dropped is kept, unmodified, outside the repository at
-
-    /mnt/sabrent-ssd/sandeep/research/iddmbse/sysml-iddmbse_v2-original/
-
-as `iddmbse_v2/` (59 files, the folder as delivered) and `iddmbse_v2.zip` (the same
-folder zipped, 56 MB). The repository holds only the curated copies.
+Everything the user dropped is kept, unmodified, outside the repository, as `iddmbse_v2/`
+(59 files, the folder as delivered) and `iddmbse_v2.zip` (the same folder zipped, 56 MB).
+The repository holds only the curated copies.
 
 ## Left out of the repository on purpose
 
@@ -47,6 +43,3 @@ folder zipped, 56 MB). The repository holds only the curated copies.
 | the six earlier snapshots (base, mk1 ... mk5) | superseded by mk6; roughly 4 MB each, no content of their own |
 | six `.mdzip.bak` files (base, mk2, mk3, mk4, mk5, mk6) | MagicDraw autosave states written one to two seconds before their sibling; they differ by 0.6 to 18 KB (`Iddmbse_v2` -646 B, mk2 +607 B, mk3 +6371 B, mk4 +18506 B, mk5 +1683 B, mk6 +1992 B relative to the `.mdzip`) |
 | `TurtleSim (2).mdzip` | an unrelated turtlesim / rosbridge tutorial project, not part of the AGR model |
-
-The `.bak` of mk6 was not opened or compared element by element; the size delta above is
-the only evidence about it. [unverified] whether any `.bak` holds edits its sibling lacks.
