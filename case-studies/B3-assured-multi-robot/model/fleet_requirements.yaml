@@ -1,0 +1,96 @@
+# Fleet requirements for case study B3, IDDMBSE Section IV-B.3.
+#
+# Step 1 of the chain: one high-level fleet requirement, decomposed below into three
+# quantitative per-robot missions. Step 2 (the satisfy allocation onto the structural
+# AGR blocks) and the goal-satisfaction write-back live in model/agr_fleet.yaml.
+#
+# These numbers were chosen for this release; the lab's own map and mission windows
+# are not in this repository. See README.md.
+
+fleet_requirement:
+  id: FR-TEAM-1
+  text: >
+    The three-robot AGR team shall complete its assigned two-station inspection
+    sweep of the west-wing floor within 15 s of the start, shall not enter any
+    mapped obstacle, and shall hold at least 0.5 m of clearance between any two
+    team members at all times.
+
+workspace:
+  x: [0.0, 8.0]
+  y: [0.0, 6.0]
+
+horizon:
+  # v_max * dt = 0.81 m stays below the 1.0 m thickness of the thinnest obstacle, so
+  # no single step can put a robot on the far side of a wall. This is also the finest
+  # discretisation at which HiGHS closes the gap on the joint instance in about three
+  # minutes; see README.md.
+  steps: 16          # k = 0 .. 16
+  dt: 0.9            # s, so the plan spans 14.4 s
+
+dynamics:
+  model: double_integrator
+  v_max: 0.9         # m/s, per axis
+  a_max: 1.0         # m/s^2, per axis
+
+separation:
+  d_min: 0.5         # m, infinity norm between any two robots
+  norm: inf
+
+synthesis:
+  required_margin: 0.35   # m; every phi_i must hold with at least this robustness
+  rho_cap: 1.0            # upper bound on every robustness variable, see README
+  effort_weight: 0.001
+  mip_rel_gap: 0.0
+  time_limit_s: 600.0
+
+execution:
+  # First-order tracking-error model, chosen before any run: the steady-state
+  # standard deviation is sigma / sqrt(1 - pole^2) = 0.15 m, the order of magnitude
+  # of Nav2 cross-track error in a cluttered indoor map. Not tuned to the outcome.
+  pole: 0.8
+  sigma: 0.09        # m per step, per axis
+  clip_sigma: 3.0
+  seed: 0
+  sweep_seeds: 20
+
+# The mapped environment in halfspace (H-) representation. Boxes are expanded to
+# four rows; `halfspaces` gives A and b directly for a general polytope.
+obstacles:
+  - id: OBS_WALL_SOUTH
+    type: box
+    x: [3.0, 4.0]
+    y: [0.0, 1.6]
+  - id: OBS_WALL_MID
+    type: box
+    x: [3.0, 4.0]
+    y: [2.6, 3.6]
+  - id: OBS_WALL_NORTH
+    type: box
+    x: [3.0, 4.0]
+    y: [4.6, 6.0]
+  - id: OBS_PILLAR
+    type: halfspaces        # a square pillar rotated 45 deg, centre (6.1, 3.0)
+    A: [[1.0, 1.0], [-1.0, 1.0], [-1.0, -1.0], [1.0, -1.0]]
+    b: [9.80710678, -2.39289322, -8.39289322, 3.80710678]
+
+# Step 1: the fleet requirement decomposed into quantitative per-robot missions.
+# `window` is a closed interval of time steps k.
+robots:
+  - id: AGR_1
+    mission: M-AGR-1
+    start: [0.7, 4.8]
+    goals:
+      - {id: ST_N1, x: [4.5, 5.7], y: [4.3, 5.5], window: [6, 10]}
+      - {id: ST_N2, x: [6.5, 7.7], y: [4.3, 5.5], window: [13, 16]}
+  - id: AGR_2
+    mission: M-AGR-2
+    start: [0.7, 3.0]
+    goals:
+      - {id: ST_C1, x: [4.3, 5.3], y: [2.5, 3.5], window: [7, 10]}
+      - {id: ST_S2, x: [6.5, 7.7], y: [0.4, 1.6], window: [14, 16]}
+  - id: AGR_3
+    mission: M-AGR-3
+    start: [0.7, 1.2]
+    goals:
+      - {id: ST_S1, x: [4.5, 5.7], y: [0.4, 1.6], window: [7, 10]}
+      - {id: ST_C2, x: [6.9, 7.9], y: [2.5, 3.5], window: [14, 16]}

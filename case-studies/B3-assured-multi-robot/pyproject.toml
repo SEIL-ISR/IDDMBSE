@@ -1,0 +1,32 @@
+[project]
+name = "iddmbse-assured-ma"
+version = "0.1.0"
+description = "Case study B3: STL-constrained MILP synthesis and VERITAS robustness scoring for a three-robot indoor team"
+# Upper bound because rtamt 0.4.10 pins antlr4-python3-runtime 4.7, which imports
+# typing.io and so fails to import on Python 3.13.
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+    "pyyaml>=6.0",
+    "rtamt>=0.4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["assured_ma"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# A sourced ROS 2 Jazzy environment puts /opt/ros/jazzy/lib/python3.12/site-packages
+# on PYTHONPATH, so pytest auto-loads the ament and launch_testing plugins from it
+# and fails on their own missing dependencies. This case study needs none of them.
+filterwarnings = ["ignore:typing.io is deprecated:DeprecationWarning"]
+addopts = "-p no:launch_testing -p no:launch_ros -p no:ament_lint -p no:ament_copyright -p no:ament_flake8 -p no:ament_pep257 -p no:ament_xmllint"

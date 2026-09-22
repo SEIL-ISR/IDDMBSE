@@ -1,0 +1,74 @@
+# The AGR fleet model, mirroring the SysML structure of IDDMBSE Section IV-B.3:
+# the fleet requirement, the three per-robot missions derived from it, the satisfy
+# relations onto the structural AGR blocks, and the goal-satisfaction value on each
+# block that VERITAS writes back after scoring the executed trajectory.
+#
+# run_case_study.py rewrites the goal_satisfaction / verdict / scored fields of the
+# blocks in place. Everything else is fixed input.
+
+model: AGR_Fleet
+source: IDDMBSE Section IV-B.3, built for this release
+requirements:
+- id: FR-TEAM-1
+  kind: fleet
+  text: 'The three-robot AGR team shall complete its assigned two-station inspection sweep of the west-wing
+    floor within 15 s of the start, shall not enter any mapped obstacle, and shall hold at least 0.5 m
+    of clearance between any two team members at all times.
+
+    '
+  derived:
+  - M-AGR-1
+  - M-AGR-2
+  - M-AGR-3
+- id: M-AGR-1
+  kind: mission
+  text: Visit station ST_N1 between 5.4 s and 9.0 s and station ST_N2 between 11.7 s and 14.4 s, avoiding
+    all obstacles and keeping 0.5 m from the other robots.
+  spec: phi_1
+  satisfied_by: AGR_1
+- id: M-AGR-2
+  kind: mission
+  text: Visit station ST_C1 between 6.3 s and 9.0 s and station ST_S2 between 12.6 s and 14.4 s, avoiding
+    all obstacles and keeping 0.5 m from the other robots.
+  spec: phi_2
+  satisfied_by: AGR_2
+- id: M-AGR-3
+  kind: mission
+  text: Visit station ST_S1 between 6.3 s and 9.0 s and station ST_C2 between 12.6 s and 14.4 s, avoiding
+    all obstacles and keeping 0.5 m from the other robots.
+  spec: phi_3
+  satisfied_by: AGR_3
+blocks:
+- id: AGR_Fleet_Assembly
+  kind: block
+  parts:
+  - AGR_1
+  - AGR_2
+  - AGR_3
+- id: AGR_1
+  kind: part
+  type: AutonomousGroundRobot
+  allocated_mission: M-AGR-1
+  spec: phi_1
+  goal_satisfaction: -0.051655
+  verdict: violated
+  binding_conjunct: sep(1,2)@k=8
+  scored_by: VERITAS quantitative STL robustness
+- id: AGR_2
+  kind: part
+  type: AutonomousGroundRobot
+  allocated_mission: M-AGR-2
+  spec: phi_2
+  goal_satisfaction: -0.051655
+  verdict: violated
+  binding_conjunct: sep(1,2)@k=8
+  scored_by: VERITAS quantitative STL robustness
+- id: AGR_3
+  kind: part
+  type: AutonomousGroundRobot
+  allocated_mission: M-AGR-3
+  spec: phi_3
+  goal_satisfaction: 0.265563
+  verdict: satisfied
+  binding_conjunct: OBS_WALL_SOUTH@k=6
+  scored_by: VERITAS quantitative STL robustness

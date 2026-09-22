@@ -1,0 +1,27 @@
+{
+  "source": "IDDMBSE case study B3, built for this release",
+  "seed": 0,
+  "blocks": {
+    "AGR_1": {
+      "spec": "phi_1",
+      "planned_rho": 0.35,
+      "goal_satisfaction": -0.051655,
+      "verdict": "violated",
+      "binding_conjunct": "sep(1,2)@k=8"
+    },
+    "AGR_2": {
+      "spec": "phi_2",
+      "planned_rho": 0.35,
+      "goal_satisfaction": -0.051655,
+      "verdict": "violated",
+      "binding_conjunct": "sep(1,2)@k=8"
+    },
+    "AGR_3": {
+      "spec": "phi_3",
+      "planned_rho": 0.35,
+      "goal_satisfaction": 0.265563,
+      "verdict": "satisfied",
+      "binding_conjunct": "OBS_WALL_SOUTH@k=6"
+    }
+  }
+}

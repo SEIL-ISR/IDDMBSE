@@ -1,0 +1,133 @@
+{
+  "time_limit_s": 40.0,
+  "mip_rel_gap": 0.15,
+  "wall_s": 240.1,
+  "rows": [
+    {
+      "allocation": [
+        0,
+        1,
+        2
+      ],
+      "status": 1,
+      "wall_s": 40.0,
+      "effort": 9.09,
+      "planned_rho": [
+        0.35,
+        0.35,
+        0.35
+      ],
+      "worst_executed_rho": -0.0939,
+      "mean_executed_rho": 0.15,
+      "violations": 4
+    },
+    {
+      "allocation": [
+        0,
+        2,
+        1
+      ],
+      "status": 1,
+      "wall_s": 40.0,
+      "effort": 7.104,
+      "planned_rho": [
+        0.35,
+        0.35,
+        0.35
+      ],
+      "worst_executed_rho": -0.0938,
+      "mean_executed_rho": 0.1585,
+      "violations": 6
+    },
+    {
+      "allocation": [
+        1,
+        0,
+        2
+      ],
+      "status": 1,
+      "wall_s": 40.0,
+      "effort": 6.646,
+      "planned_rho": [
+        0.35,
+        0.35,
+        0.35
+      ],
+      "worst_executed_rho": 0.002,
+      "mean_executed_rho": 0.1417,
+      "violations": 0
+    },
+    {
+      "allocation": [
+        1,
+        2,
+        0
+      ],
+      "status": 1,
+      "wall_s": 40.0,
+      "effort": 5.39,
+      "planned_rho": [
+        0.35,
+        0.35,
+        0.35
+      ],
+      "worst_executed_rho": -0.2139,
+      "mean_executed_rho": 0.1313,
+      "violations": 7
+    },
+    {
+      "allocation": [
+        2,
+        0,
+        1
+      ],
+      "status": 1,
+      "wall_s": 40.0,
+      "effort": 7.552,
+      "planned_rho": [
+        0.35,
+        0.35,
+        0.35
+      ],
+      "worst_executed_rho": -0.1975,
+      "mean_executed_rho": 0.1068,
+      "violations": 11
+    },
+    {
+      "allocation": [
+        2,
+        1,
+        0
+      ],
+      "status": 1,
+      "wall_s": 40.0,
+      "effort": 8.968,
+      "planned_rho": [
+        0.35,
+        0.35,
+        0.35
+      ],
+      "worst_executed_rho": -0.0789,
+      "mean_executed_rho": 0.1237,
+      "violations": 6
+    }
+  ],
+  "best_by_worst_case_rho": {
+    "allocation": [
+      1,
+      0,
+      2
+    ],
+    "status": 1,
+    "wall_s": 40.0,
+    "effort": 6.646,
+    "planned_rho": [
+      0.35,
+      0.35,
+      0.35
+    ],
+    "worst_executed_rho": 0.002,
+    "mean_executed_rho": 0.1417,
+    "violations": 0
+  }
+}

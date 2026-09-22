@@ -1,0 +1,263 @@
+# MILP plan for AGR_3 (phi_3), IDDMBSE case study B3.
+# Publish to the robot's Nav2 FollowPath action.
+header:
+  stamp:
+    sec: 0
+    nanosec: 0
+  frame_id: map
+poses:
+- header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: map
+  pose:
+    position:
+      x: 0.7
+      y: 1.2
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.164085
+      w: 0.986446
+- header:
+    stamp:
+      sec: 0
+      nanosec: 900000000
+    frame_id: map
+  pose:
+    position:
+      x: 0.943561
+      y: 1.283333
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.164085
+      w: 0.986446
+- header:
+    stamp:
+      sec: 1
+      nanosec: 800000000
+    frame_id: map
+  pose:
+    position:
+      x: 1.430682
+      y: 1.45
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.164085
+      w: 0.986446
+- header:
+    stamp:
+      sec: 2
+      nanosec: 700000000
+    frame_id: map
+  pose:
+    position:
+      x: 1.917803
+      y: 1.616667
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.164085
+      w: 0.986446
+- header:
+    stamp:
+      sec: 3
+      nanosec: 600000000
+    frame_id: map
+  pose:
+    position:
+      x: 2.404924
+      y: 1.783333
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.164085
+      w: 0.986446
+- header:
+    stamp:
+      sec: 4
+      nanosec: 500000000
+    frame_id: map
+  pose:
+    position:
+      x: 2.892045
+      y: 1.95
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.101065
+      w: 0.99488
+- header:
+    stamp:
+      sec: 5
+      nanosec: 400000000
+    frame_id: map
+  pose:
+    position:
+      x: 3.379167
+      y: 2.05
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.101065
+      w: 0.99488
+- header:
+    stamp:
+      sec: 6
+      nanosec: 300000000
+    frame_id: map
+  pose:
+    position:
+      x: 3.866288
+      y: 1.95
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.221503
+      w: 0.97516
+- header:
+    stamp:
+      sec: 7
+      nanosec: 200000000
+    frame_id: map
+  pose:
+    position:
+      x: 4.353409
+      y: 1.716667
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.221503
+      w: 0.97516
+- header:
+    stamp:
+      sec: 8
+      nanosec: 100000000
+    frame_id: map
+  pose:
+    position:
+      x: 4.84053
+      y: 1.483333
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.221503
+      w: 0.97516
+- header:
+    stamp:
+      sec: 9
+      nanosec: 0
+    frame_id: map
+  pose:
+    position:
+      x: 5.327652
+      y: 1.25
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.075383
+      w: 0.997155
+- header:
+    stamp:
+      sec: 9
+      nanosec: 900000000
+    frame_id: map
+  pose:
+    position:
+      x: 5.814773
+      y: 1.324074
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.340993
+      w: 0.940066
+- header:
+    stamp:
+      sec: 10
+      nanosec: 800000000
+    frame_id: map
+  pose:
+    position:
+      x: 6.271429
+      y: 1.705556
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.356996
+      w: 0.934106
+- header:
+    stamp:
+      sec: 11
+      nanosec: 700000000
+    frame_id: map
+  pose:
+    position:
+      x: 6.697619
+      y: 2.087037
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.356996
+      w: 0.934106
+- header:
+    stamp:
+      sec: 12
+      nanosec: 600000000
+    frame_id: map
+  pose:
+    position:
+      x: 7.12381
+      y: 2.468519
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.356996
+      w: 0.934106
+- header:
+    stamp:
+      sec: 13
+      nanosec: 500000000
+    frame_id: map
+  pose:
+    position:
+      x: 7.55
+      y: 2.85
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.356996
+      w: 0.934106
+- header:
+    stamp:
+      sec: 14
+      nanosec: 400000000
+    frame_id: map
+  pose:
+    position:
+      x: 7.97619
+      y: 3.231481
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.356996
+      w: 0.934106
