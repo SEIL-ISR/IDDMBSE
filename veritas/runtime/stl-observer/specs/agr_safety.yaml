@@ -1,0 +1,48 @@
+# VERITAS runtime obligations for the Trusted Autonomous Ground Robot.
+#
+# The first two come from requirements in sysml/models/AGR_stack-MB-SensorTrade-mk6.mdzip;
+# their Text is quoted verbatim below. The third is a local safety obligation with no numbered
+# requirement behind it in that model -- it is here because an obstacle-distance monitor is the
+# obvious third example and it exercises a plain Float64 topic.
+#
+# RTAMT's online monitor implements past-time operators, so a safety obligation is written as
+# `historically (p)` and a bounded-future one as `always[0,T] (p)` with `pastify: true`.
+# Interval bounds are in seconds.
+
+rate: 10.0
+
+monitors:
+
+  - name: soc_safety
+    requirement: P.1.4
+    # "The AGR Battery State of Charge during operation shall always be more than 0.6."
+    formula: "historically (soc >= 0.6)"
+    signals:
+      soc:
+        topic: /battery_state
+        type: sensor_msgs/msg/BatteryState
+        field: percentage
+
+  - name: goal_liveness
+    requirement: P.1.2
+    # "The AGR shall complete the entire path in the test environments in less than 180 seconds."
+    # Read online as: at every instant past the first 180 s, the goal was reached somewhere in
+    # the last 180 s. `warmup` holds the violation flag down until 180 s have actually elapsed,
+    # so the monitor does not report a violation simply because the run has just started.
+    formula: "once[0,180] (goal >= 0.5)"
+    warmup: 180.0
+    signals:
+      goal:
+        topic: /goal_reached
+        type: std_msgs/msg/Bool
+        field: data
+
+  - name: obstacle_safety
+    requirement: ""
+    # Not from a numbered requirement in the mk6 model: keep at least half a metre of clearance.
+    formula: "historically (obstacle_distance >= 0.5)"
+    signals:
+      obstacle_distance:
+        topic: /obstacle_distance
+        type: std_msgs/msg/Float64
+        field: data
