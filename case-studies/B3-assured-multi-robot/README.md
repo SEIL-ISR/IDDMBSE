@@ -276,6 +276,186 @@ A wall-clock limit is also not a reproducible stopping rule on its own: these nu
 out the same in two consecutive runs on this workstation, while the main solve's gap-0.0
 result is reproducible by construction.
 
+## Through PERFECT
+
+`run_perfect_campaign.py` runs the coordination study as a PERFECT campaign over
+the server's JSON API. The design is the coordination configuration -- which robot
+gets which station pair, and the robustness margin its plan has to hold -- and the
+environment is the tracking disturbance the fleet is executed under. The
+experiment class and its working files are `perfect/examples/multirobot-milp`; the
+chain a trial runs is this directory's `assured_ma`, called from the trial: parse
+the fleet requirements under the design's allocation, synthesise the joint plan,
+execute it once, score each robot's robustness, and write the verdicts into the
+trial's own copy of `model/agr_fleet.yaml`.
+
+```
+cd case-studies/B3-assured-multi-robot
+uv run python run_perfect_campaign.py --submit --url http://127.0.0.1:5001
+uv run python run_perfect_campaign.py --collect --url http://127.0.0.1:5001
+```
+
+The grid is the six allocations at four margins, 0.15, 0.35, 0.45 and 0.5 m (24
+designs), against three disturbance levels, `sigma` 0.06, 0.09 and 0.12 m per
+step (steady-state tracking error 0.10, 0.15 and 0.20 m before the clip; 0.09 is
+the standalone run's level), with three seeds each (9 environments): 216 trials.
+The same seed at the three levels is the same draw scaled, and every design meets
+the same nine draws. A trial's solve stops after 8000 branch-and-bound nodes, or
+earlier at a relative gap of 0.05 (`synth.synthesise(..., node_limit=8000)`), so
+it takes about a minute rather than the three and a half the gap-0.0 solve above
+takes. Because the limit counts nodes and not seconds, the nine trials of a design
+return the same plan however loaded the machine is, and the collection checks it.
+
+Recorded run, 2026-09-22, four PERFECT runners, each with its own RQ worker (the
+pairing and the reason for it are in the example's README), on a shared
+workstation:
+
+```
+designs: 24 environments: 9 trials: 216
+experiments: 216 trials enqueued: 216
+   216 / 216 shut down
+finished: 216 of 216
+```
+
+Wall clock from the first trial starting to the last shutting down: 38 min 27 s,
+58, 43, 60 and 55 trials on the four runners. Collecting it back:
+
+```
+trials collected: 216 states: ['TrialState.SUCCESSFUL|SHUT_DOWN']
+SUCCESSFUL trials: 216
+feasible: 162 of 216
+stopped by: {'infeasible': 54, 'node limit': 117, 'optimal': 45}
+most distinct plans returned by the trials of one design: 1
+```
+
+Every design's nine trials returned one and the same plan, and all 216 trials
+built the same MILP size, 1841 variables, 1043 binary, 2390 constraints.
+
+**By margin**, the six allocations pooled:
+
+| margin | designs with a plan | trials | trials with min rho < 0 | rate | mean min rho | mean solve s | mean gap | mean effort |
+|---|---|---|---|---|---|---|---|---|
+| 0.15 | 6 of 6 | 54 | 44 | 0.815 | -0.089 | 44.63 | 0.116 | 4.01 |
+| 0.35 | 6 of 6 | 54 | 7 | 0.13 | 0.106 | 54.86 | 0.488 | 7.32 |
+| 0.45 | 6 of 6 | 54 | 1 | 0.019 | 0.212 | 65.48 | 0.5 | 9.66 |
+| 0.5 | 0 of 6 | 54 | - | - | - | 0.01 | - | - |
+
+**By design** (the solve is the same in all nine trials of a design; the
+execution columns count its nine trials, and the per-robot column counts the
+trials in which that robot's own formula was violated):
+
+| design | stop | nodes | gap | effort | mean min rho | worst min rho | trials with min rho < 0 | AGR_1 / AGR_2 / AGR_3 below 0 | rank |
+|---|---|---|---|---|---|---|---|---|---|
+| alloc012-m0.15 | optimal | 5691 | 0.05 | 3.42 | -0.097 | -0.155 | 8 of 9 | 6 / 8 / 6 | 15 |
+| alloc021-m0.15 | optimal | 6467 | 0.05 | 3.39 | -0.058 | -0.145 | 6 of 9 | 4 / 5 / 5 | 14 |
+| alloc102-m0.15 | optimal | 6203 | 0.05 | 3.18 | -0.093 | -0.233 | 8 of 9 | 6 / 6 / 6 | 17 |
+| alloc120-m0.15 | optimal | 4015 | 0.05 | 3.55 | -0.173 | -0.389 | 9 of 9 | 7 / 9 / 7 | 18 |
+| alloc201-m0.15 | optimal | 5129 | 0.05 | 4.08 | -0.043 | -0.127 | 6 of 9 | 6 / 3 / 4 | 13 |
+| alloc210-m0.15 | node limit | 8000 | 0.445 | 6.43 | -0.069 | -0.233 | 7 of 9 | 7 / 4 / 6 | 16 |
+| alloc012-m0.35 | node limit | 8000 | 0.595 | 9.11 | 0.093 | -0.092 | 2 of 9 | 1 / 1 / 1 | 10 |
+| alloc021-m0.35 | node limit | 8000 | 0.558 | 7.03 | 0.144 | -0.035 | 1 of 9 | 0 / 1 / 0 | 8 |
+| alloc102-m0.35 | node limit | 8000 | 0.482 | 5.21 | 0.135 | 0.013 | 0 of 9 | 0 / 0 / 0 | 5 |
+| alloc120-m0.35 | node limit | 8000 | 0.246 | 5.29 | 0.118 | -0.101 | 1 of 9 | 0 / 1 / 1 | 11 |
+| alloc201-m0.35 | node limit | 8000 | 0.446 | 6.87 | 0.078 | -0.076 | 2 of 9 | 1 / 2 / 0 | 9 |
+| alloc210-m0.35 | node limit | 8000 | 0.602 | 10.44 | 0.069 | -0.117 | 1 of 9 | 1 / 1 / 0 | 12 |
+| alloc012-m0.45 | node limit | 8000 | 0.46 | 8.82 | 0.207 | 0.102 | 0 of 9 | 0 / 0 / 0 | 1 |
+| alloc021-m0.45 | node limit | 8000 | 0.544 | 8.28 | 0.236 | 0.099 | 0 of 9 | 0 / 0 / 0 | 2 |
+| alloc102-m0.45 | node limit | 8000 | 0.477 | 8.1 | 0.21 | 0.065 | 0 of 9 | 0 / 0 / 0 | 3 |
+| alloc120-m0.45 | node limit | 8000 | 0.345 | 8.1 | 0.219 | 0.001 | 0 of 9 | 0 / 0 / 0 | 6 |
+| alloc201-m0.45 | node limit | 8000 | 0.557 | 11.14 | 0.193 | -0.015 | 1 of 9 | 1 / 0 / 1 | 7 |
+| alloc210-m0.45 | node limit | 8000 | 0.615 | 13.54 | 0.206 | 0.065 | 0 of 9 | 0 / 0 / 0 | 4 |
+
+The rank orders the designs by their worst executed min rho over the nine trials,
+then by the mean, then by effort. The per-design and per-cell numbers are in
+`results/perfect/designs.csv` and `results/perfect/cells.csv`, every trial in
+`results/perfect/campaign.csv`, and the pooled tables, the ranking and the
+trajectories of the top- and bottom-ranked designs in `results/perfect/summary.json`.
+
+What the trials record:
+
+- *At 0.5 m no allocation has a plan.* HiGHS's presolve proves every one of the
+  six instances infeasible in about 0.01 s. For the model file's own allocation
+  the per-robot optima above already rule it out: alone, AGR_2 and AGR_3 hold at
+  most 0.467 m.
+- *The margin is what the executions spend.* Pooled over the allocations, the
+  executed min rho falls below zero in 44 of 54 trials at 0.15 m, 7 of 54 at
+  0.35 m and 1 of 54 at 0.45 m. All seven violations at 0.35 m and the one at
+  0.45 m are at the largest disturbance, sigma 0.12; at 0.15 m even the smallest
+  disturbance, sigma 0.06, breaks 8 of 18 trials. The margin costs effort (mean
+  4.01, 7.32, 9.66) and search: five of the six 0.15 m instances reach the 0.05
+  gap within the node limit, none of the 0.35 or 0.45 m ones does.
+- *The team conjunct is still the one that breaks most.* Over all 118 robot
+  violations of the campaign, the value was set by the separation conjunct in
+  77, by a station's time window in 25 and by an obstacle in 16.
+- *The allocation matters at a fixed margin.* At 0.35 m, `alloc102` (AGR_1 and
+  AGR_2 swap station pairs) is the only allocation with no violating trial, the
+  same allocation the sweep above put first; at 0.15 m, `alloc120` violates in
+  all nine trials with a worst min rho of -0.389 m.
+- *Sample-time satisfaction is not path satisfaction.* Two of the 0.15 m plans
+  clip an obstacle corner between waypoints (smallest interpolated clearance
+  -0.012 m for `alloc102-m0.15` and -0.060 m for `alloc210-m0.15`), although
+  every waypoint holds 0.15 m.
+
+Two collections of the same campaign write byte-identical
+`results/perfect/campaign.csv`, `designs.csv`, `cells.csv` and `summary.json`,
+and print identical output.
+
+The figures are drawn from the trials (SVG and PDF in `figures/`):
+
+* `perfect_min_rho` -- the executed min rho of all 162 trials with a plan, by
+  margin, allocation and disturbance level, with the margin each plan holds.
+* `perfect_solve` -- solve wall time of every trial, and the gap and the effort
+  each design's plan stopped at, by margin.
+* `perfect_violations` -- in how many trials each robot's formula was violated,
+  by margin and disturbance level.
+* `perfect_trajectories` -- the top-ranked (`alloc012-m0.45`) and the
+  bottom-ranked (`alloc120-m0.15`) design: the plan their trials returned and the
+  executed traces of all nine trials, drawn from the paths the trials relayed.
+
+### What VERITAS makes of it
+
+`veritas/datadriven/report.py` reads the campaign database directly. A trial
+counts as a failure when its executed min rho is below zero, and `min_rho` is the
+number summarised beside it; the 54 trials at 0.5 m relay no `min_rho` (they have
+no execution) and drop out:
+
+```
+uv run python datadriven/report.py --db campaign.db --out . \
+    --metric min_rho --failure-metric min_rho --failure-below 0.0 --group-by design
+```
+
+```
+outcome from min_rho: 52 of 162 trials count as failures, 54 carried no such number
+```
+
+| design | trials | failures | rate | exact interval | Wilson interval | exact upper | trials for target |
+|---|---|---|---|---|---|---|---|
+| alloc012-m0.15 | 9 | 8 | 0.8889 | [0.5175, 0.9972] | [0.565, 0.9801] | 0.9943 | 286 |
+| alloc012-m0.35 | 9 | 2 | 0.2222 | [0.0281, 0.6001] | [0.0632, 0.5474] | 0.5496 | 124 |
+| alloc012-m0.45 | 9 | 0 | 0.0 | [0.0, 0.3363] | [0.0, 0.2991] | 0.2831 | 59 |
+| alloc021-m0.15 | 9 | 6 | 0.6667 | [0.2993, 0.9251] | [0.3542, 0.8794] | 0.9023 | 234 |
+| alloc021-m0.35 | 9 | 1 | 0.1111 | [0.0028, 0.4825] | [0.0199, 0.435] | 0.4291 | 93 |
+| alloc021-m0.45 | 9 | 0 | 0.0 | [0.0, 0.3363] | [0.0, 0.2991] | 0.2831 | 59 |
+| alloc102-m0.15 | 9 | 8 | 0.8889 | [0.5175, 0.9972] | [0.565, 0.9801] | 0.9943 | 286 |
+| alloc102-m0.35 | 9 | 0 | 0.0 | [0.0, 0.3363] | [0.0, 0.2991] | 0.2831 | 59 |
+| alloc102-m0.45 | 9 | 0 | 0.0 | [0.0, 0.3363] | [0.0, 0.2991] | 0.2831 | 59 |
+| alloc120-m0.15 | 9 | 9 | 1.0 | [0.6637, 1.0] | [0.7009, 1.0] | 1.0 | 311 |
+| alloc120-m0.35 | 9 | 1 | 0.1111 | [0.0028, 0.4825] | [0.0199, 0.435] | 0.4291 | 93 |
+| alloc120-m0.45 | 9 | 0 | 0.0 | [0.0, 0.3363] | [0.0, 0.2991] | 0.2831 | 59 |
+| alloc201-m0.15 | 9 | 6 | 0.6667 | [0.2993, 0.9251] | [0.3542, 0.8794] | 0.9023 | 234 |
+| alloc201-m0.35 | 9 | 2 | 0.2222 | [0.0281, 0.6001] | [0.0632, 0.5474] | 0.5496 | 124 |
+| alloc201-m0.45 | 9 | 1 | 0.1111 | [0.0028, 0.4825] | [0.0199, 0.435] | 0.4291 | 93 |
+| alloc210-m0.15 | 9 | 7 | 0.7778 | [0.3999, 0.9719] | [0.4526, 0.9368] | 0.959 | 260 |
+| alloc210-m0.35 | 9 | 1 | 0.1111 | [0.0028, 0.4825] | [0.0199, 0.435] | 0.4291 | 93 |
+| alloc210-m0.45 | 9 | 0 | 0.0 | [0.0, 0.3363] | [0.0, 0.2991] | 0.2831 | 59 |
+
+Nine trials per design separate some of the designs: the exact intervals of
+`alloc012`, `alloc102`, `alloc120` and `alloc210` at 0.15 m lie entirely above
+the [0, 0.3363] of the five failure-free 0.45 m designs. They do not separate the
+allocations within a margin. A design with no failure in nine trials is bounded
+at 0.2831 at 95% confidence, and the "trials for target" column says 59
+failure-free trials would bring that bound to 0.05. The report, its figure pair
+and the campaign database are in `veritas/datadriven/results/multirobot/`.
+
 ## Layout
 
     assured_ma/specs.py       the STL fragment, the H-representation polytopes, the RTAMT export,

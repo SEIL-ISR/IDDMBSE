@@ -1,0 +1,29 @@
+# The coordination configuration, written by the design.
+#
+# PERFECT copies this file into the trial's working directory and then applies
+# the `files` updates of every component implementation in the design. The
+# design under test holds exactly one implementation of the `coordinator`
+# component, and that implementation writes the four values of the first block.
+#
+#   allocation       which station pair each robot is given, by the index of the
+#                    robot entry in the case study's model/fleet_requirements.yaml
+#                    whose two stations it takes over: 0 is ST_N1 then ST_N2,
+#                    1 is ST_C1 then ST_S2, 2 is ST_S1 then ST_C2. The identity
+#                    below is the allocation the model file itself makes.
+#   required_margin  every robot's reach-avoid formula has to hold in the plan
+#                    with at least this STL robustness, in metres
+#
+# The solver's stopping rule, the same for every design of the campaign:
+#
+#   node_limit       the branch-and-bound search stops after this many nodes
+#   mip_rel_gap      or earlier, once the relative gap is below this
+#   time_limit_s     a wall-clock cap the node limit is sized to stay well under
+allocation:
+  AGR_1: 0
+  AGR_2: 1
+  AGR_3: 2
+required_margin: 0.35
+
+node_limit: 8000
+mip_rel_gap: 0.05
+time_limit_s: 240.0

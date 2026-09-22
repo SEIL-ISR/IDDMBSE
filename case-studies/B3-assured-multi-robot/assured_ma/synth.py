@@ -13,20 +13,31 @@ from scipy.optimize import Bounds, LinearConstraint, milp
 from . import encode
 
 
-def synthesise(prob, spec_by_robot, mip_rel_gap=0.0, time_limit=600.0):
-    """Build and solve the MILP. Returns the plan plus the solver's own numbers."""
+def synthesise(prob, spec_by_robot, mip_rel_gap=0.0, time_limit=600.0, node_limit=None):
+    """Build and solve the MILP. Returns the plan plus the solver's own numbers.
+
+    `node_limit` stops the branch-and-bound search after that many nodes. Unlike a
+    wall-clock limit it does not depend on how loaded the machine is, so a solve
+    stopped by it returns the same incumbent every time; HiGHS reports it as
+    "Solution limit reached", which scipy passes on as status 4.
+    """
     enc = encode.build(prob, spec_by_robot)
+    options = {"mip_rel_gap": mip_rel_gap, "time_limit": time_limit,
+               "presolve": True, "disp": False}
+    if node_limit is not None:
+        options["node_limit"] = int(node_limit)
     t0 = time.perf_counter()
     res = milp(c=enc.c,
                constraints=LinearConstraint(enc.A, enc.blo, enc.bhi),
                integrality=enc.integrality,
                bounds=Bounds(enc.vlb, enc.vub),
-               options={"mip_rel_gap": mip_rel_gap, "time_limit": time_limit,
-                        "presolve": True, "disp": False})
+               options=options)
     out = {"status": int(res.status), "message": str(res.message),
            "wall_s": time.perf_counter() - t0,
            "n_var": int(enc.pool.n), "n_bin": enc.n_binary, "n_con": int(enc.rows.n),
            "nnz": int(enc.A.nnz), "mip_gap": getattr(res, "mip_gap", None),
+           "nodes": getattr(res, "mip_node_count", None),
+           "dual_bound": getattr(res, "mip_dual_bound", None),
            "encoding": enc}
     if res.x is not None:
         x = np.asarray(res.x, float)

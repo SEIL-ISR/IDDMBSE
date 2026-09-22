@@ -1,0 +1,410 @@
+[
+    {
+        "name": "alloc012-m0.15",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 0},
+                        {"keys": "allocation.AGR_2", "value": 1},
+                        {"keys": "allocation.AGR_3", "value": 2},
+                        {"keys": "required_margin", "value": 0.15}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc012-m0.35",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 0},
+                        {"keys": "allocation.AGR_2", "value": 1},
+                        {"keys": "allocation.AGR_3", "value": 2},
+                        {"keys": "required_margin", "value": 0.35}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc012-m0.45",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 0},
+                        {"keys": "allocation.AGR_2", "value": 1},
+                        {"keys": "allocation.AGR_3", "value": 2},
+                        {"keys": "required_margin", "value": 0.45}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc012-m0.5",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 0},
+                        {"keys": "allocation.AGR_2", "value": 1},
+                        {"keys": "allocation.AGR_3", "value": 2},
+                        {"keys": "required_margin", "value": 0.5}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc021-m0.15",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 0},
+                        {"keys": "allocation.AGR_2", "value": 2},
+                        {"keys": "allocation.AGR_3", "value": 1},
+                        {"keys": "required_margin", "value": 0.15}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc021-m0.35",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 0},
+                        {"keys": "allocation.AGR_2", "value": 2},
+                        {"keys": "allocation.AGR_3", "value": 1},
+                        {"keys": "required_margin", "value": 0.35}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc021-m0.45",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 0},
+                        {"keys": "allocation.AGR_2", "value": 2},
+                        {"keys": "allocation.AGR_3", "value": 1},
+                        {"keys": "required_margin", "value": 0.45}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc021-m0.5",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 0},
+                        {"keys": "allocation.AGR_2", "value": 2},
+                        {"keys": "allocation.AGR_3", "value": 1},
+                        {"keys": "required_margin", "value": 0.5}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc102-m0.15",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 1},
+                        {"keys": "allocation.AGR_2", "value": 0},
+                        {"keys": "allocation.AGR_3", "value": 2},
+                        {"keys": "required_margin", "value": 0.15}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc102-m0.35",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 1},
+                        {"keys": "allocation.AGR_2", "value": 0},
+                        {"keys": "allocation.AGR_3", "value": 2},
+                        {"keys": "required_margin", "value": 0.35}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc102-m0.45",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 1},
+                        {"keys": "allocation.AGR_2", "value": 0},
+                        {"keys": "allocation.AGR_3", "value": 2},
+                        {"keys": "required_margin", "value": 0.45}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc102-m0.5",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 1},
+                        {"keys": "allocation.AGR_2", "value": 0},
+                        {"keys": "allocation.AGR_3", "value": 2},
+                        {"keys": "required_margin", "value": 0.5}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc120-m0.15",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 1},
+                        {"keys": "allocation.AGR_2", "value": 2},
+                        {"keys": "allocation.AGR_3", "value": 0},
+                        {"keys": "required_margin", "value": 0.15}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc120-m0.35",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 1},
+                        {"keys": "allocation.AGR_2", "value": 2},
+                        {"keys": "allocation.AGR_3", "value": 0},
+                        {"keys": "required_margin", "value": 0.35}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc120-m0.45",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 1},
+                        {"keys": "allocation.AGR_2", "value": 2},
+                        {"keys": "allocation.AGR_3", "value": 0},
+                        {"keys": "required_margin", "value": 0.45}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc120-m0.5",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 1},
+                        {"keys": "allocation.AGR_2", "value": 2},
+                        {"keys": "allocation.AGR_3", "value": 0},
+                        {"keys": "required_margin", "value": 0.5}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc201-m0.15",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 2},
+                        {"keys": "allocation.AGR_2", "value": 0},
+                        {"keys": "allocation.AGR_3", "value": 1},
+                        {"keys": "required_margin", "value": 0.15}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc201-m0.35",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 2},
+                        {"keys": "allocation.AGR_2", "value": 0},
+                        {"keys": "allocation.AGR_3", "value": 1},
+                        {"keys": "required_margin", "value": 0.35}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc201-m0.45",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 2},
+                        {"keys": "allocation.AGR_2", "value": 0},
+                        {"keys": "allocation.AGR_3", "value": 1},
+                        {"keys": "required_margin", "value": 0.45}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc201-m0.5",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 2},
+                        {"keys": "allocation.AGR_2", "value": 0},
+                        {"keys": "allocation.AGR_3", "value": 1},
+                        {"keys": "required_margin", "value": 0.5}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc210-m0.15",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 2},
+                        {"keys": "allocation.AGR_2", "value": 1},
+                        {"keys": "allocation.AGR_3", "value": 0},
+                        {"keys": "required_margin", "value": 0.15}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc210-m0.35",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 2},
+                        {"keys": "allocation.AGR_2", "value": 1},
+                        {"keys": "allocation.AGR_3", "value": 0},
+                        {"keys": "required_margin", "value": 0.35}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc210-m0.45",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 2},
+                        {"keys": "allocation.AGR_2", "value": 1},
+                        {"keys": "allocation.AGR_3", "value": 0},
+                        {"keys": "required_margin", "value": 0.45}
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "alloc210-m0.5",
+        "type": "coordinator",
+        "implementation": {
+            "files": [
+                {
+                    "file": "config.yaml",
+                    "updates": [
+                        {"keys": "allocation.AGR_1", "value": 2},
+                        {"keys": "allocation.AGR_2", "value": 1},
+                        {"keys": "allocation.AGR_3", "value": 0},
+                        {"keys": "required_margin", "value": 0.5}
+                    ]
+                }
+            ]
+        }
+    }
+]

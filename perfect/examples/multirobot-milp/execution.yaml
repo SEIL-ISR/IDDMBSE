@@ -1,0 +1,20 @@
+# The execution condition, written by the environment.
+#
+# PERFECT copies this file into the trial's working directory and then applies
+# the `files` updates the environment specification carries, so the first two
+# values are the ones the environment under test chose.
+#
+#   sigma       per-step disturbance of the tracking-error process, metres per
+#               axis; the steady-state tracking error has standard deviation
+#               sigma / sqrt(1 - pole^2)
+#   seed        the disturbance draw
+#
+# The path follower, the same in every environment of the campaign:
+#
+#   pole        closed-loop pole of the tracking-error process
+#   clip_sigma  every disturbance step is clipped at this many sigma
+sigma: 0.09
+seed: 0
+
+pole: 0.8
+clip_sigma: 3.0
