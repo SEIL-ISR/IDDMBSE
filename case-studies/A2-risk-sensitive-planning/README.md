@@ -327,7 +327,7 @@ lighter tail), and the risk level is the dial.
 
 ![RRT* and RA-RRT* at CVaR 0.9 growing their trees on the hard field](animations/rarrt_tree_growth.gif)
 
-`animations/rarrt_tree_growth.mp4` is 20 s at 1280 x 720 and 24 fps; the GIF
+`animations/rarrt_tree_growth.mp4` is 20 s at 1920 x 1080 and 24 fps; the GIF
 above is the same at 640 px and 12 fps, and `rarrt_tree_growth_poster.{svg,pdf}`
 is its last frame. Two panels on the hard field of campaign run 0 at noise level
 0.5 (48 discs, the world in the right panel of `figures/paths_by_environment`):

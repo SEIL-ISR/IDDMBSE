@@ -479,7 +479,7 @@ their margin, and the progress obligation firing one 20 s window after the robot
 
 ## The behavior-tree animation
 
-`formal/animations/bt_to_automaton.mp4` is 25 s at 1280 x 720 and 24 fps; the GIF above is
+`formal/animations/bt_to_automaton.mp4` is 25 s at 1920 x 1080 and 24 fps; the GIF above is
 the same at 640 px and 12 fps, and `bt_to_automaton_poster.{svg,pdf}` is the end of its first
 scene. The first scene draws the demo tree `Sequence(FA, Sequence(Selector(CBatt, FCharger),
 FB))` node by node, then the network `demo.py` composes from it, template by template and

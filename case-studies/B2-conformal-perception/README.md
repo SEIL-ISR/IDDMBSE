@@ -158,7 +158,7 @@ rate and path length against the coverage level.
 
 ![Test episode 0 with and without the conformal regions](animations/conformal_regions.gif)
 
-`animations/conformal_regions.mp4` is 20 s at 1280 x 720 and 24 fps; the GIF
+`animations/conformal_regions.mp4` is 20 s at 1920 x 1080 and 24 fps; the GIF
 above is the same at 640 px and 12 fps, and `conformal_regions_poster.{svg,pdf}`
 is its last frame. It plays the episode of `figures/trajectories`, test episode
 0, one control step at a time. Left: the robot plans on its raw detections.

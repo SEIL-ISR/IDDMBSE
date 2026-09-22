@@ -233,7 +233,9 @@ def main():
     a = render.arguments(NAME)
     fig, draw, n_full = build(a.fps)
     ts = render.timeline(n_full, a.frames)
-    render.render(fig, draw, ts, a.out, NAME, a.fps, poster_t=1.0)
+    render.render(fig, draw, ts, a.out, NAME, a.fps, poster_t=1.0,
+                  gif_width=a.gif_width, gif_fps=a.gif_fps, gif_speed=a.gif_speed,
+                  height=a.height)
 
 
 if __name__ == "__main__":

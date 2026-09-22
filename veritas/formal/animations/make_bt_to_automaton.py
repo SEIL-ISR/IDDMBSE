@@ -50,6 +50,11 @@ p = argparse.ArgumentParser()
 p.add_argument("--out", default=str(here))
 p.add_argument("--frames", type=int, default=600)
 p.add_argument("--fps", type=int, default=24)
+p.add_argument("--height", type=int, default=1080, choices=[720, 1080],
+               help="MP4 height; the width follows at 16:9")
+p.add_argument("--gif-width", type=int, default=640, help="GIF width in pixels")
+p.add_argument("--gif-fps", type=int, default=None,
+               help="GIF frame rate (default: 12, or 8 when the GIF is over 3 MB at 12)")
 p.add_argument("--seed", type=int, default=0, help="unused: nothing here is random")
 p.add_argument("--record-verdicts", action="store_true",
                help="write uppaal_verdicts.json beside this script from a live verifyta run")
@@ -328,19 +333,35 @@ def draw(i):
 
 
 ffmpeg = shutil.which("ffmpeg")
-width, height = fig.canvas.get_width_height()
 mp4 = out / "bt_to_automaton.mp4"
 gif = out / "bt_to_automaton.gif"
-enc = subprocess.Popen([ffmpeg, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgba",
-                        "-s", str(width) + "x" + str(height), "-r", str(a.fps), "-i", "-",
-                        "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "23",
-                        "-movflags", "+faststart", str(mp4)], stdin=subprocess.PIPE)
+# The figure is laid out at 1280 x 720 (100 dpi); 1080p is the same figure at 150 dpi. A GIF
+# up to 1280 px wide is scaled from 720p frames, encoded beside the MP4 and deleted after.
+streams = [(mp4, 100 * a.height / 720)]
+if a.height != 720 and a.gif_width <= 1280:
+    streams.append((out / "bt_to_automaton_720p.mp4", 100))
+
+
+def encoder(path, dpi):
+    fig.set_dpi(dpi)
+    width, height = fig.canvas.get_width_height()
+    return subprocess.Popen([ffmpeg, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgba",
+                             "-s", str(width) + "x" + str(height), "-r", str(a.fps), "-i", "-",
+                             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "23",
+                             "-movflags", "+faststart", str(path)], stdin=subprocess.PIPE)
+
+
+encs = [encoder(path, dpi) for path, dpi in streams]
 for i in range(n):
     draw(i)
-    fig.canvas.draw()
-    enc.stdin.write(bytes(fig.canvas.buffer_rgba()))
-enc.stdin.close()
-enc.wait()
+    for enc, (path, dpi) in zip(encs, streams):
+        fig.set_dpi(dpi)
+        fig.canvas.draw()
+        enc.stdin.write(bytes(fig.canvas.buffer_rgba()))
+fig.set_dpi(100)
+for enc in encs:
+    enc.stdin.close()
+    enc.wait()
 
 # the poster: the end of scene one, the tree and its network with both verdicts
 draw(int(np.searchsorted(u, T_SWITCH)) - 1)
@@ -348,14 +369,16 @@ fig.savefig(out / "bt_to_automaton_poster.svg", metadata={"Date": None})
 fig.savefig(out / "bt_to_automaton_poster.pdf", metadata={"CreationDate": None})
 plt.close(fig)
 
-for gif_fps in [12, 8]:
-    subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-i", str(mp4), "-vf",
-                    "fps=" + str(gif_fps) + ",scale=640:-1:flags=lanczos,split[a][b];"
+for gif_fps in ([a.gif_fps] if a.gif_fps else [12, 8]):
+    subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-i", str(streams[-1][0]), "-vf",
+                    "fps=" + str(gif_fps) + ",scale=" + str(a.gif_width) + ":-1:flags=lanczos,split[a][b];"
                     "[a]palettegen=max_colors=64:stats_mode=diff[p];"
                     "[b][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle",
                     str(gif)], check=True)
     if gif.stat().st_size <= 3 * 1024 * 1024:
         break
+if streams[-1][0] != mp4:
+    streams[-1][0].unlink()
 
 print("frames", n, "fps", a.fps, "duration", round(n / a.fps, 2), "s")
 print("mp4", mp4.stat().st_size, "bytes; gif", gif.stat().st_size, "bytes at", gif_fps, "fps")

@@ -5,7 +5,8 @@ campaign PERFECT ran for TRADES-X, the eight headless Isaac Sim traverses of the
 campaign with the VERITAS observer's verdicts, the assured multi-robot study, and the
 risk-sensitive planner and conformal-calibration campaigns PERFECT ran for the case
 studies. Each one is a matplotlib figure driven frame by frame and written by ffmpeg as
-an H.264 MP4 (1280 x 720, 24 fps), a 640 px palette GIF, and a poster frame in SVG and
+an H.264 MP4 (1920 x 1080, 24 fps; the render wall times below were measured for the earlier
+1280 x 720 default), a 640 px palette GIF, and a poster frame in SVG and
 PDF drawn by the same code. Every number on screen comes from the input files named on
 its card; nothing is re-simulated.
 
