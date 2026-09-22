@@ -11,16 +11,21 @@
 #
 # The old positional `environments create $WORLD $AX $AY $BX $BY` is gone;
 # environments now come from a JSON template with named arguments. The stock
-# template perfect/common/templates/nav2_operation_plans/navigate_to_goal_pose.json
-# declares only $x_goal and $y_goal, so the x_start / y_start arguments below
-# need a template that declares them as well. TEMPLATE points at that file, and
-# TEMPLATE_ID is the row the load creates (1 on a fresh database).
+# template perfect/perfect/common/templates/nav2_operation_plans/
+# navigate_from_initial_pose_to_goal_pose.json declares exactly $x_start,
+# $y_start, $x_goal and $y_goal, which is what the loop below passes.
+# TEMPLATE points at that file, and TEMPLATE_ID is the row the load creates
+# (1 on a fresh database). `environments create_templates_from_file` first
+# tries TEMPLATE as a path relative to the current directory, then, on
+# FileNotFoundError, searches recursively for that filename under
+# perfect/perfect/common/ (perfect.common.PATH) — see
+# perfect/perfect/app/routes/environments.py. A bare filename is enough.
 #
 # tradesx/ddo.py emits this same sequence from a design list and a grid.
 
 # All designs, environments, and experiments we create here will have the same tag
 TAG=arglebargle
-TEMPLATE=navigate_to_goal_pose.json
+TEMPLATE=navigate_from_initial_pose_to_goal_pose.json
 TEMPLATE_ID=1
 # All Flask calls start with this
 PERFECT_CMD="python -m flask --app perfect.app"

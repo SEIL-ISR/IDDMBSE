@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "IDDMBSE: Integrating Data-Driven and Model-Based Systems Engineering for Trusted Autonomous Cyber-Physical Systems (companion repository)"
+authors:
+  - family-names: Baras
+    given-names: "John S."
+    affiliation: "Institute for Systems Research, University of Maryland, College Park, MD, USA"
+  - family-names: Damera
+    given-names: "Sai Sandeep"
+    affiliation: "Institute for Systems Research, University of Maryland, College Park, MD, USA"
+  - family-names: Matheu
+    given-names: Ryan
+    affiliation: "Institute for Systems Research, University of Maryland, College Park, MD, USA"
+  - family-names: Enwerem
+    given-names: Clinton
+    affiliation: "Institute for Systems Research, University of Maryland, College Park, MD, USA"
+  - family-names: Kumar
+    given-names: "Praveen M.S."
+    affiliation: "Institute for Systems Research, University of Maryland, College Park, MD, USA"
+repository-code: "https://github.com/seil-umd/IDDMBSE"
+license: MIT
+date-released: "2026-09-22"
+preferred-citation:
+  type: conference-paper
+  title: "IDDMBSE: Integrating Data-Driven and Model-Based Systems Engineering for Trusted Autonomous Cyber-Physical Systems"
+  authors:
+    - family-names: Baras
+      given-names: "John S."
+      affiliation: "Institute for Systems Research, University of Maryland, College Park, MD, USA"
+    - family-names: Damera
+      given-names: "Sai Sandeep"
+      affiliation: "Institute for Systems Research, University of Maryland, College Park, MD, USA"
+    - family-names: Matheu
+      given-names: Ryan
+      affiliation: "Institute for Systems Research, University of Maryland, College Park, MD, USA"
+    - family-names: Enwerem
+      given-names: Clinton
+      affiliation: "Institute for Systems Research, University of Maryland, College Park, MD, USA"
+    - family-names: Kumar
+      given-names: "Praveen M.S."
+      affiliation: "Institute for Systems Research, University of Maryland, College Park, MD, USA"
+  year: 2026
+  # venue inferred from the manuscript folder name, not stated in main.tex or sections/*.tex
+  collection-title: "IEEE International Symposium on Systems Engineering (ISSE)"

@@ -1,7 +1,40 @@
 # seil-r2
 
+## Provenance and status in this release
+
+This is a ROS 2 colcon workspace: an Isaac Sim Carter navigation baseline built
+on Nav2 with AMCL, plus the docker files to run it in a container. `seil-r2/src`
+holds `custom_message`, `isaac_ros2_messages`, `isaac_tutorials`, `isaacsim`,
+`navigation` and `rviz configs`; `seil-r2/docker` holds `Dockerfile.base`,
+`Dockerfile.ros2`, `docker-compose.yaml`, `.env.base`, `.env.ros2`,
+`container.py`/`container.sh` and supporting `cluster/` and `utils/`
+directories.
+
+The pinned versions, read from the docker files: `seil-r2/docker/Dockerfile.ros2`
+line 2 is commented `# ROS2 Humble`, line 18 installs `ros-humble-${ROS2_APT_PACKAGE}`,
+and line 31 sources `/opt/ros/humble/setup.bash` — so the ROS 2 distro is
+**Humble**. `seil-r2/docker/.env.base` sets `ISAACSIM_VERSION=4.1.0`, and
+`seil-r2/src/isaacsim/scripts/run_isaacsim.py` defaults `isaac_sim_version` to
+`"4.1.0"` — so the Isaac Sim version is **4.1.0**. All the files agree; there is
+no mixed evidence.
+
+The upstream repository, `https://github.com/seil-umd/seil-r2`, returned HTTP
+404 when this release was prepared and could not be reached from here
+`[reported by the orchestrator, 2026-09-21]`. This workspace's git-ignored
+`isaac_envs/` folder is the source of the Isaac Sim contested-terrain range
+released under `isaacsim/` in this repository; see `isaacsim/README.md`, which
+is authoritative for that range.
+
+This workspace was **not built or launched** while preparing this release. The
+build and launch instructions below are therefore **Unverified here** — the
+workstation preparing this release has ROS 2 Jazzy and Isaac Sim 6.0 installed,
+neither of which matches the Humble / 4.1.0 pins above, and no build was
+attempted against either. The paragraph below about "the SEIL HPC admin
+profile" describes the lab's own machine that this workspace was developed on,
+not the reader's machine.
+
 ROS2-based Autonomous Ground Robot Navigation Stack. 
-**_This branch is based off of the baseline carter navigation packages provided by Isaac Sim 4.x. If you want to use Isaac Sim 2023.x, you will need to cfork the `legacy-IS-2023.x`_ branch of the repo that uses the old Isaac Sim ROS Workspace configured for 2023.1**
+**_This branch is based off of the baseline carter navigation packages provided by Isaac Sim 4.x. If you want to use Isaac Sim 2023.x, you will need to fork the `legacy-IS-2023.x`_ branch of the repo that uses the old Isaac Sim ROS Workspace configured for 2023.1**
 
 > **This is an open-source project. Please do not include any ARL proprietary material.** 
 

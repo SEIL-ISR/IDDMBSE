@@ -24,6 +24,7 @@ devel_isolated/
 # Ignore generated docs
 *.dox
 *.wikidoc
+manuscript/
 
 # eclipse stuff
 .project
@@ -49,3 +50,29 @@ qtcreator-*
 
 # Catkin custom files
 CATKIN_IGNORE
+
+# Claude Code working protocol and the local record (D001/D002, adopted 2026-09-21 from la3se):
+# local-only on this machine, never pushed — the agent definitions, the hook, the derived
+# CLAUDE.md block, the implog + session handovers, the scratch workspace and the spawn-gate log.
+# Root-anchored so the subprojects' own docs/ and .vscode/ stay tracked.
+# The protocol pack and the record gate live under logs/ (ignored by the `logs/` rule above).
+/.claude/
+/CLAUDE.md
+/docs/
+/analysis-scratch/
+/.vscode/
+*.log
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Release hygiene (2026-09-22): dump/ held the two reference clones vendored into veritas/
+# (with attribution; deleted after vendoring — the rule guards a re-clone); per-tool virtual
+# environments and caches.
+/dump/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
