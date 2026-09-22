@@ -17,7 +17,7 @@ contested-terrain Isaac Sim test range.
 
 | directory | what it is | origin | what ran here (2026-09-22) |
 |---|---|---|---|
-| [`perfect/`](perfect/README.md) | SysML-to-ROS 2 performance-evaluation tool: a Flask server, an RQ/Redis job queue and distributed runners | recovered lab code, from the University of Maryland lab's GitLab branch `example-isaacsim-husky` | the `dummy` example end to end — one trial to `TrialState.SUCCESSFUL\|SHUT_DOWN` in 19.3 s, `devtools/smoke_dummy.sh` printing `PASS` in 46.3 s — and two campaigns driven over `/api/v1`: 180 sensor-suite trials and 8 headless Isaac Sim range trials |
+| [`perfect/`](perfect/README.md) | SysML-to-ROS 2 performance-evaluation tool: a Flask server, an RQ/Redis job queue and distributed runners | recovered lab code, from the University of Maryland lab's GitLab branch `example-isaacsim-husky` | the `dummy` example end to end — one trial to `TrialState.SUCCESSFUL\|SHUT_DOWN` in 19.3 s, `devtools/smoke_dummy.sh` printing `PASS` in 46.3 s — and four campaigns driven over `/api/v1`: 180 sensor-suite trials, 8 headless Isaac Sim range trials, 300 risk-sensitive planner trials and 270 conformal-calibration trials |
 | [`trades-x/`](trades-x/README.md) | the trade-off stage: model-based optimization (Julia) then data-driven optimization and a Multi-Attribute Value Function ranking (Python) | recovered lab code (the Julia MBO package) plus code built for this release (the greedy submodular search, the full design-space enumeration, the Python/JAX sensitivity path, the requirement partition) | 57 tests; the full 8191-design enumeration gives 120 non-dominated designs; a 180-trial data-driven campaign against a live PERFECT stack, ranked by MAVF from PERFECT's own trial table |
 | [`veritas/`](veritas/README.md) | the verification layer: a model-based module (SysML/behavior-tree to UPPAAL), a data-driven module (failure-rate and STL-robustness statistics over a PERFECT campaign) and a runtime module (an STL observer plus a behavior-tree monitor) | vendored from a coauthor's two repositories (the behavior-tree modules, see [`veritas/ATTRIBUTION.md`](veritas/ATTRIBUTION.md)) plus code built for this release (the SysML-to-UPPAAL front end, the whole data-driven module, the deployed-stack observer) | 62 tests, 63 with UPPAAL on the machine; UPPAAL 5.0.0 returned 12 verdicts on the battery model and 2 on the behavior-tree network; failure-rate reports over both PERFECT campaigns; the STL observer live on a ROS 2 graph and replayed over all eight range trajectories |
 | [`sysml/`](sysml/README.md) | the SysML v1 model of the AGR stack (Magic Systems of Systems Architect) and the MATLAB workbench that calls PERFECT from it | recovered lab code | the shipped model's checksum matches the lab's drop; 69 blocks, 3 constraint blocks, 23 requirements and 51 diagrams read out of it, and all 23 requirements are carried into the UPPAAL model VERITAS writes from it; the bridge scripts take the server URL and the workspace path from the environment and post to `/api/v1/run` |
@@ -83,9 +83,10 @@ directory it names or of the one that directory points into (2026-09-22).
   one trial from enqueue to `TrialState.SUCCESSFUL|SHUT_DOWN` in 19.3 s, and
   `devtools/smoke_dummy.sh`, which brings the whole stack up, runs two trials — one through
   `experiments run`, one through `POST /api/v1/run` with the payload the MATLAB bridge sends
-  — and tears it down, printed `PASS` in 46.3 s. Two more examples ran as whole campaigns:
-  `sensor-suite-sim` (180 trials in 4 min 35 s on one runner) and `isaacsim-range` (8 trials,
-  each a headless Isaac Sim process, 411 s). `/api/v1` carries four library and environment POST
+  — and tears it down, printed `PASS` in 46.3 s. Four more examples ran as whole campaigns:
+  `sensor-suite-sim` (180 trials in 4 min 35 s on one runner), `isaacsim-range` (8 trials,
+  each a headless Isaac Sim process, 411 s), `rarrt-planning` (300 trials in 7 min 44 s) and
+  `conformal-calibration` (270 trials in 6 min 22 s). `/api/v1` carries four library and environment POST
   routes beside the experiment ones, which is what lets a design-space tool build a whole
   campaign over HTTP without touching the CLI.
 - **`trades-x/`** — 57 tests pass. The sensor-suite study enumerates the whole 8191-design
@@ -130,17 +131,25 @@ directory it names or of the one that directory points into (2026-09-22).
   recorded 4095-design evaluation table reproduces to a maximum absolute difference of
   4.7e-10, gives 96 Pareto designs with the standard and MATLAB-compatible filters agreeing
   exactly, and the full 8191-design enumeration gives 120.
-- **`case-studies/A2-risk-sensitive-planning/`** — 37 tests pass; the campaign is 3
-  environments x 4 noise levels x 5 policies x 50 runs = 3000 planner runs, which took 109 s
+- **`case-studies/A2-risk-sensitive-planning/`** — 45 tests pass; the standalone campaign is
+  3 environments x 4 noise levels x 5 policies x 50 runs = 3000 planner runs, which took 109 s
   across 16 worker processes and reproduces byte-identically run to run except for plan time.
+  Through PERFECT, the five policies are one component's implementations and the campaign is
+  5 policies x 60 environments (3 rock fields x 4 noise levels x 5 seeds) = 300 trials, all
+  `SUCCESSFUL` in 7 min 44 s on one runner, with the cell table and the three figures redrawn
+  from PERFECT's trial data and a VERITAS failure-rate report over its database.
 - **`case-studies/A3-behavior-tree-verification/`** — `./run.sh` composes the behavior tree
   into a network of three timed-automata templates, md5
   `96b2e35c435ce771191351242e29cb77`, and `./run.sh --verify` hands it to UPPAAL, which
   returns both queries satisfied in 0.28 s.
 - **`case-studies/B1-contested-terrain-range/`** — the range and its campaign, above.
-- **`case-studies/B2-conformal-perception/`** — 19 tests pass; 90 calibration episodes give
+- **`case-studies/B2-conformal-perception/`** — 30 tests pass; 90 calibration episodes give
   2039 detection rows, held-out coverage is 0.9037 at alpha = 0.10, and in the closed loop
-  the conformal margin takes collisions from 168 to 16 of 200 episodes.
+  the conformal margin takes collisions from 168 to 16 of 200 episodes. Through PERFECT, the
+  calibration data comes from 3 detector configurations x 90 environments = 270 trials, all
+  `SUCCESSFUL` in 6 min 22 s, 24 704 detection rows collected; calibrated on 5399 nominal
+  detections, the held-out coverage is 0.9156 at alpha = 0.10, and the report tables carry a
+  coverage column per detector configuration.
 - **`case-studies/B3-assured-multi-robot/`** — the joint MILP is 1841 variables of which 1043
   binary, 2390 constraints and 7988 nonzeros; HiGHS reaches `Optimal` at relative gap 0.0 in
   about three and a half minutes, with an identical solution across three runs, and the STL
