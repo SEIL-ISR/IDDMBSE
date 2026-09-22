@@ -16,7 +16,7 @@ PERFECT uses a SQLite database to maintain the definitions of components, design
 This section records a bring-up that was actually run end to end on the `dummy` example on
 2026-09-22 (Ubuntu, Python 3.12.11, ROS 2 Jazzy on the machine but not used by `dummy`).
 Every command below was run in the order shown, and every quoted line is copied from that
-run. The full log is `analysis-scratch/packaging/F-gate.txt`.
+run.
 
 The `dummy` example needs no simulator: it runs `countdown.bash`, which counts to 15 and
 exits. It is the right thing to run first when checking that the server, the queue, the
@@ -223,9 +223,9 @@ One caution: `GET /experiments/updates` is what the pages poll, and it **deletes
 
 ### The JSON API
 
-The HTML pages are one surface; `/api/v1` is the other. It is read-only except for two
-POST routes, and it has **no authentication** — anything that can reach the Flask port can
-create and run experiments. Keep it on localhost.
+The HTML pages are one surface; `/api/v1` is the other. It has **no authentication** —
+anything that can reach the Flask port can create and run experiments. Keep it on
+localhost.
 
 ```bash
 curl -s http://127.0.0.1:5001/api/v1/experiments/1 | python -m json.tool
@@ -250,12 +250,22 @@ curl -s http://127.0.0.1:5001/api/v1/experiments/1 | python -m json.tool
 | GET | `/api/v1/environments`, `/api/v1/environments/<id>` | environments, specification parsed to JSON |
 | GET | `/api/v1/experiments` | one line per experiment with `last_trial_state` |
 | GET | `/api/v1/experiments/<id>` | the experiment with design, environment and every trial |
+| GET | `/api/v1/environment_templates` | environment templates with their specification |
 | GET | `/api/v1/trials/<id>` | one trial with its `Update` rows (`?updates=N`, default 100) |
+| POST | `/api/v1/component_implementations` | create component implementations from a list; each is validated against `schema/implementation_schema.json` and one already there is returned unchanged |
+| POST | `/api/v1/designs` | create a design from component-implementation ids or names; a design of that name already there is returned unchanged |
+| POST | `/api/v1/environment_templates` | create a template from a name and a specification |
+| POST | `/api/v1/environments` | create an environment, either from a template id plus `arguments` or from a specification directly |
 | POST | `/api/v1/experiments` | create and enqueue from design ids and environment ids |
 | POST | `/api/v1/experiments/<id>/run` | enqueue another trial of an existing experiment |
 | POST | `/api/v1/run` | the SysML-to-MATLAB bridge endpoint |
 
-Unlike `GET /experiments/updates`, none of these deletes anything.
+Unlike `GET /experiments/updates`, none of these deletes anything. The four library and
+environment POST routes each match on the row's name first and return what is already
+there, so a campaign script that sets a project up can be re-run without duplicating it;
+they call the same create functions the Flask CLI calls. That is what lets a design-space
+tool build a whole campaign over HTTP: `trades-x/case-studies/sensor-suite/run_ddo_campaign.py`
+and `isaacsim/tools/range_campaign.py` both do.
 
 `POST /api/v1/run` takes the payload the MATLAB functions in `sysml/workbench/bridge/`
 send, matches it against the component library by name and type, and creates and enqueues
@@ -322,6 +332,48 @@ them; exit 1 means they did not, and it prints the tail of the worker and runner
 | `experiments run demo` (enqueue only) | 0.40 s |
 | the trial itself, enqueue to `SHUT_DOWN` | 19.3 s |
 | `devtools/smoke_dummy.sh`, the whole thing (two trials) | 46.3 s |
+
+## Examples
+
+`examples/` holds one directory per experiment. Each is a PERFECT project root: a
+`components.json` or an `impl.py` describing the library, an `experiment.py` subclassing one
+of the base experiments, and usually a `load.bash` with the CLI sequence that sets the
+project up. Point `PERFECT_PROJECT_ROOT` at one and bring the four terminals up as above.
+
+| example | what it is |
+|---|---|
+| `dummy` | no simulator at all: the trial runs `countdown.bash` in a subprocess. It is the example the bring-up above uses, and the one to try first |
+| `sensor-suite-sim` | a planar navigation simulation in plain Python whose measured metrics depend on which sensors the design carries and on how cluttered and how dark the environment is. No ROS, no simulator, a trial in about 1.5 s |
+| `isaacsim-range` | one headless Isaac Sim run on the contested-terrain range in this repository's `isaacsim/` directory. The experiment writes a design-point layer, launches Isaac Sim as a child process, drives the robot and relays the metrics and a pose trajectory |
+| `isaacsim-carter` | the Nova Carter in Isaac Sim driven through Nav2: the experiment rewrites `carter_navigation`'s Nav2 parameter file from the design and launches the stack |
+| `isaacsim-husky` | the same shape for a Clearpath Husky in Isaac Sim, over `clearpath_nav2_demos`' Nav2 configuration |
+| `ros2-clearpath` | a Clearpath Husky on ROS 2 with Nav2 and no Isaac Sim, rewriting both the Nav2 parameters and the robot description |
+| `ros2-turtlebot3` | TurtleBot3 Burger and Waffle with SLAM and two Nav2 behavior trees, as a five-entry component library |
+| `ros1-clearpath-husky` | the ROS 1 Clearpath Husky experiment, recording `/cmd_vel` and `/odom` |
+| `SEILR1` | the sensor-suite library the SysML bridge matches against: eight lidar and laser-scanner implementations with their rates. `robustness.bash` is its scoring script and `perfect_stream.m` its MATLAB side |
+
+These three ran end to end here, and their own READMEs carry the detail:
+
+- **`dummy`** — one trial from enqueue to `TrialState.SUCCESSFUL|SHUT_DOWN` in 19.3 s, and
+  `devtools/smoke_dummy.sh`, which brings the whole stack up, runs two trials (one through
+  `experiments run`, one through `POST /api/v1/run`) and tears it down, printing `PASS` in
+  46.3 s.
+- **`sensor-suite-sim`** — 30 tests pass in 0.71 s; one recorded trial with the
+  VLP-16-A + LMS111-b1 + D435 + Blackfly-A suite at clutter 0.5, visibility 0.4 and twelve
+  draws reported `success_rate 1.0`, `time_to_goal 37.48`, `detection_distance 13.91`. Ten
+  designs across eighteen scenarios were run as a 180-trial campaign over `/api/v1`, all of
+  them reaching `TrialState.SUCCESSFUL|SHUT_DOWN` in 4 min 35 s on one runner;
+  `trades-x/case-studies/sensor-suite/README.md` has that campaign and the ranking it fed.
+- **`isaacsim-range`** — eight trials through a stack on Redis 6390, Flask 5001 and the
+  runner on 8003, each one a headless Isaac Sim 6.0.1 process started by the runner's job.
+  Every trial reached `TrialState.SUCCESSFUL|SHUT_DOWN`; stage open took 13.8 to 14.2 s,
+  physics initialisation 5.75 to 6.14 s, and a whole trial 41.8 to 48.6 s, 346 s of the
+  campaign's 411 s. `isaacsim/README.md` has the design points and the resulting table.
+
+The ROS-backed examples each need their own robot stack on the machine: the Nav2
+configuration package the experiment rewrites, the simulator it launches, and a ROS
+environment on the interpreter's path. `components.json` and `impl.py` in each directory
+name which.
 
 ## Provenance
 

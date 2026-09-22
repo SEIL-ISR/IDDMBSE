@@ -224,3 +224,57 @@ def test_the_range_trace_writer_uses_the_trial_column_order(tmp_path):
     table = np.loadtxt(p, delimiter=",", skiprows=1)
     assert table.shape == (3600, 8)
     assert table[1, 0] == pytest.approx(1.0 / 60.0, abs=1e-6)
+
+
+# ------------------------------------------------------------------
+# the verdict table over several traces at once
+
+def test_the_verdict_table_has_one_row_per_trace(range_csv, tmp_path):
+    from replay_observer import verdict_table, write_verdicts, figure
+
+    points = tmp_path / "campaign.csv"
+    points.write_text("trial_id,trajectory,environment\n"
+                      "1,trajectories/trajectory.csv,density 0.4 slope 25\n")
+    from replay_observer import read_points
+    names, rows, traces = verdict_table(str(range_spec), [str(range_csv), str(range_csv)],
+                                        read_points(str(points), ["environment"]), ["environment"])
+
+    assert names == ["roll_safety", "pitch_safety", "progress"]
+    assert len(rows) == 2
+    assert rows[0]["environment"] == "density 0.4 slope 25"
+    assert rows[0]["roll_safety_verdict"] == "satisfied"
+    assert rows[0]["pitch_safety_verdict"] == "violated"       # the 0.40 rad excursion at 10 s
+    assert rows[0]["progress_verdict"] == "violated"           # stuck from 15 s on
+    assert rows[0]["pitch_safety_first_violation_s"] == pytest.approx(
+        replay(str(range_spec), str(range_csv))["pitch_safety"]["first_violation_time"], abs=0.01)
+
+    csv_path, md_path = write_verdicts(names, rows, ["environment"], str(tmp_path))
+    assert len(Path(csv_path).read_text().strip().splitlines()) == 3      # header plus two rows
+    md = Path(md_path).read_text().splitlines()
+    assert md[0] == "| trace | environment | roll_safety | pitch_safety | progress |"
+    assert len(md) == 4                                                   # header, rule, two rows
+
+    svg, pdf = figure(names, traces, str(tmp_path))
+    assert Path(svg).read_text().lstrip().startswith("<?xml")
+    assert Path(pdf).stat().st_size > 0
+
+
+def test_the_worst_robustness_leaves_the_warmup_out(tmp_path):
+    """A run that starts at rest: the progress monitor is negative there but is not judging yet."""
+    from replay_observer import verdict_table
+
+    t = np.arange(0.0, 40.0, 1.0 / RANGE_RATE)
+    v = np.where(t >= 1.0, 0.6, 0.0)
+    zero = np.zeros_like(t)
+    order = ["t", "x", "y", "z", "roll", "pitch", "yaw", "v"]
+    cols = {"t": t, "x": np.cumsum(v / RANGE_RATE), "y": zero, "z": zero,
+            "roll": zero, "pitch": zero, "yaw": zero, "v": v}
+    p = tmp_path / "slow_start.csv"
+    np.savetxt(p, np.column_stack([cols[c] for c in order]), delimiter=",", fmt="%.6f",
+               header=",".join(order), comments="")
+
+    rho = np.asarray(replay(str(range_spec), str(p))["progress"]["rho"])
+    assert rho.min() == pytest.approx(-0.2)          # at rest, inside the 20 s warmup
+    _, rows, _ = verdict_table(str(range_spec), [str(p)])
+    assert rows[0]["progress_verdict"] == "satisfied"
+    assert rows[0]["progress_rho"] == pytest.approx(0.4)

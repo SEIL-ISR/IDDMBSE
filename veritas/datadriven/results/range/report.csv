@@ -1,0 +1,9 @@
+design,environment,trials,failures,failure_rate,clopper_pearson_lo,clopper_pearson_hi,clopper_pearson_upper,wilson_lo,wilson_hi,trials_for_target
+Carter v2.4,"density 0.1, slope 15.0, friction 0.6/0.5, seed 7",1,0,0.0,0.0,0.975,0.95,0.0,0.7934506856227627,59
+Carter v2.4,"density 0.1, slope 25.0, friction 0.6/0.5, seed 7",1,0,0.0,0.0,0.975,0.95,0.0,0.7934506856227627,59
+Carter v2.4,"density 0.1, slope authored, friction 0.6/0.5, seed 7",1,1,1.0,0.025,1.0,1.0,0.2065493143772374,1.0,93
+Carter v2.4,"density 0.3, slope 15.0, friction 0.6/0.5, seed 7",1,0,0.0,0.0,0.975,0.95,0.0,0.7934506856227627,59
+Carter v2.4,"density 0.4, slope 15.0, friction 0.6/0.5, seed 7",1,0,0.0,0.0,0.975,0.95,0.0,0.7934506856227627,59
+Carter v2.4,"density 0.4, slope 25.0, friction 0.6/0.5, seed 7",1,0,0.0,0.0,0.975,0.95,0.0,0.7934506856227627,59
+Carter v2.4,"density 0.8, slope 15.0, friction 0.6/0.5, seed 7",1,1,1.0,0.025,1.0,1.0,0.2065493143772374,1.0,93
+Carter v2.4,"density 0.8, slope 25.0, friction 0.6/0.5, seed 7",1,0,0.0,0.0,0.975,0.95,0.0,0.7934506856227627,59

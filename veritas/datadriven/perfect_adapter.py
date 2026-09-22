@@ -96,9 +96,12 @@ def read_metric(db_path, trial_ids, name="robustness"):
     """One named number per trial out of the `update` table, aligned to `trial_ids`.
 
     A payload counts if it is `{"update": name, ..., "data": value}` (the shape PERFECT's
-    runner sends) or if it simply has `name` as a key.  The last matching payload of a trial
-    wins, so a metric written repeatedly during a run reports its final value.  Trials with no
-    such payload -- and databases with no `update` table at all -- come back as nan.
+    runner sends), if it simply has `name` as a key, or if its `data` is itself a dictionary
+    carrying `name` -- an experiment that relays a whole bundle of numbers in one payload,
+    `{"update": "metrics", "data": {"success_rate": ..., "time_to_goal": ...}}`, is read the
+    same way as one that relays them singly.  The last matching payload of a trial wins, so a
+    metric written repeatedly during a run reports its final value.  Trials with no such
+    payload -- and databases with no `update` table at all -- come back as nan.
     """
     trial_ids = np.asarray(trial_ids, dtype=np.int64)
     values = {}
@@ -122,6 +125,8 @@ def read_metric(db_path, trial_ids, name="robustness"):
             v = d["data"]
         elif name in d:
             v = d[name]
+        elif isinstance(d.get("data"), dict) and name in d["data"]:
+            v = d["data"][name]
         else:
             continue
         try:

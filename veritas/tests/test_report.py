@@ -217,3 +217,84 @@ def test_a_csv_campaign_groups_the_same_way(tmp_path):
     assert [" | ".join(g) for g in s["groups"]] == ["A | sparse", "B | dense"]
     assert s["trials"].tolist() == [2, 1]
     assert s["failures"].tolist() == [1, 0]
+
+
+def test_a_bundle_payload_gives_up_its_named_number(tmp_path):
+    """An experiment that relays several numbers in one payload, the shape a real campaign uses."""
+    path = tmp_path / "bundle.db"
+    con = sqlite3.connect(path)
+    con.executescript(SCHEMA)
+    con.execute("insert into design values (1,'d','demo',null,'[]')")
+    con.execute("insert into environment values (1,'e','demo','{}',null)")
+    con.execute("insert into experiment values (1,1,1,'demo')")
+    con.executemany("insert into trial (id, state, experiment_id) values (?,?,1)",
+                    [(1, "TrialState.SUCCESSFUL"), (2, "TrialState.SUCCESSFUL")])
+    con.executemany('insert into "update" values (?,?,?,?)', [
+        (1, 1, 0.0, json.dumps({"update": "metrics", "trial_id": 1,
+                                "data": {"success_rate": 0.75, "time_to_goal": 58.4}})),
+        (2, 2, 0.0, json.dumps({"update": "metrics", "trial_id": 2,
+                                "data": {"success_rate": 1.0, "time_to_goal": 41.2}})),
+    ])
+    con.commit()
+    con.close()
+    assert pa.read_metric(str(path), [1, 2], name="success_rate").tolist() == [0.75, 1.0]
+    assert pa.read_metric(str(path), [1, 2], name="time_to_goal").tolist() == [58.4, 41.2]
+    assert np.all(np.isnan(pa.read_metric(str(path), [1, 2], name="not_in_the_bundle")))
+
+
+def test_group_by_design_folds_the_environments_together(campaign):
+    c = pa.read_campaign(str(campaign["path"]))
+    per_pair = report.summarise(c["success"], c["design_name"], c["environment_name"])
+    per_design = report.summarise(c["success"], c["design_name"], c["environment_name"],
+                                  by="design")
+
+    assert [" | ".join(g) for g in per_design["groups"]] == ["planner A | all", "planner B | all"]
+    assert per_design["trials"].tolist() == [2 * PER_GROUP] * 2
+    # the two pair groups of a design add up to that design's group
+    assert per_design["failures"].tolist() == [
+        int(per_pair["failures"][0] + per_pair["failures"][1]),
+        int(per_pair["failures"][2] + per_pair["failures"][3])]
+
+    per_environment = report.summarise(c["success"], c["design_name"], c["environment_name"],
+                                       by="environment")
+    assert [" | ".join(g) for g in per_environment["groups"]] == ["all | dense", "all | sparse"]
+    assert per_environment["trials"].sum() == per_design["trials"].sum()
+
+
+def test_a_metric_criterion_reproduces_the_recorded_outcome(campaign, tmp_path):
+    """The fixture's state is `robustness >= 0`, so that criterion must give the same counts."""
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    r = subprocess.run([sys.executable, str(root / "datadriven" / "report.py"),
+                        "--db", str(campaign["path"]), "--out", str(tmp_path),
+                        "--failure-metric", "robustness", "--failure-below", "0.0"],
+                       capture_output=True, text=True, env=env)
+    assert r.returncode == 0, r.stderr
+    assert "of " + str(PER_GROUP * MEANS.size) + " trials count as failures" in r.stdout
+
+    doc = json.loads((tmp_path / "report.json").read_text())
+    by_state = report.summarise(*report.read_database(str(campaign["path"]))[:3])
+    assert [g["failures"] for g in doc["groups"]] == by_state["failures"].tolist()
+
+    # a criterion needs a threshold
+    r = subprocess.run([sys.executable, str(root / "datadriven" / "report.py"),
+                        "--db", str(campaign["path"]), "--out", str(tmp_path),
+                        "--failure-metric", "robustness"],
+                       capture_output=True, text=True, env=env)
+    assert r.returncode == 2
+    assert "--failure-below" in r.stderr
+
+
+def test_the_tag_narrows_the_read_to_one_campaign(campaign):
+    kept = report.read_database(str(campaign["path"]), tag="demo")[0]
+    assert kept.size == PER_GROUP * MEANS.size
+    assert report.read_database(str(campaign["path"]), tag="some-other-campaign")[0].size == 0
+
+
+def test_a_boolean_csv_column_reads_as_one_and_zero(tmp_path):
+    p = tmp_path / "campaign.csv"
+    p.write_text("trial_id,stuck,distance_m\n1,False,12.5\n2,True,3.2\n3,False,\n")
+    assert report.read_csv_column(str(p), "stuck").tolist() == [0.0, 1.0, 0.0]
+    d = report.read_csv_column(str(p), "distance_m")
+    assert d[:2].tolist() == [12.5, 3.2]
+    assert np.isnan(d[2])

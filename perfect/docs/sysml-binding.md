@@ -195,10 +195,22 @@ single word.
 | GET | `/api/v1/environments`, `/api/v1/environments/<id>` | environments with the specification parsed to JSON |
 | GET | `/api/v1/experiments` | one line per experiment, with `last_trial_id` and `last_trial_state` |
 | GET | `/api/v1/experiments/<id>` | the experiment with its design, environment and every trial |
+| GET | `/api/v1/environment_templates` | environment templates with their specification, the `$name` placeholders included |
 | GET | `/api/v1/trials/<id>` | one trial with its `Update` rows (`?updates=N` to cap, default 100); non-destructive |
+| POST | `/api/v1/component_implementations` | create implementations from `{"components": [{"name": ..., "type": ..., "implementation": {...}}, ...]}` (a bare list works too); each is validated against `schema/implementation_schema.json`, and the reply splits them into `created`, `existing` and `invalid` |
+| POST | `/api/v1/designs` | create a design from `{"name": ..., "component_implementation_names": [...]}` or the same with `component_implementation_ids`; a design of that name already there comes back with `"created": false` |
+| POST | `/api/v1/environment_templates` | create a template from `{"name": ..., "specification": {...}}`, the same shape the CLI loads from a template file |
+| POST | `/api/v1/environments` | create an environment from `{"name": ..., "template_id": N, "arguments": {...}}` — the same `$name` substitution the HTML form and the CLI do — or from a `specification` directly |
 | POST | `/api/v1/experiments` | create and enqueue from `{"design_ids": [...], "environment_ids": [...], "tag": "..."}`; `design_tag`/`environment_tag` select by tag instead, as the CLI does; `"run": false` creates without enqueuing |
 | POST | `/api/v1/experiments/<id>/run` | enqueue another trial of an existing experiment |
 | POST | `/api/v1/run` | the bridge endpoint above |
+
+The four library and environment POST routes match on the row's name before they create
+anything and return what is already there, so a script that sets a whole project up over
+HTTP can be re-run without duplicating it. They call the same create functions the Flask
+CLI calls, so a project built this way is identical to one built from `load.bash`. With
+them the model-based side never has to touch the CLI: the bridge can create the library,
+the design, the environment template, the environment and the experiment in five requests.
 
 **There is no authentication on any of these routes.** Anything that can reach the Flask
 port can create designs, environments and experiments and start trials. Bind the server to

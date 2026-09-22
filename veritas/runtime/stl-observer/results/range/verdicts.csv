@@ -1,0 +1,9 @@
+trace,environment,roll_safety_rho,roll_safety_verdict,roll_safety_first_violation_s,pitch_safety_rho,pitch_safety_verdict,pitch_safety_first_violation_s,progress_rho,progress_verdict,progress_first_violation_s
+trial_1.csv,"density 0.1, slope 15.0, friction 0.6/0.5, seed 7",0.119,satisfied,,0.0658,satisfied,,1.2256,satisfied,
+trial_2.csv,"density 0.1, slope 25.0, friction 0.6/0.5, seed 7",0.0751,satisfied,,0.0563,satisfied,,0.5616,satisfied,
+trial_3.csv,"density 0.4, slope 15.0, friction 0.6/0.5, seed 7",0.108,satisfied,,0.0658,satisfied,,1.2256,satisfied,
+trial_4.csv,"density 0.4, slope 25.0, friction 0.6/0.5, seed 7",0.0751,satisfied,,0.0563,satisfied,,0.5616,satisfied,
+trial_5.csv,"density 0.8, slope 15.0, friction 0.6/0.5, seed 7",0.2408,satisfied,,0.2232,satisfied,,-0.1098,violated,25.7
+trial_6.csv,"density 0.8, slope 25.0, friction 0.6/0.5, seed 7",0.2001,satisfied,,0.1463,satisfied,,0.274,satisfied,
+trial_7.csv,"density 0.3, slope 15.0, friction 0.6/0.5, seed 7",-0.1278,violated,29.85,0.031,satisfied,,1.8721,satisfied,
+trial_8.csv,"density 0.1, slope authored, friction 0.6/0.5, seed 7",-2.7723,violated,0.0,0.037,satisfied,,0.2508,satisfied,

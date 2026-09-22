@@ -48,8 +48,15 @@ scene; the flags and the three shipped design points are in
 
 ## What was checked here (2026-09-22)
 
-- `isaacsim/tools`: 22 tests pass (`uv run pytest -q`); the heightmap round
+- `isaacsim/tools`: 49 tests pass (`uv run pytest -q`); the heightmap round
   trip reproduces the terrain mesh to a maximum point error of 1.5e-5.
+- An eight-point design-of-experiments campaign ran through PERFECT (obstacle
+  densities 0.1, 0.4 and 0.8 crossed with slope targets of 15° and 25°, the
+  baseline point and the authored relief, 30 simulated seconds each), every
+  trial a headless Isaac Sim 6.0.1 process started by the PERFECT runner, all
+  successful in 411 s; the metric table, two figure pairs and eight pose
+  trajectories are under `isaacsim/results/`, and the VERITAS runtime observer
+  replayed its range obligations over all eight trajectories.
 - One headless load of the base scene and of one design-of-experiments layer
   in Isaac Sim 6.0.1: 22 978 prims, 0 unresolved references, the Carter
   articulation found with 7 degrees of freedom. The RTX 3D lidar of the
