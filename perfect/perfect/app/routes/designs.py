@@ -207,7 +207,7 @@ def _get_implementation_from_selection(component_selections, implementations=Fal
             filter_attr = models.ComponentImplementation.id if implementations else models.ComponentImplementation.component_id
             component_implementation: models.ComponentImplementation = db.session.query(models.ComponentImplementation).filter(filter_attr == grouped_component_id).one()
             component_implementation = component_implementation.implementation
-            parameters = {"$"+p["name"]: p["default"] for p in component_implementation["parameters"]}
+            parameters = {"$"+p["name"]: p["default"] for p in component_implementation.get("parameters", [])}
             parameters.update(group_component_parameters)
             component_implementation = _apply_parameters_to_component_implementation(component_implementation, parameters)
             design_implementation[group_id].append(component_implementation)
@@ -278,7 +278,7 @@ def get_default_robot_design_implementation(template_name):
             except sa.exc.NoResultFound:
                 print(f"Didn't find default component named '{default_name}'")
                 continue
-            parameters = {"$"+p["name"]: p["default"] for p in default_implementation.implementation["parameters"]}
+            parameters = {"$"+p["name"]: p["default"] for p in default_implementation.implementation.get("parameters", [])}
             parameters.update(group_parameters)
             parameters = _interparameter_substitution(parameters, i)
             parameters["$i"] = i
@@ -286,7 +286,7 @@ def get_default_robot_design_implementation(template_name):
                 default_implementation.implementation,
                 parameters=parameters
             )
-            applied_component_implementation.pop("parameters")
+            applied_component_implementation.pop("parameters", None)
             design_implementation.append(applied_component_implementation)
     return design_implementation
 

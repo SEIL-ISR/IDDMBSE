@@ -50,6 +50,7 @@ def create_app() -> Flask:
     app.task_queue = rq.Queue("perfect-tasks", connection=app.redis)
 
     from perfect.app.routes import (
+        api,
         components,
         designs,
         environments,
@@ -57,6 +58,7 @@ def create_app() -> Flask:
         experiments,
     )
 
+    app.register_blueprint(api.bp)
     app.register_blueprint(components.bp)
     app.register_blueprint(designs.bp)
     app.register_blueprint(environments.bp)

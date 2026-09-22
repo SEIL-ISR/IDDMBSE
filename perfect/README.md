@@ -44,7 +44,7 @@ worker and the runner are talking to each other.
 |---|---|---|
 | Redis | 6390 | this workstation already runs a system `redis-server` on 6379 that belongs to something else. A private Redis on 6390 keeps the two apart. Use 6379 only if it is yours. |
 | Flask server | 5001 | 5000 is the upstream default; 5001 was free here. |
-| PERFECT runner | 8003 | hard-coded in `perfect/experiment/runner.py`, and matched by the default `RUNNER_URIS` in `perfect/app/config.py`. Changing it means changing both. |
+| PERFECT runner | 8003 | the default. Set `RUNNER_PORT` to change it: the runner and the server's `RUNNER_URIS` default both read it through `perfect/common/__init__.py`, so they cannot drift apart. Set `RUNNER_URIS` (comma-separated) to point the server at runners elsewhere. |
 
 ### The environment
 
@@ -221,6 +221,91 @@ is a combination: `SUCCESSFUL|SHUT_DOWN` here.
 One caution: `GET /experiments/updates` is what the pages poll, and it **deletes** the
 `Update` rows it returns. Do not use it as a read-only API.
 
+### The JSON API
+
+The HTML pages are one surface; `/api/v1` is the other. It is read-only except for two
+POST routes, and it has **no authentication** — anything that can reach the Flask port can
+create and run experiments. Keep it on localhost.
+
+```bash
+curl -s http://127.0.0.1:5001/api/v1/experiments/1 | python -m json.tool
+# {
+#     "design": {"components": [], "id": 1, "implementation": [...],
+#                "name": "Widget A + Dijkstra", "tag": "demo", ...},
+#     "environment": {"id": 1, "name": "Nothing", "specification": {}, "tag": "demo", ...},
+#     "id": 1,
+#     "last_trial_id": 1,
+#     "last_trial_state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+#     "trials": [{"id": 1, "start_age": 15.038934230804443,
+#                 "state": "TrialState.SUCCESSFUL|SHUT_DOWN",
+#                 "uri": "ws://localhost:8003", ...}]
+# }
+```
+
+| method | route | what it does |
+|---|---|---|
+| GET | `/api/v1/components` | `Component` rows, each with its `ComponentImplementation` nested |
+| GET | `/api/v1/component_implementations` | `ComponentImplementation` rows |
+| GET | `/api/v1/designs`, `/api/v1/designs/<id>` | designs with components and merged implementation |
+| GET | `/api/v1/environments`, `/api/v1/environments/<id>` | environments, specification parsed to JSON |
+| GET | `/api/v1/experiments` | one line per experiment with `last_trial_state` |
+| GET | `/api/v1/experiments/<id>` | the experiment with design, environment and every trial |
+| GET | `/api/v1/trials/<id>` | one trial with its `Update` rows (`?updates=N`, default 100) |
+| POST | `/api/v1/experiments` | create and enqueue from design ids and environment ids |
+| POST | `/api/v1/experiments/<id>/run` | enqueue another trial of an existing experiment |
+| POST | `/api/v1/run` | the SysML-to-MATLAB bridge endpoint |
+
+Unlike `GET /experiments/updates`, none of these deletes anything.
+
+`POST /api/v1/run` takes the payload the MATLAB functions in `sysml/workbench/bridge/`
+send, matches it against the component library by name and type, and creates and enqueues
+an experiment. Run against `dummy`, whose library holds only `widget` and `ppa` types:
+
+```bash
+curl -s -X POST http://127.0.0.1:5001/api/v1/run -H "Content-Type: application/json" -d '{
+    "launch_file": "~/auto_stack_ws/src/hardware_launch/launch/navigation_rosbridge.launch",
+    "sensor_update": {"laser_3d": {"model": "vlp16", "update_rate": 15},
+                      "depth_camera": {"model": "d435", "width": 1280, "height": 720}}}'
+# {"experiment_id": 2, "trial_ids": [2],
+#  "status_url": "http://127.0.0.1:5001/api/v1/experiments/2",
+#  "design": {"created": true, "id": 2, "name": "no components #db1a87"},
+#  "environment": {"created": false, "id": 1, "name": "Nothing"},
+#  "library": "ComponentImplementation",
+#  "matched": [{"from": "laser_3d", "value": "vlp16", "matched": null},
+#              {"from": "depth_camera", "value": "d435", "matched": null}, ...]}
+```
+
+Nothing matched, because the `dummy` library has no sensors — so the design is empty and
+`matched` says so, field by field. The trial still runs (`DummyExperiment` ignores the
+design) and reaches `TrialState.SUCCESSFUL|SHUT_DOWN` with `start_age` 15.53 s. Against a
+sensor library such as `examples/SEILR1/components.json` the same request matches the
+Velodyne Puck (15 Hz) and the Intel RealSense D435. `perfect/docs/sysml-binding.md` has
+the full request and reply and the matching rules.
+
+### The smoke test
+
+`devtools/smoke_dummy.sh` runs everything above unattended, against a throwaway copy of
+`examples/dummy` in a temporary directory, and is this repository's gate for PERFECT:
+
+```bash
+perfect/devtools/smoke_dummy.sh
+# project root /tmp/perfect-smoke-CW4V3l, redis 6390, flask 5001, runner 8003
+# --- experiments run demo
+# experiment 1 state: TrialState.SUCCESSFUL|SHUT_DOWN
+# --- POST /api/v1/run (the payload MatSensorTrade.m sends)
+# experiment 2 state: TrialState.SUCCESSFUL|SHUT_DOWN
+# PASS
+```
+
+The whole script took 46.3 s wall on 2026-09-22 (`time`): two trials of about 20 s each,
+plus the database, library and server setup.
+
+It takes `--redis-port`, `--flask-port`, `--runner-port`, `--no-api-run` (skip the bridge
+POST) and `--keep` (leave the temporary project root in place). It refuses to start if any
+of its three ports is already listening, and it kills everything it started on exit,
+including on failure. Exit 0 means both trials reached `SHUT_DOWN` and the API reported
+them; exit 1 means they did not, and it prints the tail of the worker and runner logs.
+
 ### Time for the whole thing
 
 | step | wall |
@@ -236,6 +321,7 @@ One caution: `GET /experiments/updates` is what the pages poll, and it **deletes
 | `experiments create` | 0.39 s |
 | `experiments run demo` (enqueue only) | 0.40 s |
 | the trial itself, enqueue to `SHUT_DOWN` | 19.3 s |
+| `devtools/smoke_dummy.sh`, the whole thing (two trials) | 46.3 s |
 
 ## Provenance
 
@@ -247,10 +333,11 @@ One caution: `GET /experiments/updates` is what the pages poll, and it **deletes
   the MATLAB alternative) and `pyjulia_example/` now lives in `trades-x/` at the repository
   root, as `trades-x/mbo`, `trades-x/mbo-matlab-alt` and `trades-x/pyjulia-example`.
 
-### Changes made here to get the bring-up above to run
+### Changes made here
 
-The snapshot did not run as imported against current dependency versions. Five small changes,
-all of them either version compatibility or a plain defect; none changes what PERFECT does:
+**Getting the bring-up above to run.** The snapshot did not run as imported against current
+dependency versions. Five small changes, all of them either version compatibility or a
+plain defect; none changes what PERFECT does:
 
 1. `perfect/experiment/experiment.py` — `from pxr import Usd` moved from module scope into
    `edit_local_usd()`, the only function that uses it. OpenUSD is not in `setup.py` and is
@@ -273,3 +360,48 @@ all of them either version compatibility or a plain defect; none changes what PE
    to the `implementation` key that `load_component_implementations` validates against
    `perfect/app/schema/implementation_schema.json`, each with `"parameters": []` as the other
    examples' `impl.py` produce.
+
+**Built for this release.** The paper describes a RESTful plus WebSocket API and a SysML
+binding. The WebSocket leg was already here (server to runner); the JSON API and the
+documented binding were not, and are new in this repository:
+
+6. `perfect/app/routes/api.py` — the `/api/v1` blueprint, registered in `create_app`.
+   Read-only routes over components, designs, environments, experiments and trials, plus
+   `POST /api/v1/experiments` (create and enqueue) and `POST /api/v1/run` (the bridge
+   endpoint). It reuses `experiments._create` and `designs._create_design` rather than
+   repeating their logic. No authentication, deliberately and documented: keep the server
+   on localhost.
+7. `perfect/app/routes/experiments.py` — `_create` now returns the experiment it
+   committed. It returned `None`, so nothing outside the HTML form could enqueue what it
+   had just created.
+8. `perfect/app/routes/designs.py` — `component_implementation["parameters"]` became
+   `.get("parameters", [])` in the two places it appears, and the matching `pop` gained a
+   default. An implementation without a `parameters` key raised `KeyError` on
+   `designs create`, which is every one of the five entries in
+   `examples/ros2-turtlebot3/components.json`. After the fix that example's
+   `designs create "Burger" "SLAM" -i` commits.
+9. `perfect/common/__init__.py`, `perfect/app/config.py`, `perfect/experiment/runner.py` —
+   the runner's port was the literal `8003` in `runner.py` and again inside `RUNNER_URIS`.
+   It is now `RUNNER_PORT` (environment variable, default 8003), read in one place and
+   used by both; `RUNNER_URIS` takes a comma-separated environment override.
+10. `examples/SEILR1/components.json` — the 18 entries used a `specification` key that no
+    loader reads, so the file loaded nothing. Rewritten to the `implementation` key, with
+    the same 18 components and the same numbers: each sensor's specification became a
+    `files` update writing that component's type as a key of `sensor.yaml` (which is the
+    file `examples/SEILR1/experiment.py` edits, with the same keys), and each planner and
+    controller became a `launchargs` entry on `base_global_planner` or
+    `base_local_planner` (which is what `get_launch_args` in that file sets). All 18 now
+    validate and load. Note that `SEILR1/experiment.py` still builds its own
+    `self._sensor_update` from a design keyed by component type and writes `sensor.yaml`
+    itself, so it does not read these `files` entries; it is a ROS 1 example and has not
+    been run here.
+11. New files: `devtools/smoke_dummy.sh` (the gate above), `docs/sysml-binding.md` (how a
+    SysML model maps onto the schema, and the exact request and reply of
+    `POST /api/v1/run`), and `sysml-profile/perfect.sysml` (a SysML v2 textual profile
+    declaring `ROS2Node`, `ROS2Topic`, `ROS2Parameter` and `ComponentImplementation`, with
+    one worked example. PERFECT does not parse it, and it has not been run through a
+    SysML v2 parser — there is none on this workstation).
+12. Outside this directory: the four MATLAB functions in `sysml/workbench/bridge/` were
+    re-pointed from the 2023 `/run` endpoint to `/api/v1/run` and now return the
+    experiment id from the reply instead of a hard-coded `1.0`. That directory's README
+    records it. None of them has been run: there is no MATLAB on this workstation.

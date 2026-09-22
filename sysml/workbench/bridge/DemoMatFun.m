@@ -8,7 +8,7 @@ function mat_fun_out = DemoMatFun(parA1, parA2, parB1, parB2)
 % if strlength(server) == 0
 %     server = "http://127.0.0.1:5000";
 % end
-% uri = matlab.net.URI(server + "/run");
+% uri = matlab.net.URI(server + "/api/v1/run");
 % method = matlab.net.http.RequestMethod.POST;
 % 
 % ws = string(getenv("AUTO_STACK_WS"));
@@ -21,10 +21,15 @@ function mat_fun_out = DemoMatFun(parA1, parA2, parB1, parB2)
 % options = weboptions("MediaType", "application/json", "Timeout", 2000);
 % 
 % response = webwrite(uri, s, options)
+% if ischar(response) || isstring(response)
+%     response = jsondecode(response);
+% end
+% mat_fun_out = response.experiment_id;
+% return
 
 
 
 
-mat_fun_out = 1parA1+parA2+parB1+parB2
+mat_fun_out = parA1+parA2+parB1+parB2;
 
 end

@@ -8,6 +8,7 @@ from websockets.asyncio.server import ServerConnection
 from websockets.protocol import State
 
 import perfect.logging
+from perfect import common
 from perfect.experiment.experiment import BaseExperiment
 
 logger = perfect.logging.getLogger("runner")
@@ -191,7 +192,7 @@ class Runner:
         while not self._restart_f.done() or self._restart_f.result():
             if self._restart_f.done():
                 self._restart_f = loop.create_future()
-            port = 8003  # TODO get from configuration
+            port = common.RUNNER_PORT
             logger.info(f"Starting server on port {port}")
             server = await websockets.serve(self._handler, "", port)
             logger.info("Started server and awaiting stop")

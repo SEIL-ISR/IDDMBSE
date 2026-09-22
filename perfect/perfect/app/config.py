@@ -1,5 +1,7 @@
 import os
 
+from perfect import common
+
 
 class Config:
     # System configuration
@@ -15,9 +17,10 @@ class Config:
         os.environ.get("PERFECT_PROJECT_DATABASE_URI")
         or f"sqlite:///{PERFECT_PROJECT_ROOT}/{PERFECT_PROJECT_NAME}.db"
     )
-    RUNNER_URIS = [
-        "ws://localhost:8003",
-    ]
+    RUNNER_PORT = common.RUNNER_PORT
+    RUNNER_URIS = (
+        os.environ.get("RUNNER_URIS") or f"ws://localhost:{common.RUNNER_PORT}"
+    ).split(",")
 
     RUN_LOCALLY = False
 

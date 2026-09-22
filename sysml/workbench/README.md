@@ -35,13 +35,23 @@ The POST body has two shapes:
   -- `MatSensorTrade.m`. The `sensor_update` keys match the top-level keys of
   `../ros1-husky-config/sensor.yaml`.
 
-**[unverified]**: the `perfect/` snapshot in this repository (2025) is a Flask app whose
-routes are blueprint-scoped (`/experiments/run/<id>`, `/experiments/run_locally`, ...).
-It has no bare `/run` endpoint taking a `launch_file`. The server these scripts talked to
-in 2023-24 was an earlier PERFECT. The closest thing in the current tree is
-`perfect/examples/SEILR1/experiment.py`, which consumes a sensor YAML of the same shape
-and launches the same workspace, so the configuration vocabulary carried over even though
-the endpoint did not.
+The bare `/run` endpoint these scripts were written against belonged to an earlier
+PERFECT (2023-24) and is not in the 2025 snapshot, whose routes are blueprint-scoped
+(`/experiments/run/<id>`, `/experiments/run_locally`, ...). PERFECT now carries a
+compatibility endpoint for exactly this payload at **`POST /api/v1/run`**, and the four
+scripts in `bridge/` were re-pointed at it. It resolves `launch_args` and `sensor_update`
+into a PERFECT Design by matching the library on component name and type, resolves
+`launch_args.domain` to an Environment, then creates one Experiment and enqueues one
+Trial. It replies with `{"experiment_id": N, "trial_ids": [M], "status_url": "...",
+"design": {...}, "environment": {...}, "matched": [...]}`, and the scripts now return that
+`experiment_id` instead of the hard-coded `1.0` they used to return. `matched` says, field
+by field, which library component each payload field resolved to, or `null` where nothing
+matched. The full request and reply are documented in `perfect/docs/sysml-binding.md`.
+`perfect/examples/SEILR1/experiment.py` still consumes a sensor YAML of the same shape and
+launches the same workspace, so the configuration vocabulary carried over as well. **This
+endpoint has been exercised with `curl` against the `dummy` example (see
+`perfect/README.md`); it has not been exercised from MATLAB, because there is no MATLAB on
+this workstation.**
 
 ## Substitutions made here
 
@@ -62,7 +72,7 @@ server = string(getenv("PERFECT_SERVER_URL"));
 if strlength(server) == 0
     server = "http://127.0.0.1:5000";
 end
-uri = matlab.net.URI(server + "/run");
+uri = matlab.net.URI(server + "/api/v1/run");
 
 ws = string(getenv("AUTO_STACK_WS"));
 if strlength(ws) == 0
@@ -81,6 +91,12 @@ older launch file (`navigation.launch` with `timeout` 600 and launch arguments
 `rtabmap_viz`, `camera`, `lidar3d`, `slam2d`, `icp_odometry`). Those same launch
 arguments survive in `bridge/testhttpPost.m`, so nothing was lost.
 
+Two further changes were made later, when the server grew the endpoint again: `/run`
+became `/api/v1/run` in all four, and the three scripts that POST now decode the reply and
+return `response.experiment_id` in place of the hard-coded `1.0`. `MatSensorTrade.m` had
+been assigning its result to `mat_out_sen` while its signature declares `mat_fun_out`, so
+it could never have returned at all; that is fixed by the same line. `DemoMatFun.m`'s
+`mat_fun_out = 1parA1+parA2+...` is not valid MATLAB and was read as the plain sum.
 Nothing else in any script was changed. The scripts in `dse/`, `rosbag/` and the files in
 `../ros1-husky-config/` contained no addresses or absolute paths to scrub (checked with
 `grep -nE '10\.229\.|/home/|C:\\'`, which returned nothing on all of them).

@@ -16,7 +16,7 @@ server = string(getenv("PERFECT_SERVER_URL"));
 if strlength(server) == 0
     server = "http://127.0.0.1:5000";
 end
-uri = matlab.net.URI(server + "/run");
+uri = matlab.net.URI(server + "/api/v1/run");
 method = matlab.net.http.RequestMethod.POST;
 lp_dict(lpkey)
 gp_dict(gpkey)
@@ -31,8 +31,14 @@ options = weboptions("MediaType", "application/json", "Timeout", 2000);
 
 response = webwrite(uri, s, options)
 
+% webwrite decodes an application/json reply into a struct; when the reply
+% arrives as text, decode it here. The reply is
+% {"experiment_id": N, "trial_ids": [M], "status_url": "..."}.
+if ischar(response) || isstring(response)
+    response = jsondecode(response);
+end
 
-mat_out = 1.0 
+mat_out = response.experiment_id;
 
 
 end

@@ -49,6 +49,7 @@ def _create(design_id: int, environment_id: int, tag=None):
     db.session.add(experiment)
     db.session.commit()
     current_app.logger.info(f"Committed {experiment}")
+    return experiment
 
 
 @bp.route("run/<id>")
