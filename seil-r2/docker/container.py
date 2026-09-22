@@ -21,12 +21,12 @@ def parse_cli_args() -> argparse.Namespace:
     Returns:
         The parsed command line arguments.
     """
-    parser = argparse.ArgumentParser(description="Utility for using Docker with Isaac Lab.")
+    parser = argparse.ArgumentParser(description="Utility for using Docker with the seil-r2 workspace.")
 
     # We have to create separate parent parsers for common options to our subparsers
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument(
-        "profile", nargs="?", default="base", help="Optional container profile specification. Example: 'base' or 'ros'."
+        "profile", nargs="?", default="base", help="Optional container profile specification: 'base' or 'ros2'."
     )
     parent_parser.add_argument(
         "--files",
@@ -55,7 +55,7 @@ def parse_cli_args() -> argparse.Namespace:
         parents=[parent_parser],
     )
     subparsers.add_parser(
-        "enter", help="Begin a new bash process within an existing Isaac Lab container.", parents=[parent_parser]
+        "enter", help="Begin a new bash process within an existing seil-r2 container.", parents=[parent_parser]
     )
     config = subparsers.add_parser(
         "config",
@@ -85,7 +85,7 @@ def main(args: argparse.Namespace):
     if not shutil.which("docker"):
         raise RuntimeError(
             "Docker is not installed! Please check the 'Docker Guide' for instruction: "
-            "https://isaac-sim.github.io/IsaacLab/source/deployment/docker.html"
+            "https://docs.docker.com/engine/install/"
         )
 
     # creating container interface

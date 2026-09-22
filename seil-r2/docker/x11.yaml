@@ -1,5 +1,5 @@
 services:
-  isaac-lab-base:
+  iddmbse-seil-r2-base:
     environment:
       - DISPLAY
       - TERM
@@ -17,7 +17,7 @@ services:
       target: /etc/localtime
       read_only: true
 
-  isaac-lab-ros2:
+  iddmbse-seil-r2-ros2:
     environment:
       - DISPLAY
       - TERM

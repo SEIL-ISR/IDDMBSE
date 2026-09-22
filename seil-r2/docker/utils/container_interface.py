@@ -15,7 +15,7 @@ from .state_file import StateFile
 
 
 class ContainerInterface:
-    """A helper class for managing Isaac Lab containers."""
+    """A helper class for managing the seil-r2 containers."""
 
     def __init__(
         self,
@@ -50,13 +50,8 @@ class ContainerInterface:
 
         # set the profile and container name
         self.profile = profile
-        if self.profile == "isaaclab":
-            # Silently correct from isaaclab to base, because isaaclab is a commonly passed arg
-            # but not a real profile
-            self.profile = "base"
-
-        self.container_name = f"isaac-lab-{self.profile}"
-        self.image_name = f"isaac-lab-{self.profile}:latest"
+        self.container_name = f"iddmbse-seil-r2-{self.profile}"
+        self.image_name = f"iddmbse-seil-r2-{self.profile}:latest"
 
         # keep the environment variables from the current environment
         self.environ = os.environ
@@ -110,7 +105,7 @@ class ContainerInterface:
                 "--env-file",
                 ".env.base",
                 "build",
-                "isaac-lab-base",
+                "iddmbse-seil-r2-base",
             ],
             check=False,
             cwd=self.context_dir,
@@ -188,11 +183,10 @@ class ContainerInterface:
                 output_dir.mkdir()
 
             # define dictionary of mapping from docker container path to host machine path
-            docker_isaac_lab_path = Path(self.dot_vars["DOCKER_ISAACLAB_PATH"])
+            docker_workspace_path = Path(self.dot_vars["DOCKER_WORKSPACE_PATH"])
             artifacts = {
-                docker_isaac_lab_path.joinpath("logs"): output_dir.joinpath("logs"),
-                docker_isaac_lab_path.joinpath("docs/_build"): output_dir.joinpath("docs"),
-                docker_isaac_lab_path.joinpath("data_storage"): output_dir.joinpath("data_storage"),
+                docker_workspace_path.joinpath("install"): output_dir.joinpath("install"),
+                docker_workspace_path.joinpath("log"): output_dir.joinpath("log"),
             }
             # print the artifacts to be copied
             for container_path, host_path in artifacts.items():
@@ -207,7 +201,7 @@ class ContainerInterface:
                     [
                         "docker",
                         "cp",
-                        f"isaac-lab-{self.profile}:{container_path}/",
+                        f"{self.container_name}:{container_path}/",
                         f"{host_path}",
                     ],
                     check=False,

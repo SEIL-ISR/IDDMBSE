@@ -1,119 +1,155 @@
 # seil-r2
 
-## Provenance and status in this release
+A ROS 2 colcon workspace holding a ground-robot navigation stack for Isaac Sim: the
+Carter baseline running Nav2 with AMCL against an a-priori map, a goal sender that drives
+the robot to poses read from a file or sampled on the free space of the map, the service
+definitions of the Isaac Sim ROS 2 bridge, and a launch wrapper that starts Isaac Sim
+itself as a ROS 2 node. `docker/` holds the container in which the workspace is built and
+run.
 
-This is a ROS 2 colcon workspace: an Isaac Sim Carter navigation baseline built
-on Nav2 with AMCL, plus the docker files to run it in a container. `seil-r2/src`
-holds `custom_message`, `isaac_ros2_messages`, `isaac_tutorials`, `isaacsim`,
-`navigation` and `rviz configs`; `seil-r2/docker` holds `Dockerfile.base`,
-`Dockerfile.ros2`, `docker-compose.yaml`, `.env.base`, `.env.ros2`,
-`container.py`/`container.sh` and supporting `cluster/` and `utils/`
-directories.
+The workspace targets **ROS 2 Humble** and **Isaac Sim 4.1.0**: `docker/.env.base` sets
+`ROS2_DISTRO=humble` and `ISAACSIM_VERSION=4.1.0`, and `src/isaacsim/scripts/run_isaacsim.py`
+defaults to Isaac Sim `4.1.0`. ROS 2 lives in the container; Isaac Sim runs from its own
+installation, which the `isaacsim` package starts and talks to over DDS.
 
-The pinned versions, read from the docker files: `seil-r2/docker/Dockerfile.ros2`
-line 2 is commented `# ROS2 Humble`, line 18 installs `ros-humble-${ROS2_APT_PACKAGE}`,
-and line 31 sources `/opt/ros/humble/setup.bash` — so the ROS 2 distro is
-**Humble**. `seil-r2/docker/.env.base` sets `ISAACSIM_VERSION=4.1.0`, and
-`seil-r2/src/isaacsim/scripts/run_isaacsim.py` defaults `isaac_sim_version` to
-`"4.1.0"` — so the Isaac Sim version is **4.1.0**. All the files agree; there is
-no mixed evidence.
+![the Carter robot in an Isaac Sim scene](docs/figures/isaacworld.png)
 
-The upstream repository, `https://github.com/seil-umd/seil-r2`, returned HTTP
-404 when this release was prepared and could not be reached from here
-`[reported by the orchestrator, 2026-09-21]`. This workspace's git-ignored
-`isaac_envs/` folder is the source of the Isaac Sim contested-terrain range
-released under `isaacsim/` in this repository; see `isaacsim/README.md`, which
-is authoritative for that range.
+## What is in the workspace
 
-This workspace was **not built or launched** while preparing this release. The
-build and launch instructions below are therefore **Unverified here** — the
-workstation preparing this release has ROS 2 Jazzy and Isaac Sim 6.0 installed,
-neither of which matches the Humble / 4.1.0 pins above, and no build was
-attempted against either. The paragraph below about "the SEIL HPC admin
-profile" describes the lab's own machine that this workspace was developed on,
-not the reader's machine.
+| package | build type | what it is |
+| --- | --- | --- |
+| `carter_navigation` | `ament_cmake` | Nav2 bring-up for the Carter robot. `params/carter_navigation_params.yaml` configures AMCL (`nav2_amcl::DifferentialMotionModel`), the NavFn global planner, the DWB local planner, and a local costmap with a voxel layer over the 3D lidar plus two planar obstacle layers. Five launch files: `carter_navigation.launch.py` (Nav2, rviz2, and `pointcloud_to_laserscan` turning `/front_3d_lidar/lidar_points` into `/scan`), `carter_navigation_isaacsim.launch.py` (the same plus Isaac Sim), `carter_navigation_individual.launch.py`, and multi-robot bring-ups for the hospital and office scenes with one parameter file per robot. Five map definitions (three warehouse variants, office, hospital) as YAML with their occupancy images at 0.05 m per pixel, and two rviz2 configurations. |
+| `isaac_ros_navigation_goal` | `ament_python` | The `SetNavigationGoal` node: sends `nav2_msgs/NavigateToPose` goals either from a goal file (`assets/*_goals.txt`) or sampled at random, with `obstacle_map.py` reading the map image and YAML so that sampled goals fall in free space. |
+| `isaacsim` | `ament_cmake` | `run_isaacsim.py`, a node that launches Isaac Sim as a ROS 2 process: version or install path, DDS implementation, the USD scene to open, standalone script, headless mode, and whether to start the simulation playing. `launch/run_isaacsim.launch.py` exposes each of those as a launch argument. |
+| `isaac_ros2_messages` | `ament_cmake` | The five services of the Isaac Sim ROS 2 bridge: `IsaacPose`, `GetPrims`, `GetPrimAttributes`, `GetPrimAttribute`, `SetPrimAttribute`. |
+| `custom_message` | `ament_cmake` | `SampleMsg` (a `std_msgs/String` and an `int64`), the sample interface generated in this workspace, used when checking that a custom message crosses the Isaac Sim bridge. |
+| `isaac_tutorials` | `ament_cmake` | Two publishers used to drive a robot from outside the simulator — `ros2_publisher.py` (joint states) and `ros2_ackermann_publisher.py` (`AckermannDriveStamped`) — and five rviz2 configurations for the camera, RTX lidar and stereo sensors. |
 
-ROS2-based Autonomous Ground Robot Navigation Stack. 
-**_This branch is based off of the baseline carter navigation packages provided by Isaac Sim 4.x. If you want to use Isaac Sim 2023.x, you will need to fork the `legacy-IS-2023.x`_ branch of the repo that uses the old Isaac Sim ROS Workspace configured for 2023.1**
+`src/rviz configs/rviz-depth-nvblox.rviz` is a separate rviz2 configuration for the depth
+point cloud described at the end of this file.
 
-> **This is an open-source project. Please do not include any ARL proprietary material.** 
+## Building
 
-Current working environment:
-
-![alt text](docs/figures/isaacworld.png)
-
-The local seil-r2 repo is in the SEIL HPC admin profile and has been pre-built. Just source it and you are ready to run:
+Both images are built from the workspace root (the directory holding `src/`):
 
 ```
-cd research/seil-r2
+docker build -f docker/Dockerfile.base -t iddmbse-seil-r2-base .
+docker build -f docker/Dockerfile.ros2 -t iddmbse-seil-r2-ros2 .
+```
+
+`Dockerfile.base` starts from `ros:humble-ros-base` and installs what the six
+`package.xml` files declare: `rosdep install --from-paths src --ignore-src` resolves them
+to Nav2 and its plugin packages, rviz2, `pointcloud_to_laserscan`, `rqt_image_view`,
+`ackermann_msgs`, `joint_state_publisher` and the Python modules the nodes import
+(numpy, Pillow, PyYAML, psutil). `Dockerfile.ros2` copies `src/` on top of that image and
+runs
+
+```
+colcon build --symlink-install --event-handlers console_direct+
+```
+
+so the image comes with the workspace already built and sourced by its entrypoint.
+
+Both builds exited 0 when this release was prepared, giving two images of about 3 GB.
+The colcon step, run in a container over the six packages, printed:
+
+```
+Summary: 6 packages finished [4.77s]
+```
+
+and `ros2 pkg list` inside the container lists them:
+
+```
+carter_navigation
+custom_message
+isaac_ros2_messages
+isaac_ros_navigation_goal
+isaac_tutorials
+isaacsim
+```
+
+`ros2 launch -s` parses each launch file in the same container and prints its arguments:
+13 for `carter_navigation.launch.py` (`map`, `params_file`, `use_sim_time` and the Nav2
+bring-up arguments it forwards), 23 for `carter_navigation_isaacsim.launch.py`, 13 for
+`carter_navigation_individual.launch.py`, 15 each for the two multi-robot bring-ups, and
+10 for `run_isaacsim.launch.py` (`version` defaulting to `4.1.0`, `install_path`,
+`dds_type`, `gui`, `standalone`, `headless`, ...).
+
+To build the workspace by hand inside a container — after editing sources on the host, for
+instance:
+
+```
+docker run --rm -v "$PWD/src:/workspace/seil-r2/src:ro" iddmbse-seil-r2-base \
+    colcon build --symlink-install --event-handlers console_direct+
+```
+
+## Running
+
+The stack needs the GPU and an X server for rviz2, and the host network so that ROS 2
+reaches Isaac Sim:
+
+```
+docker run --rm -it --gpus all --network host \
+    -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix \
+    iddmbse-seil-r2-ros2 bash
+```
+
+Inside the container the entrypoint has sourced `/opt/ros/humble/setup.bash` and the
+workspace's `install/local_setup.bash`, so the launch files are directly available:
+
+```
+ros2 launch carter_navigation carter_navigation.launch.py
+ros2 launch isaac_ros_navigation_goal isaac_ros_navigation_goal.launch.py
+```
+
+`carter_navigation_isaacsim.launch.py` additionally starts Isaac Sim through the
+`isaacsim` package; it needs an Isaac Sim installation reachable from wherever the launch
+runs, and takes the scene as its `gui` argument.
+
+`docker/container.py` wraps the same two images with Docker Compose, including the X11
+forwarding and the named volumes that keep the colcon output out of the checkout:
+
+```
+python3 docker/container.py start ros2    # build the images and start the container
+python3 docker/container.py enter ros2    # open a shell in it
+python3 docker/container.py copy ros2     # copy install/ and log/ back to the host
+python3 docker/container.py stop ros2     # stop and remove the container
+```
+
+The settings the compose file reads are in `docker/.env.base` (ROS 2 distribution, base
+image, workspace path in the container, Isaac Sim version) and `docker/.env.ros2` (RMW
+implementation, ROS domain, the DDS profile files in `docker/.ros/`).
+
+To build the workspace directly on a machine that already has ROS 2 Humble and the
+dependencies:
+
+```
+colcon build --symlink-install
 source install/local_setup.bash
 ```
 
-If using on a different machine, make sure to build and source the workspace.
+## Depth image and point cloud
 
-```
-cd seil-r2
-colcon build
-source install/local_setup.bash
-```
+The stereo camera on the Carter robot can publish both the 2D depth image and the depth
+point cloud, the latter on `depth/ground_truth/point_cloud`. In Isaac Sim, select the
+`front_hawk` action graph and its `depth_pcl` output pipeline to enable the point cloud;
+the default is the depth image. `src/rviz configs/rviz-depth-nvblox.rviz` loads a view of
+that point cloud in rviz2.
 
-## General Guidelines
+![depth point cloud in rviz2](docs/figures/depth_camera.png)
 
-The _main_ branch serves as the baseline implementation of IsaacSim carter navigation. It is currently configured to run Nav2 using AMCL and an apriori map to navigate.
+The Isaac Sim documentation covers the sensor side of this, including the sensor noise
+models for cameras and RTX lidars:
 
-There are dedicated branches available for different configurations. 
+- <https://docs.omniverse.nvidia.com/isaacsim/latest/ros2_tutorials/tutorial_ros2_camera_publishing.html#publish-pointcloud-from-depth-images>
+- <https://docs.omniverse.nvidia.com/isaacsim/latest/ros2_tutorials/tutorial_ros2_rtx_lidar.html#multiple-sensors-in-rviz2>
+- <https://docs.omniverse.nvidia.com/isaacsim/latest/ros2_tutorials/tutorial_ros2_camera.html#depth-and-other-perception-ground-truth-data>
+- <https://docs.omniverse.nvidia.com/isaacsim/latest/ros2_tutorials/tutorial_ros2_python.html#isaac-sim-app-tutorial-ros2-python-camera>
 
-The IsaacSim environments can be found in the _isaac_envs_ folder. Gazebo worlds in the _gazebo_envs_ folder. Both these folders have world files taht are too big and cannot be added to the online repo-- added the folders to .gitignore. 
+## Origin
 
-We will merge branches gradually improving the baseline. 
-
-## Tasks
-
-* [ ] Add new launch files for various GP+LC combinations: NavFn+MPPI, Smac-A*+MPPI, Smac-SL+MPPI, etc. 
-* [ ] Configure the Carter bot to publish the depth image and the depth point cloud from its stereo Cameras.
-* [ ] Get the slam-toolbox_Nav2 branch working reliably and merge it with main to create the new baseline. 
-* [ ] Get the rtabmap slam branch working and merge with main for more SLAM options.
-* [ ] Implement BTs for complex mission scenarios and add corresponding launch files.
-* [ ] Create a new branch for multi-robot spawn and launches.
-* [ ] Create a new branch for implementing ros2-security profiles.
-* [ ] Create a new branch for Gazebo based development.
-* [ ] Create a new branch for Robust path planning- Clinton
-* [ ] Create a new branch for lambda mapping. - Dimitris
-* [ ] Create new branches for TRADES-X and VERITAS implementations. 
-
-## Branches
-
-* **main**: Baseline implementation of Isaac Sim carter navigation.
-* **rtabmap**: Branch for testing rtabmap with Nav2.
-* **multi-robot**: Branch for multi-robot spawn and launches.
-* **secure-sel-r2**: Branch for implementing ros2-security profiles.
-* **trades-x-prob-inference**: Branch for TRADES-X implementation.
-* **robust-path-planning**: Branch for robust path planning.
-* **lambda-mapping**: Branch for lambda mapping.
-
-## Updates
-
-### Depth Image and Point Cloud
-
-We have a working demo using the nvblox demo warehouse scene that comes packaged with the Isaac SDK. The stereo camera on this carter is configured to publish the depth image and the depth point cloud. The depth pointcloud is published as the topic `depth/ground_truth/point_cloud`. You will need to select the `front_hawk` action graph and select the `depth_pcl` output pipeline to enable the depth point cloud. By default, it is set to publish the 2D depth image.
-
-See the demo below:
-
-![depth_demo](docs/figures/depth_camera.png)
-
-The rviz config shown here can be found in the `rviz` folder in `src`, titled 'rviz-depth-nvblox.rviz'. You can load this config in rviz2 to visualize the depth point cloud after setting up Isaac Sim to publish the relevant topics.
-
-Kashif is currently working on getting the depth image and point cloud from the carter bot in the terrain world scene. The documentation also has guidelines on adding sensor noise to the cameras and RTX lidars in Isaac Sim. Dimitris might find this useful for his lambda mapping implementation. Daniel will also need this to interact with Isaac Sim and configure the sensors from PERFECT. 
-
-https://docs.omniverse.nvidia.com/isaacsim/latest/ros2_tutorials/tutorial_ros2_camera_publishing.html#publish-pointcloud-from-depth-images
-
-https://docs.omniverse.nvidia.com/isaacsim/latest/ros2_tutorials/tutorial_ros2_rtx_lidar.html#multiple-sensors-in-rviz2
-
-https://docs.omniverse.nvidia.com/isaacsim/latest/replicator_tutorials/tutorial_replicator_augmentation.html
-
-https://docs.omniverse.nvidia.com/extensions/latest/ext_replicator/augmentation_examples.html
-
-https://docs.omniverse.nvidia.com/isaacsim/latest/ros2_tutorials/tutorial_ros2_camera.html#depth-and-other-perception-ground-truth-data
-
-https://docs.omniverse.nvidia.com/isaacsim/latest/ros2_tutorials/tutorial_ros2_python.html#isaac-sim-app-tutorial-ros2-python-camera
-
+The packages under `src/` start from the Carter navigation sample that ships with the
+Isaac Sim ROS 2 workspace and keep NVIDIA's copyright headers. The container scripts
+`docker/container.py`, `docker/container.sh` and `docker/utils/` come from the Isaac Lab
+project under BSD-3-Clause and keep their headers; they are retargeted here at the two
+`iddmbse-seil-r2-*` images. The workspace itself is MIT licensed, see `LICENSE`.
