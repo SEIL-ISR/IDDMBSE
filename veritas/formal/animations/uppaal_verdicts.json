@@ -1,0 +1,63 @@
+{
+  "version": "UPPAAL 5.0.0 (rev. 714BA9DB36F49691), June 2023",
+  "bt": [
+    [
+      "E<> spec.Success",
+      "satisfied"
+    ],
+    [
+      "E<> spec.Failure",
+      "satisfied"
+    ]
+  ],
+  "sm": [
+    [
+      "A[] gt < 180",
+      "not satisfied"
+    ],
+    [
+      "A[] current_soc > 60",
+      "satisfied"
+    ],
+    [
+      "A[] not deadlock",
+      "satisfied"
+    ],
+    [
+      "E<> ee_hv_battery_charge_discharge_p.Pseudostate",
+      "satisfied"
+    ],
+    [
+      "E<> ee_hv_battery_charge_discharge_p.Operational",
+      "satisfied"
+    ],
+    [
+      "E<> ee_hv_battery_charge_discharge_p.Enter_Power_Saving_Mode",
+      "not satisfied"
+    ],
+    [
+      "E<> ee_hv_battery_charge_discharge_p.Charging",
+      "not satisfied"
+    ],
+    [
+      "E<> ee_hv_battery_charge_discharge_p.Quick_Charge_Complete",
+      "not satisfied"
+    ],
+    [
+      "E<> demo_ad_p.InitialNode",
+      "satisfied"
+    ],
+    [
+      "E<> demo_ad_p.Opaque_Action_Matlab_Script",
+      "satisfied"
+    ],
+    [
+      "E<> demo_ad_p.Opaque_Action_Python_Script",
+      "satisfied"
+    ],
+    [
+      "E<> demo_ad_p.MergeNode",
+      "satisfied"
+    ]
+  ]
+}

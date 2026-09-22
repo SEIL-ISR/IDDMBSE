@@ -323,6 +323,40 @@ p95 against mean planned length, one point per policy. This is the trade the
 manuscript describes: moving right (a longer nominal path) buys moving down (a
 lighter tail), and the risk level is the dial.
 
+### Animation
+
+![RRT* and RA-RRT* at CVaR 0.9 growing their trees on the hard field](animations/rarrt_tree_growth.gif)
+
+`animations/rarrt_tree_growth.mp4` is 20 s at 1280 x 720 and 24 fps; the GIF
+above is the same at 640 px and 12 fps, and `rarrt_tree_growth_poster.{svg,pdf}`
+is its last frame. Two panels on the hard field of campaign run 0 at noise level
+0.5 (48 discs, the world in the right panel of `figures/paths_by_environment`):
+plain RRT\* on the left, RA-RRT\* at CVaR 0.9 on the right, each growing its
+tree over 1500 iterations from the same start with the same samples. The shaded
+ring around each rock is the 2 m (`d_hazard`) within which a segment's hazard
+chance is highest. Each panel prints the iteration, the node count and the
+length and smallest clearance of the best path so far, which is the path the
+planner would return if it stopped at that iteration. Both trees end with the
+same 1063 nodes, wired differently. The last five seconds hold the two final
+paths with the numbers of their campaign rows: nominal length 80.26 m and
+smallest clearance 0.004 m for RRT\*, 91.88 m and 1.452 m for CVaR 0.9, and
+31.5 % against 22.8 % of the 400 executions over the 118.8 m budget.
+
+The planner is rerun through `rarrt`. `plan` takes an `on_iteration` hook that
+sees the tree before every iteration, and `rarrt/growth.py` keeps copies at the
+iterations the frames show and rebuilds each frame's best path by the rule
+`plan` ends with. The hook draws nothing from the random generators, so the
+recorded run is the campaign's run: the script checks its three final numbers
+against `results/campaign.csv` and stops if they differ. `tests/test_growth.py`
+checks that, that recording leaves the plan unchanged, and that the kept final
+tree is the one `plan(..., keep_tree=True)` returns.
+
+    uv run python animations/make_rarrt_tree_growth.py --out animations
+
+`--seed` picks the campaign run (0 to 49); `--frames` and `--fps` set the length.
+The render needs `ffmpeg` on the `PATH`. It took 19.8 s here, and a second render
+gave the same 480 frames and byte-identical poster files.
+
 
 ## Through PERFECT
 

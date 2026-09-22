@@ -96,13 +96,22 @@ def _best_move(d, rc):
     return cand[np.arange(k), pick], total[np.arange(k), pick]
 
 
-def run_episodes(rng, boxes, valid, hard, q, max_steps=120, shift=0.0, record=False):
+def run_episodes(rng, boxes, valid, hard, q, max_steps=120, shift=0.0, record=False,
+                 on_step=None):
     """Run the closed loop for a batch of worlds.
 
     q is the conformal inflation per episode, broadcast to (K,); q = 0 is the
     nominal arm, which uses the raw detections. Returns a dict with the status,
     the path length, the realised trajectory, the number of steps, and, when
     `record` is set, the per-detection rows and the last frame of boxes.
+
+    `on_step(state)`, when given, is called at the end of every control step with
+    a dict of the batch arrays of that step: the step index `t`, the pose and
+    grid cell before the move (`xy_before`, `rc_before`), the detections
+    (`det`, `det_valid`), the regions planned against (`regions`, the detections
+    grown by ROBOT_HALF + q), the cost-to-go field `cost_to_go`, the pose after
+    the move `xy`, and `status` after the step. It draws nothing from `rng`, so
+    a run with the hook is the same run.
     """
     k = boxes.shape[0]
     q = np.broadcast_to(np.asarray(q, dtype=float), (k,))
@@ -131,9 +140,11 @@ def run_episodes(rng, boxes, valid, hard, q, max_steps=120, shift=0.0, record=Fa
             rows.append(_rows(t, boxes, det, det_valid & live[:, None], dist, xy))
             frames.append((det.copy(), conformal.inflate(det, world.ROBOT_HALF + q[:, None]).copy(), det_valid.copy()))
 
-        occ = rasterise(conformal.inflate(det, world.ROBOT_HALF + q[:, None]), det_valid)
+        regions = conformal.inflate(det, world.ROBOT_HALF + q[:, None])
+        occ = rasterise(regions, det_valid)
         occ[np.arange(k), rc[:, 0], rc[:, 1]] = False    # never fence the robot in
         d = cost_to_go(occ)
+        xy_before, rc_before = xy, rc
         nxt, total = _best_move(d, rc)
 
         stuck = live & ~np.isfinite(total)
@@ -154,6 +165,10 @@ def run_episodes(rng, boxes, valid, hard, q, max_steps=120, shift=0.0, record=Fa
         status = np.where(crash, COLLISION, status)
         reached = (status == RUNNING) & (np.linalg.norm(xy - goal_xy, axis=1) < world.RES)
         status = np.where(reached, SUCCESS, status)
+        if on_step is not None:
+            on_step({"t": t, "xy_before": xy_before, "rc_before": rc_before, "det": det,
+                     "det_valid": det_valid, "regions": regions, "cost_to_go": d,
+                     "xy": xy, "status": status})
 
     status = np.where(status == RUNNING, STALLED, status)
     out = {
@@ -192,3 +207,28 @@ ROW_COLUMNS = [
     "true_xmin", "true_ymin", "true_xmax", "true_ymax",
     "det_xmin", "det_ymin", "det_xmax", "det_ymax",
 ]
+
+
+def descend(d, rc, max_len=4 * world.NCELL):
+    """The path the robot would follow down a fixed cost-to-go field.
+
+    d (K, H, W), rc (K, 2) int. Repeats the control loop's own move rule from rc
+    until the goal cell (cost 0) or a cell with no finite way on. Returns the
+    cells (K, L, 2) and the number of cells in use per episode (K,); the rows of
+    an episode that stopped early repeat its last cell. The loop is over path
+    steps; each step moves the whole batch.
+    """
+    k = d.shape[0]
+    cells = [rc]
+    going = np.isfinite(d[np.arange(k), rc[:, 0], rc[:, 1]]) & (d[np.arange(k), rc[:, 0], rc[:, 1]] > 0)
+    used = np.ones(k, dtype=int)
+    for _ in range(max_len):
+        if not going.any():
+            break
+        nxt, total = _best_move(d, cells[-1])
+        going = going & np.isfinite(total)
+        cur = np.where(going[:, None], nxt, cells[-1])
+        used = used + going
+        cells.append(cur)
+        going = going & (d[np.arange(k), cur[:, 0], cur[:, 1]] > 0)
+    return np.stack(cells, axis=1), used

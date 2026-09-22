@@ -154,6 +154,42 @@ frame, step 20; the trajectory is the whole episode. `figures/tradeoff.svg` and
 `.pdf` are the coverage check with its bootstrap intervals and the collision
 rate and path length against the coverage level.
 
+### Animation
+
+![Test episode 0 with and without the conformal regions](animations/conformal_regions.gif)
+
+`animations/conformal_regions.mp4` is 20 s at 1280 x 720 and 24 fps; the GIF
+above is the same at 640 px and 12 fps, and `conformal_regions_poster.{svg,pdf}`
+is its last frame. It plays the episode of `figures/trajectories`, test episode
+0, one control step at a time. Left: the robot plans on its raw detections.
+Right: it plans on the conformal regions, each detection grown by the calibrated
+q = 0.680 m (alpha = 0.10). Every frame shows the true obstacles in grey (the
+robot never sees them), that step's detections dashed in orange, on the right
+the conformal regions in purple, the path the planner would follow from the
+robot's current cell dashed in blue, the trajectory so far, and the robot's
+0.7 m square footprint. The left robot strikes an obstacle at step 20, and the
+box it struck turns red; the right robot routes around the regions and reaches
+the goal at step 48 after 28.56 m. The closing line quotes `results/summary.json`:
+168 against 16 collisions over the 200 test episodes, and held-out coverage
+0.9037 at the 0.90 target.
+
+`cpnav/replay.py` repeats `run_case_study.py`'s seeded draws (the campaign, the
+calibration, the test worlds and the recorded pair), reading the seed and the
+sizes from `results/summary.json`. `planner.run_episodes` takes an `on_step`
+hook that receives each step's poses, detections, planning regions and
+cost-to-go field, and `planner.descend` follows that field from the robot's cell
+by the controller's own move rule to give the drawn plan. The replay gives
+q = 0.6804527362549031 and a closed-loop coverage of 0.9482 in the conformal arm,
+both equal to `results/summary.json`; the script checks q and stops if it
+differs. `tests/test_replay.py` checks both numbers, that the hook leaves the run
+unchanged, and that the plan's first move is the move the robot makes.
+
+    uv run python animations/make_conformal_regions.py --out animations
+
+`--seed` picks another of the 24 recorded test episodes; `--frames` and `--fps`
+set the length. The render needs `ffmpeg` on the `PATH`. It took 28.6 s here, and
+a second render gave the same 480 frames and byte-identical poster files.
+
 ## Through PERFECT
 
 `run_perfect_campaign.py` generates the calibration data as a real PERFECT

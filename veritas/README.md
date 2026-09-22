@@ -219,6 +219,43 @@ machine has no notion of completing a path: `gt` runs on without bound, and UPPA
 trace that delays 180 time units in the initial state. The query is there to show that a
 time-bounded requirement maps onto `gt` rather than onto a scaled integer.
 
+#### Animation
+
+![The demo behavior tree becoming its UPPAAL network, then the verdicts](formal/animations/bt_to_automaton.gif)
+
+`formal/animations/bt_to_automaton.mp4` is 25 s at 1280 x 720 and 24 fps; the GIF above is
+the same at 640 px and 12 fps, and `bt_to_automaton_poster.{svg,pdf}` is the end of its first
+scene. The first scene draws the demo tree `Sequence(FA, Sequence(Selector(CBatt, FCharger),
+FB))` node by node, then the network `demo.py` composes from it, template by template and
+location by location: `BT` (`spec = BT(20)`, 6 locations with `Success`, `Failure` and one
+urgent location, 11 edges), `Battery` (`battery = Battery(75)`, 2 locations, 3 edges) and `Grid`
+(`grid = Grid()`, 86 locations on a 10 x 10 grid, 362 edges of which 86 are self-loops and are
+left out of the drawing; the cells `A`, `B` and `Charger` are the targets of the edges that set
+those flags). It ends with `E<> spec.Success` and `E<> spec.Failure`, both satisfied. The second
+scene draws the two templates `sysml2uppaal` writes for the battery state machine and the
+`Demo AD` activity, then lists the twelve queries of the table above one by one with their
+verdicts; each reachability verdict colours its location, so `Enter_Power_Saving_Mode`,
+`Charging` and `Quick_Charge_Complete` turn red and the other six locations green.
+
+Both models are regenerated into a temporary directory by the tools themselves: `demo.py`, and
+`sysml2uppaal.translate` with `demo_battery.py`'s arguments. `formal/animations/nta_layout.py`
+reads each model's XML; `BT`, `Battery` and the two SysML templates are laid out by Graphviz
+`dot` (its JSON output gives the location, name, spline and label positions), and `Grid` is
+drawn at the coordinates its XML carries. The verdicts come from a live `verifyta` run through
+`verify.py` when it finds one, and otherwise from `formal/animations/uppaal_verdicts.json`,
+which `--record-verdicts` wrote from such a run. The render here used the live run, UPPAAL
+5.0.0 (rev. 714BA9DB36F49691); its verdicts are the ones listed above.
+
+```
+export UPPAAL_HOME=/path/to/your/uppaal    # optional
+uv run python formal/animations/make_bt_to_automaton.py --out formal/animations
+```
+
+The render needs `dot` and `ffmpeg` on the `PATH`. It took 16.7 s here, and a second render gave
+the same 600 frames and byte-identical poster files. `tests/test_animation.py` checks the reader
+and the layout on the demo network, that the recorded verdicts belong to the demo's queries,
+and that the script writes its four files.
+
 ### 4. Failure rates and confidence bounds over a PERFECT campaign — `datadriven/`
 
 ```

@@ -77,11 +77,17 @@ def _near_radius(world, n, step, gamma_scale=1.5):
     return min(gamma * np.sqrt(np.log(n + 1.0) / (n + 1.0)), 2.0 * step)
 
 
-def plan(world, cost, iterations=1500, step=3.0, goal_bias=0.05, seed=0, keep_tree=False):
+def plan(world, cost, iterations=1500, step=3.0, goal_bias=0.05, seed=0, keep_tree=False,
+         on_iteration=None):
     """Grow an RRT* under `cost` and return the best path to the goal.
 
     Returns a dict with the path (or None), the cost-to-come at the goal in the
     planner's own units, the node count and the wall-clock planning time.
+
+    `on_iteration(i, n, pts, parent, cost_to)`, when given, is called before
+    iteration i and once more after the last one (i = iterations) with the live
+    tree buffers; only the first n rows are in use.  It must not modify them.
+    The planner draws nothing for it, so a recorded run grows the same tree.
     """
     rng = np.random.default_rng(seed)
     started = time.perf_counter()
@@ -94,7 +100,9 @@ def plan(world, cost, iterations=1500, step=3.0, goal_bias=0.05, seed=0, keep_tr
     n = 1
 
     half = world.half_width
-    for _ in range(iterations):
+    for it in range(iterations):
+        if on_iteration is not None:
+            on_iteration(it, n, pts, parent, cost_to)
         target = world.goal if rng.random() < goal_bias else rng.uniform(-half, half, size=2)
 
         delta = pts[:n] - target
@@ -150,6 +158,8 @@ def plan(world, cost, iterations=1500, step=3.0, goal_bias=0.05, seed=0, keep_tr
                 cost_to[children] += shift
                 frontier = children
 
+    if on_iteration is not None:
+        on_iteration(iterations, n, pts, parent, cost_to)
     elapsed = time.perf_counter() - started
 
     to_goal = np.linalg.norm(pts[:n] - world.goal, axis=1)
