@@ -2,28 +2,33 @@
   "files": [
     {
       "path": ".gitignore",
-      "bytes": 256,
-      "sha256": "f8593e8dc7dd87adff16ebd688474e4f7b94fb614f3bf66e5b3b47b9412fae07"
+      "bytes": 360,
+      "sha256": "9389c0cda95f3ed1117e04412fed094ef571a4eb28d6ae251f2138f505d80dca"
     },
     {
       "path": "range/doe/density_0p1.usda",
-      "bytes": 200909,
-      "sha256": "15969bab72d0c7c3568c8dcdaa3ef0720daae384bfd5385a4aa127412d4f55d2"
+      "bytes": 293312,
+      "sha256": "0420293e28e0c7e18c069c6bb0556ac1156bca8ea027c9e4a70f703f23ee114e"
     },
     {
       "path": "range/doe/density_0p4.usda",
-      "bytes": 845016,
-      "sha256": "9d8d914b0920621ad8df29d33552f1866fb0cd44ecb184e8411569010af90b9b"
+      "bytes": 1234922,
+      "sha256": "1479548e06997c8a04399838588d9199503ac0f9b8a6929b809e4baa3a9c3b54"
     },
     {
       "path": "range/doe/density_0p8.usda",
-      "bytes": 1731993,
-      "sha256": "e1449e7898971bfe7d1d970cb111c165d3cf1d84891da8e9e907eaaaeb7bc594"
+      "bytes": 2531747,
+      "sha256": "33715e004f0acd5588012fbbba1f8accde5d6a6fc858c32c294ab76feb2f9759"
     },
     {
       "path": "range/doe/doe_manifest.json",
-      "bytes": 4105,
-      "sha256": "4859cacbca97af4850aef2dc7e50ddaad1f96be3d380c02af4e2f31a9edf8546"
+      "bytes": 6066,
+      "sha256": "a31eeea7f5b9eac09b62a4a34e41c085c396e88b7c695c17be543eebb4170437"
+    },
+    {
+      "path": "range/doe/paper_baseline.usda",
+      "bytes": 950703,
+      "sha256": "0636a9b50b75ee46896231512210c219841ddbde784832afd42a64da1dadf1e9"
     },
     {
       "path": "range/people_simulation",
@@ -69,6 +74,71 @@
       "path": "range/terrain1_world.usd",
       "bytes": 383613,
       "sha256": "d2b2448e03eb57dfcf756d68a9b99f69804d5ec2a95c164ff8ee3ae0f9f964a0"
+    },
+    {
+      "path": "results/campaign.csv",
+      "bytes": 7237,
+      "sha256": "f0d517e7242d9a47b45f9311d94a1c644f3a349331e826aefacd0d09843919a4"
+    },
+    {
+      "path": "results/campaign_metrics.pdf",
+      "bytes": 16962,
+      "sha256": "0963488a0b0a30a0786b3ae415132fbc0f8f8091ee88c2d0df45b4a52eaa9ec5"
+    },
+    {
+      "path": "results/campaign_metrics.svg",
+      "bytes": 54739,
+      "sha256": "4188300917396a1863cb4d3461580dc54fd19f9aab69a2e65926911818116c61"
+    },
+    {
+      "path": "results/campaign_trajectories.pdf",
+      "bytes": 28966,
+      "sha256": "6bb88e7cb8544be9633ef898d63574cda7333fa50d4b5d2685df6ff47f316d48"
+    },
+    {
+      "path": "results/campaign_trajectories.svg",
+      "bytes": 76718,
+      "sha256": "bfbb72a6d09e7c89d62218c581a9c098bb93354a648617a26774d9e306d756a3"
+    },
+    {
+      "path": "results/trajectories/trial_1.csv",
+      "bytes": 140321,
+      "sha256": "a9eb9bf22f797bbaed7920a581fd1a7bf43285c0ba389d57ec8a195a28f47f17"
+    },
+    {
+      "path": "results/trajectories/trial_2.csv",
+      "bytes": 140703,
+      "sha256": "b9cbac59f5cac900bb33a3abe75e72379b57b3ff5f86b82c729ddf1923612c78"
+    },
+    {
+      "path": "results/trajectories/trial_3.csv",
+      "bytes": 140264,
+      "sha256": "e0d9cd7984a4f895f52b614b17883baf5b49e0435495e0860815d100bcc83de7"
+    },
+    {
+      "path": "results/trajectories/trial_4.csv",
+      "bytes": 140703,
+      "sha256": "b9cbac59f5cac900bb33a3abe75e72379b57b3ff5f86b82c729ddf1923612c78"
+    },
+    {
+      "path": "results/trajectories/trial_5.csv",
+      "bytes": 141487,
+      "sha256": "f3373f25dc3b51fa2da597e16a8238099fe3895764fd8b050745884e39144894"
+    },
+    {
+      "path": "results/trajectories/trial_6.csv",
+      "bytes": 141303,
+      "sha256": "6ab49d5cf88ad480433eabcd66f0cd4d1ce63a7645e2cd504c7251cd5bdf7139"
+    },
+    {
+      "path": "results/trajectories/trial_7.csv",
+      "bytes": 140016,
+      "sha256": "c5afb0f11688a4802ad80a1484e73384f0ac1231c42a893382bd045e020339c3"
+    },
+    {
+      "path": "results/trajectories/trial_8.csv",
+      "bytes": 138147,
+      "sha256": "462b3a368ac1da91068854bc9be688ea08432c3d19f8269628715a3ec04c816d"
     },
     {
       "path": "showcases/warehouse_iros_v1.usd",
@@ -117,13 +187,18 @@
     },
     {
       "path": "tools/pyproject.toml",
-      "bytes": 339,
-      "sha256": "1bc68726ce9652fd12d824439d5b4645b802b1ac29dc3d14279f641406cd959f"
+      "bytes": 365,
+      "sha256": "61eedc9612d8b2f6e330a7aeaba734d6478ba79a9a6b07ccd860aa5a673968b0"
+    },
+    {
+      "path": "tools/range_campaign.py",
+      "bytes": 18480,
+      "sha256": "b875b256657b8272ca05f5d066aabdab520ad49bb04d01aec51243dc9a10e6d9"
     },
     {
       "path": "tools/range_doe.py",
-      "bytes": 22489,
-      "sha256": "3d3a262cb27c4d74f57023baad9f005d06d05acfc6b3ec192becec2e335c47f6"
+      "bytes": 26391,
+      "sha256": "97d5c368010f052f69d0732be634b77113415f52abe095f281985d839a141d78"
     },
     {
       "path": "tools/relink.py",
@@ -146,14 +221,19 @@
       "sha256": "1cb82766b3618a65fc323f42d437e7a6b729e13338c4e04798a8cdc166143c32"
     },
     {
+      "path": "tools/tests/test_range_campaign.py",
+      "bytes": 10542,
+      "sha256": "691df62c8b09b2b82611d5fb7bc0a2226007aa69ffd2f9c661dad466bda10d89"
+    },
+    {
       "path": "tools/tests/test_range_doe.py",
-      "bytes": 7610,
-      "sha256": "f85536634b3d7bc36f7ca2ec4bb71a79effd6330054623b79cee585bc987dffa"
+      "bytes": 10895,
+      "sha256": "6b27006f2c6d71251a60f7882ed89c68e4cbab0ddb769670813e9c3798c122d6"
     },
     {
       "path": "tools/uv.lock",
-      "bytes": 52871,
-      "sha256": "2de8483836fa7463f1ffa363bf1a5c91f4a5412f6025ad5674b22448c591a52f"
+      "bytes": 203499,
+      "sha256": "6cb688dab1032f9839035bcc165e852aef664201864c7109573f5836f0efa344"
     }
   ]
 }

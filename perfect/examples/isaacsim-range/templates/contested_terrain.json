@@ -1,0 +1,22 @@
+{
+    "name": "Contested terrain",
+    "specification": {
+        "doe": {
+            "obstacle_density": "$obstacle_density",
+            "max_slope_deg": "$max_slope_deg",
+            "friction_static": "$friction_static",
+            "friction_dynamic": "$friction_dynamic",
+            "restitution": "$restitution",
+            "seed": "$seed"
+        },
+        "drive": {
+            "duration_s": "$duration_s",
+            "speed_mps": 0.6,
+            "yaw_amplitude_radps": 0.3,
+            "yaw_period_s": 10.0,
+            "wheel_radius_m": 0.14,
+            "settle_s": 1.0
+        },
+        "start": {"x": -18.75, "y": -5.31}
+    }
+}

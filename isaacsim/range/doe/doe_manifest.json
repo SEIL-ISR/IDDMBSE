@@ -31,6 +31,12 @@
       },
       "requested_density": 0.1,
       "obstacle_count": 264,
+      "obstacle_approximation": "convexHull",
+      "agr_keepout": [
+        -40.98730888764226,
+        35.95363022713426,
+        3.0
+      ],
       "realised_coverage": 0.10016489176823458,
       "obstacle_diameter_m": [
         1.0054770003402962,
@@ -38,16 +44,16 @@
         2.994419871578422
       ],
       "min_spacing_guaranteed_m": 1.0609383597782038,
-      "min_spacing_measured_m": 1.481906278471578,
+      "min_spacing_measured_m": 1.1632484765057969,
       "physics": {
         "static_friction": 0.7,
         "dynamic_friction": 0.6,
         "restitution": 0.0
       },
+      "agr_start": null,
       "extra_agr": 0,
       "sensor_payload": false,
-      "layer_bytes": 200909,
-      "wall_seconds": 0.57
+      "layer_bytes": 293312
     },
     {
       "out": "range/doe/density_0p4.usda",
@@ -78,6 +84,12 @@
       },
       "requested_density": 0.4,
       "obstacle_count": 1114,
+      "obstacle_approximation": "convexHull",
+      "agr_keepout": [
+        -40.98730888764226,
+        35.95363022713426,
+        3.0
+      ],
       "realised_coverage": 0.40042758481726354,
       "obstacle_diameter_m": [
         1.000380003214687,
@@ -85,16 +97,16 @@
         2.9990027045140537
       ],
       "min_spacing_guaranteed_m": 1.0193980637189917,
-      "min_spacing_measured_m": 1.1420919814845696,
+      "min_spacing_measured_m": 1.0974626594720753,
       "physics": {
         "static_friction": 0.7,
         "dynamic_friction": 0.6,
         "restitution": 0.0
       },
+      "agr_start": null,
       "extra_agr": 0,
       "sensor_payload": false,
-      "layer_bytes": 845016,
-      "wall_seconds": 0.63
+      "layer_bytes": 1234922
     },
     {
       "out": "range/doe/density_0p8.usda",
@@ -125,6 +137,12 @@
       },
       "requested_density": 0.8,
       "obstacle_count": 2285,
+      "obstacle_approximation": "convexHull",
+      "agr_keepout": [
+        -40.98730888764226,
+        35.95363022713426,
+        3.0
+      ],
       "realised_coverage": 0.8001166367149316,
       "obstacle_diameter_m": [
         1.000380003214687,
@@ -132,16 +150,73 @@
         2.9990027045140537
       ],
       "min_spacing_guaranteed_m": 0.9915757889048269,
-      "min_spacing_measured_m": 1.0034621513822117,
+      "min_spacing_measured_m": 1.0283576272528943,
       "physics": {
         "static_friction": 0.7,
         "dynamic_friction": 0.6,
         "restitution": 0.0
       },
+      "agr_start": null,
       "extra_agr": 0,
       "sensor_payload": false,
-      "layer_bytes": 1731993,
-      "wall_seconds": 0.82
+      "layer_bytes": 2531747
+    },
+    {
+      "out": "range/doe/paper_baseline.usda",
+      "seed": 7,
+      "terrain_footprint_m2": 9652.59763320512,
+      "height_scale": 0.21304803076568607,
+      "slope_window_cells": 1,
+      "slope_window_m": [
+        0.0484,
+        0.0475952
+      ],
+      "slope_percentile": 99.0,
+      "slope_deg_before": {
+        "p50": 11.787482633334404,
+        "p90": 31.281555720161673,
+        "p95": 38.098686409685506,
+        "p99": 51.51157674112225,
+        "max": 84.68317903401167,
+        "mean": 14.829639689882153
+      },
+      "slope_deg_after": {
+        "p50": 2.545664092499251,
+        "p90": 7.375431573409166,
+        "p95": 9.483306453825335,
+        "p99": 14.999999999998217,
+        "max": 66.40340671550933,
+        "mean": 3.4555965493281193
+      },
+      "requested_density": 0.3,
+      "obstacle_count": 857,
+      "obstacle_approximation": "convexHull",
+      "agr_keepout": [
+        -18.75,
+        -5.31,
+        3.0
+      ],
+      "realised_coverage": 0.30028330537996056,
+      "obstacle_diameter_m": [
+        1.0065534838272903,
+        1.9947700884390305,
+        2.9981175109596316
+      ],
+      "min_spacing_guaranteed_m": 0.9973850442195151,
+      "min_spacing_measured_m": 1.1693001748475873,
+      "physics": {
+        "static_friction": 0.6,
+        "dynamic_friction": 0.5,
+        "restitution": 0.1
+      },
+      "agr_start": [
+        -18.75,
+        -5.31,
+        0.546900077753529
+      ],
+      "extra_agr": 0,
+      "sensor_payload": false,
+      "layer_bytes": 950703
     }
   ]
 }

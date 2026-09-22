@@ -24,7 +24,15 @@ What the flags do:
                      computed on the heightmap in world units, so it already
                      accounts for the scene's own transform.
 --friction-*         a physics material on the terrain and on the obstacles.
+--obstacle-approximation
+                     the PhysX collision approximation the obstacles get.
+                     The rock assets carry geometry only, so the layer applies
+                     the collision APIs itself.
 --multi-agr N        N more Carters on a ring around the one in the base scene.
+--agr-keepout-radius
+                     the clear disc the AGR starts in. Obstacles are dealt
+                     cells outside it, so the count and the coverage do not
+                     change and nothing is spawned on top of the robot.
 --sensor-payload     a Nova Carter, which carries the stereo cameras, the 3D
                      lidar and the IMUs.
 
@@ -190,7 +198,8 @@ def rock_shapes(range_dir=RANGE):
     return out
 
 
-def scatter(terrain, shapes, density, size_m, jitter, min_spacing_factor, rng, k):
+def scatter(terrain, shapes, density, size_m, jitter, min_spacing_factor, rng, k,
+            keepout=None):
     """Place rocks to cover `density` of the terrain footprint.
 
     Sizes are drawn first and cut at the point where the covered area reaches
@@ -198,6 +207,10 @@ def scatter(terrain, shapes, density, size_m, jitter, min_spacing_factor, rng, k
     round. Positions come from a jittered grid: one rock per cell, each jogged
     by at most half the slack between the cell size and the minimum spacing,
     which bounds how close two of them can end up.
+
+    `keepout` is (x, y, radius): the cells that could put a rock inside that
+    radius are taken out of the draw before the rocks are dealt, so no obstacle
+    centre comes closer to the AGR than the radius and the count is unchanged.
     """
     target = density * terrain.area
     areas = np.array([s["area"] for s in shapes])
@@ -223,7 +236,18 @@ def scatter(terrain, shapes, density, size_m, jitter, min_spacing_factor, rng, k
     jx = max(0.0, (cx - dmin) / 2)
     jy = max(0.0, (cy - dmin) / 2)
 
-    cells = rng.permutation(nx * ny)[:n]
+    usable = np.arange(nx * ny)
+    if keepout is not None:
+        kx, ky, kr = keepout
+        ccx = xlo + (usable // ny + 0.5) * cx
+        ccy = ylo + (usable % ny + 0.5) * cy
+        # a rock sits at its cell centre plus up to (jx, jy) of jitter, so the
+        # cells have to be excluded out to the radius plus that jitter for the
+        # radius itself to be a guarantee
+        usable = usable[np.hypot(ccx - kx, ccy - ky) > kr + max(jx, jy)]
+    cells = rng.permutation(usable)[:n]
+    n = len(cells)
+    diam, kind, foot, scale, margin = diam[:n], kind[:n], foot[:n], scale[:n], margin[:n]
     ix, iy = cells // ny, cells % ny
     x = xlo + (ix + 0.5) * cx + rng.uniform(-jx, jx, n)
     y = ylo + (iy + 0.5) * cy + rng.uniform(-jy, jy, n)
@@ -320,6 +344,17 @@ def write_layer(out, args, terrain, k, rocks, shapes, base=BASE):
             place(p, rocks["x"][i], rocks["y"][i], rocks["z"][i],
                   rocks["yaw"][i], rocks["scale"][i])
             bind_physics(p, mat_path)
+            collide(layer, "/World/doe_obstacles/rock_%04d/Rock_%d/Rock_%d" % (i, n, n),
+                    args.obstacle_approximation)
+
+    # where the base scene's AGR starts. Only the translate is overridden, so
+    # the base scene keeps its heading and its transform order.
+    if args.agr_start_x is not None and args.agr_start_y is not None:
+        z = float(terrain.height_at(np.array([args.agr_start_x]),
+                                    np.array([args.agr_start_y]), k)[0]) + args.agr_clearance
+        p = prim(layer, CARTER_PRIM, "", Sdf.SpecifierOver)
+        attr(p, "xformOp:translate", Sdf.ValueTypeNames.Double3,
+             Gf.Vec3d(args.agr_start_x, args.agr_start_y, z))
 
     # more Carters, on a ring around the one in the base scene
     if args.multi_agr:
@@ -361,6 +396,22 @@ def write_layer(out, args, terrain, k, rocks, shapes, base=BASE):
 
     layer.Save()
     return out
+
+
+def collide(layer, mesh_path, approximation):
+    """Make a referenced rock mesh a static collider.
+
+    The rock assets carry geometry only, so without this the obstacles are
+    scenery: the robot drives through them and the density knob changes
+    nothing a trial can measure.
+    """
+    spec = prim(layer, mesh_path, "", Sdf.SpecifierOver)
+    op = Sdf.TokenListOp()
+    op.prependedItems = ["PhysicsCollisionAPI", "PhysicsMeshCollisionAPI"]
+    spec.SetInfo("apiSchemas", op)
+    attr(spec, "physics:collisionEnabled", Sdf.ValueTypeNames.Bool, True)
+    attr(spec, "physics:approximation", Sdf.ValueTypeNames.Token, approximation)
+    return spec
 
 
 def bind_physics(spec, mat_path):
@@ -410,10 +461,16 @@ def run(args):
 
     rng = np.random.default_rng(args.seed)
     shapes = rock_shapes(pathlib.Path(args.base).parent)
+    if args.agr_start_x is not None and args.agr_start_y is not None:
+        agr = (args.agr_start_x, args.agr_start_y)
+    else:
+        agr = carter_pose(args.base)[:2]
+    keepout = (agr[0], agr[1], args.agr_keepout_radius)
     rocks = None
     if args.obstacle_density > 0:
         rocks = scatter(terrain, shapes, args.obstacle_density, args.rock_size,
-                        args.rock_size_jitter, args.min_spacing_factor, rng, k)
+                        args.rock_size_jitter, args.min_spacing_factor, rng, k,
+                        keepout=keepout)
 
     out = write_layer(args.out, args, terrain, k, rocks, shapes, args.base)
 
@@ -427,6 +484,8 @@ def run(args):
         "slope_deg_before": before, "slope_deg_after": after,
         "requested_density": args.obstacle_density,
         "obstacle_count": 0 if rocks is None else int(len(rocks["x"])),
+        "obstacle_approximation": args.obstacle_approximation,
+        "agr_keepout": [float(keepout[0]), float(keepout[1]), float(keepout[2])],
         "realised_coverage": 0.0 if rocks is None else rocks["coverage"],
         "obstacle_diameter_m": None if rocks is None else
             [float(rocks["diam"].min()), float(np.median(rocks["diam"])),
@@ -438,6 +497,10 @@ def run(args):
         "physics": {"static_friction": args.friction_static,
                     "dynamic_friction": args.friction_dynamic,
                     "restitution": args.restitution},
+        "agr_start": None if args.agr_start_x is None or args.agr_start_y is None else
+            [args.agr_start_x, args.agr_start_y,
+             float(terrain.height_at(np.array([args.agr_start_x]),
+                                     np.array([args.agr_start_y]), k)[0]) + args.agr_clearance],
         "extra_agr": args.multi_agr,
         "sensor_payload": bool(args.sensor_payload),
         "layer_bytes": out.stat().st_size,
@@ -460,9 +523,17 @@ def main():
                     help="obstacle footprint diameter in metres")
     ap.add_argument("--rock-size-jitter", type=float, default=0.5)
     ap.add_argument("--min-spacing-factor", type=float, default=0.5)
+    ap.add_argument("--obstacle-approximation", default="convexHull",
+                    help="PhysX collision approximation for the obstacles")
+    ap.add_argument("--agr-start-x", type=float,
+                    help="move the base scene's AGR here and seat it on the terrain")
+    ap.add_argument("--agr-start-y", type=float)
     ap.add_argument("--multi-agr", type=int, default=0)
     ap.add_argument("--agr-ring-radius", type=float, default=4.0)
     ap.add_argument("--agr-clearance", type=float, default=0.3)
+    ap.add_argument("--agr-keepout-radius", type=float, default=3.0,
+                    help="no obstacle is dealt a cell whose centre is this close "
+                         "to the AGR's start, in metres")
     ap.add_argument("--sensor-payload", action="store_true")
     ap.add_argument("--nova-carter-version", default="4.1")
     ap.add_argument("--nova-carter-local", action="store_true")

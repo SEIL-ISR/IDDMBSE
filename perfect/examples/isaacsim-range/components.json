@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Carter v2.4",
+        "type": "agr",
+        "implementation": {
+            "envvars": [
+                {"envvar": "RANGE_ROBOT", "value": "carter_v2_4"},
+                {"envvar": "RANGE_SENSOR_PAYLOAD", "value": "0"},
+                {"envvar": "RANGE_MULTI_AGR", "value": "0"}
+            ],
+            "parameters": []
+        }
+    },
+    {
+        "name": "Carter v2.4 x3",
+        "type": "agr",
+        "implementation": {
+            "envvars": [
+                {"envvar": "RANGE_ROBOT", "value": "carter_v2_4"},
+                {"envvar": "RANGE_SENSOR_PAYLOAD", "value": "0"},
+                {"envvar": "RANGE_MULTI_AGR", "value": "2"}
+            ],
+            "parameters": []
+        }
+    }
+]

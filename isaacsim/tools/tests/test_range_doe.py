@@ -4,7 +4,7 @@ import pathlib
 
 import numpy as np
 import pytest
-from pxr import Sdf, Usd
+from pxr import Sdf, Usd, UsdGeom
 
 import range_doe
 
@@ -113,8 +113,11 @@ def doe_args(out, **kw):
         obstacle_density=0.1, max_slope_deg=15.0, slope_window=1,
         slope_percentile=99.0, friction_static=0.7, friction_dynamic=0.6,
         restitution=0.05, rock_size=2.0, rock_size_jitter=0.5,
-        min_spacing_factor=0.5, multi_agr=2, agr_ring_radius=4.0,
-        agr_clearance=0.3, sensor_payload=False, nova_carter_version="4.1",
+        min_spacing_factor=0.5, obstacle_approximation="convexHull",
+        multi_agr=2, agr_ring_radius=4.0,
+        agr_clearance=0.3, agr_keepout_radius=3.0,
+        agr_start_x=None, agr_start_y=None,
+        sensor_payload=False, nova_carter_version="4.1",
         nova_carter_local=False, seed=5, base=range_doe.BASE,
         npz=range_doe.NPZ, meta=range_doe.META, out=str(out), json=False)
     for k, v in kw.items():
@@ -157,6 +160,11 @@ def test_layer_overs_target_prims_that_exist_in_the_base_scene(tmp_path):
     prefix = "/World/terrain1_world"
     for p in overs:
         s = str(p)
+        if s.startswith("/World/doe_obstacles/"):
+            # the collider overs resolve through this layer's own reference to
+            # the rock asset, not through the base scene; the collider test
+            # checks them on the composed stage
+            continue
         if s.startswith(prefix):
             inner = "/World" + s[len(prefix):]
             assert terrain_layer.GetPrimAtPath(inner) is not None, inner
@@ -196,3 +204,69 @@ def test_a_different_seed_moves_the_obstacles(tmp_path):
     range_doe.run(doe_args(a, seed=1))
     range_doe.run(doe_args(b, seed=2))
     assert a.read_text() != b.read_text()
+
+
+@needs_terrain
+def test_agr_start_seats_the_robot_on_the_terrain(tmp_path):
+    out = tmp_path / "doe.usda"
+    x, y = -18.75, -5.31
+    report = range_doe.run(doe_args(out, agr_start_x=x, agr_start_y=y))
+    layer = Sdf.Layer.FindOrOpen(str(out))
+    spec = layer.GetPrimAtPath(range_doe.CARTER_PRIM)
+    assert spec is not None and spec.specifier == Sdf.SpecifierOver
+    t = spec.properties["xformOp:translate"].default
+    assert (float(t[0]), float(t[1])) == (x, y)
+
+    terrain = range_doe.Terrain()
+    ground = float(terrain.height_at(np.array([x]), np.array([y]),
+                                     report["height_scale"])[0])
+    assert float(t[2]) == pytest.approx(ground + 0.3)
+    assert report["agr_start"] == pytest.approx([x, y, ground + 0.3])
+
+
+@needs_terrain
+def test_no_agr_start_leaves_the_base_scene_pose_alone(tmp_path):
+    out = tmp_path / "doe.usda"
+    range_doe.run(doe_args(out))
+    layer = Sdf.Layer.FindOrOpen(str(out))
+    assert layer.GetPrimAtPath(range_doe.CARTER_PRIM) is None
+
+
+@needs_terrain
+def test_every_obstacle_gets_a_collider(tmp_path):
+    out = tmp_path / "doe.usda"
+    report = range_doe.run(doe_args(out))
+    stage = Usd.Stage.Open(str(out), Usd.Stage.LoadAll)
+    meshes = [p for p in stage.Traverse()
+              if p.IsA(UsdGeom.Mesh) and "/World/doe_obstacles/" in str(p.GetPath())]
+    assert len(meshes) == report["obstacle_count"]
+    for mesh in meshes:
+        assert "PhysicsCollisionAPI" in mesh.GetAppliedSchemas()
+        assert mesh.GetAttribute("physics:collisionEnabled").Get() is True
+        assert mesh.GetAttribute("physics:approximation").Get() == "convexHull"
+
+
+@pytest.mark.parametrize("density", [0.1, 0.4, 0.8])
+@needs_terrain
+def test_no_obstacle_comes_inside_the_agr_keepout(tmp_path, density):
+    """The low densities are the test: their cells are metres across, so the
+    jitter alone could otherwise put a rock on the robot."""
+    out = tmp_path / ("doe_%s.usda" % density)
+    x, y = -18.75, -5.31
+    report = range_doe.run(doe_args(out, obstacle_density=density, multi_agr=0,
+                                    agr_start_x=x, agr_start_y=y))
+    layer = Sdf.Layer.FindOrOpen(str(out))
+    root = layer.GetPrimAtPath("/World/doe_obstacles")
+    xy = np.array([[float(c.properties["xformOp:translate"].default[0]),
+                    float(c.properties["xformOp:translate"].default[1])]
+                   for c in root.nameChildren])
+    assert len(xy) == report["obstacle_count"]
+    assert np.hypot(xy[:, 0] - x, xy[:, 1] - y).min() >= 3.0
+    assert report["agr_keepout"] == [x, y, 3.0]
+
+
+@needs_terrain
+def test_the_keepout_does_not_cost_coverage(tmp_path):
+    report = range_doe.run(doe_args(tmp_path / "a.usda", obstacle_density=0.4,
+                                    agr_start_x=-18.75, agr_start_y=-5.31))
+    assert report["realised_coverage"] == pytest.approx(0.4, abs=0.01)
