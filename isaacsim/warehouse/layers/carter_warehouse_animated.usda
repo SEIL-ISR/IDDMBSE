@@ -1,0 +1,511 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary metricsAssembler = {
+            dictionary "/World/CbaseWarehouseMaze/People/HumanMotionLibrary" = {
+            }
+            int version = 1
+        }
+    }
+    defaultPrim = "World"
+    endTimeCode = 86400
+    metersPerUnit = 1
+    subLayers = [
+        @carter_warehouse_maze.usda@
+    ]
+    upAxis = "Z"
+)
+
+over "World"
+{
+    over "CbaseWarehouseMaze"
+    {
+        def NavMeshVolume "NavMeshVolume" (
+            prepend apiSchemas = ["NavMeshAreaAPI"]
+        )
+        {
+            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+            token nav:volume:type = "Include"
+            float3 xformOp:scale = (17, 26, 4)
+            double3 xformOp:translate = (-0.5, 2.5, 1.5)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        over "People"
+        {
+            def "HumanMotionLibrary" (
+                prepend payload = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/Behavior/110.0/Samples/Assets/MotionLibrary/Human/HumanMotionLibrary.usd@
+            )
+            {
+                quatf xformOp:orient = (1, 0, 0, 0)
+                float3 xformOp:scale = (1, 1, 1)
+                double3 xformOp:translate = (0, 0, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+
+            def Scope "warehouse_workers"
+            {
+                def "warehouse_workers_0" (
+                    prepend payload = @${ISAACSIM_ASSET_ROOT}/Isaac/People/Characters/female_adult_police_02/female_adult_police_02.usd@
+                )
+                {
+                    quatd xformOp:orient = (1, 0, 0, 0)
+                    double3 xformOp:translate = (-5.5, 4, 0)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale", "xformOp:orient"]
+
+                    over "female_adult_police_02"
+                    {
+                        over "ManRoot"
+                        {
+                            over "female_adult_police_02" (
+                                prepend apiSchemas = ["BehaviorAgentAPI", "NavMeshExcludeAPI", "IRACharacterAPI"]
+                                append apiSchemas = ["SemanticsLabelsAPI:class"]
+                            )
+                            {
+                                rel behavior:motionLibrary = </World/CbaseWarehouseMaze/People/HumanMotionLibrary>
+                                string metro:agent:group = "warehouse_workers"
+                                string metro:agent:name = "warehouse_workers_0"
+                                rel metro:agent:routines = </World/CbaseWarehouseMaze/People/warehouse_workers/warehouse_workers_0/female_adult_police_02/ManRoot/female_adult_police_02/Routines/behavior>
+                                int64 metro:agent:seed = 35
+                                token[] semantics:labels:class = ["character"]
+
+                                over "female_adult_police_02"
+                                {
+                                    over "female_adult_police_02"
+                                    {
+                                        uniform token controlRig:forwardAxis = "MINUS Y"
+                                        uniform token[] controlRig:retargetTags = ["", "Hips", "", "LeftLeg", "LeftShin", "LeftFoot", "", "LeftToeBase", "", "", "", "", "", "", "", "", "", "", "RightLeg", "RightShin", "", "RightFoot", "RightToeBase", "", "", "", "", "", "", "", "", "", "", "Spine1", "Spine2", "Chest", "Neck1", "Neck2", "Head", "", "", "", "", "", "", "RightEye", "LeftEye", "", "", "LeftShoulder", "LeftArm", "LeftForeArm", "", "", "", "LeftHand", "LeftHandPinky2", "LeftHandPinky3", "LeftHandPinky4", "LeftHandRing2", "LeftHandRing3", "LeftHandRing4", "LeftHandMiddle2", "LeftHandMiddle3", "LeftHandMiddle4", "LeftHandIndex2", "LeftHandIndex3", "LeftHandIndex4", "LeftHandThumb1", "LeftHandThumb2", "LeftHandThumb3", "", "", "", "", "", "", "RightShoulder", "RightArm", "RightForeArm", "", "", "", "RightHand", "RightHandRing2", "RightHandRing3", "RightHandRing4", "RightHandMiddle2", "RightHandMiddle3", "RightHandMiddle4", "RightHandThumb1", "RightHandThumb2", "RightHandThumb3", "RightHandIndex2", "RightHandIndex3", "RightHandIndex4", "RightHandPinky2", "RightHandPinky3", "RightHandPinky4", "", ""]
+                                        uniform token controlRig:upAxis = "Z"
+                                    }
+                                }
+
+                                def Cylinder "worker_proximity_trigger" (
+                                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsCollisionAPI", "PhysxTriggerAPI"]
+                                )
+                                {
+                                    double height = 2
+                                    custom string metro:collider:name = "worker_proximity_trigger"
+                                    bool physics:kinematicEnabled = 1
+                                    bool physics:rigidBodyEnabled = 1
+                                    double radius = 0.3
+                                    token visibility = "invisible"
+                                    float3 xformOp:rotateXYZ
+                                    float3 xformOp:scale
+                                    double3 xformOp:translate = (0, 0, 1)
+                                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+                                }
+
+                                def Scope "Routines"
+                                {
+                                    def CharacterWanderBehavior "behavior"
+                                    {
+                                        string[] metro:agentBehavior:idle:animations = ["idle"]
+                                        float2[] metro:agentBehavior:idle:time_ranges = [(2, 5)]
+                                        float[] metro:agentBehavior:idle:weights = [1]
+                                        int metro:agentBehavior:repeat = 1
+                                        float2 metro:agentBehavior:walk:distance_range = (5, 10)
+                                        string[] metro:agentBehavior:walk:navigation_areas = []
+                                        float2 metro:agentBehavior:walk:speed_range = (0.8, 1.5)
+                                        float metro:agentBehavior:weight = 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                def "warehouse_workers_1" (
+                    prepend payload = @${ISAACSIM_ASSET_ROOT}/Isaac/People/Characters/original_male_adult_construction_05/male_adult_construction_05.usd@
+                )
+                {
+                    quatd xformOp:orient = (6.123233995736766e-17, 0, 0, 1)
+                    double3 xformOp:translate = (7.567277908325195, 6.266320705413818, 0)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale", "xformOp:translate:pivot", "!invert!xformOp:translate:pivot", "xformOp:rotateXYZ", "xformOp:orient"]
+
+                    over "ManRoot"
+                    {
+                        over "male_adult_construction_05" (
+                            prepend apiSchemas = ["BehaviorAgentAPI", "NavMeshExcludeAPI", "IRACharacterAPI"]
+                            append apiSchemas = ["SemanticsLabelsAPI:class"]
+                        )
+                        {
+                            rel behavior:motionLibrary = </World/CbaseWarehouseMaze/People/HumanMotionLibrary>
+                            string metro:agent:group = "warehouse_workers"
+                            string metro:agent:name = "warehouse_workers_1"
+                            rel metro:agent:routines = </World/CbaseWarehouseMaze/People/warehouse_workers/warehouse_workers_1/ManRoot/male_adult_construction_05/Routines/behavior>
+                            int64 metro:agent:seed = 35
+                            token[] semantics:labels:class = ["character"]
+
+                            over "male_adult_construction_05"
+                            {
+                                over "male_adult_construction_05"
+                                {
+                                    uniform token controlRig:forwardAxis = "MINUS Y"
+                                    uniform token[] controlRig:retargetTags = ["", "Hips", "", "LeftLeg", "LeftShin", "LeftFoot", "", "LeftToeBase", "", "", "", "", "", "", "", "", "", "", "RightLeg", "RightShin", "", "RightFoot", "RightToeBase", "", "", "", "", "", "", "", "", "", "", "Spine1", "Spine2", "Chest", "Neck1", "Neck2", "Head", "", "", "", "", "", "", "RightEye", "LeftEye", "", "", "LeftShoulder", "LeftArm", "LeftForeArm", "", "", "", "LeftHand", "LeftHandPinky2", "LeftHandPinky3", "LeftHandPinky4", "LeftHandRing2", "LeftHandRing3", "LeftHandRing4", "LeftHandMiddle2", "LeftHandMiddle3", "LeftHandMiddle4", "LeftHandIndex2", "LeftHandIndex3", "LeftHandIndex4", "LeftHandThumb1", "LeftHandThumb2", "LeftHandThumb3", "", "", "", "", "", "", "RightShoulder", "RightArm", "RightForeArm", "", "", "", "RightHand", "RightHandRing2", "RightHandRing3", "RightHandRing4", "RightHandMiddle2", "RightHandMiddle3", "RightHandMiddle4", "RightHandThumb1", "RightHandThumb2", "RightHandThumb3", "RightHandIndex2", "RightHandIndex3", "RightHandIndex4", "RightHandPinky2", "RightHandPinky3", "RightHandPinky4", "", ""]
+                                    uniform token controlRig:upAxis = "Z"
+                                }
+                            }
+
+                            def Cylinder "worker_proximity_trigger" (
+                                prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsCollisionAPI", "PhysxTriggerAPI"]
+                            )
+                            {
+                                double height = 2
+                                custom string metro:collider:name = "worker_proximity_trigger"
+                                bool physics:kinematicEnabled = 1
+                                bool physics:rigidBodyEnabled = 1
+                                double radius = 0.3
+                                token visibility = "invisible"
+                                float3 xformOp:rotateXYZ
+                                float3 xformOp:scale
+                                double3 xformOp:translate = (0, 0, 1)
+                                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+                            }
+
+                            def Scope "Routines"
+                            {
+                                def CharacterWanderBehavior "behavior"
+                                {
+                                    string[] metro:agentBehavior:idle:animations = ["idle"]
+                                    float2[] metro:agentBehavior:idle:time_ranges = [(2, 5)]
+                                    float[] metro:agentBehavior:idle:weights = [1]
+                                    int metro:agentBehavior:repeat = 1
+                                    float2 metro:agentBehavior:walk:distance_range = (5, 10)
+                                    string[] metro:agentBehavior:walk:navigation_areas = []
+                                    float2 metro:agentBehavior:walk:speed_range = (0.8, 1.5)
+                                    float metro:agentBehavior:weight = 1
+                                }
+                            }
+                        }
+                    }
+                }
+
+                def "warehouse_workers_2" (
+                    prepend payload = @${ISAACSIM_ASSET_ROOT}/Isaac/People/Characters/original_male_adult_medical_01/male_adult_medical_01.usd@
+                )
+                {
+                    quatd xformOp:orient = (1, 0, 0, 0)
+                    double3 xformOp:translate = (-5, 9.800000190734863, 0)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale", "xformOp:translate:pivot", "!invert!xformOp:translate:pivot", "xformOp:rotateXYZ", "xformOp:orient"]
+
+                    over "ManRoot"
+                    {
+                        over "male_adult_medical_01" (
+                            prepend apiSchemas = ["BehaviorAgentAPI", "NavMeshExcludeAPI", "IRACharacterAPI"]
+                            append apiSchemas = ["SemanticsLabelsAPI:class"]
+                        )
+                        {
+                            rel behavior:motionLibrary = </World/CbaseWarehouseMaze/People/HumanMotionLibrary>
+                            string metro:agent:group = "warehouse_workers"
+                            string metro:agent:name = "warehouse_workers_2"
+                            rel metro:agent:routines = </World/CbaseWarehouseMaze/People/warehouse_workers/warehouse_workers_2/ManRoot/male_adult_medical_01/Routines/behavior>
+                            int64 metro:agent:seed = 35
+                            token[] semantics:labels:class = ["character"]
+
+                            over "male_adult_medical_01"
+                            {
+                                over "male_adult_medical_01"
+                                {
+                                    uniform token controlRig:forwardAxis = "MINUS Y"
+                                    uniform token[] controlRig:retargetTags = ["", "Hips", "", "LeftLeg", "LeftShin", "LeftFoot", "", "LeftToeBase", "", "", "", "", "", "", "", "", "", "", "RightLeg", "RightShin", "", "RightFoot", "RightToeBase", "", "", "", "", "", "", "", "", "", "", "Spine1", "Spine2", "Chest", "Neck1", "Neck2", "Head", "", "", "", "", "", "", "RightEye", "LeftEye", "", "", "LeftShoulder", "LeftArm", "LeftForeArm", "", "", "", "LeftHand", "LeftHandPinky2", "LeftHandPinky3", "LeftHandPinky4", "LeftHandRing2", "LeftHandRing3", "LeftHandRing4", "LeftHandMiddle2", "LeftHandMiddle3", "LeftHandMiddle4", "LeftHandIndex2", "LeftHandIndex3", "LeftHandIndex4", "LeftHandThumb1", "LeftHandThumb2", "LeftHandThumb3", "", "", "", "", "", "", "RightShoulder", "RightArm", "RightForeArm", "", "", "", "RightHand", "RightHandRing2", "RightHandRing3", "RightHandRing4", "RightHandMiddle2", "RightHandMiddle3", "RightHandMiddle4", "RightHandThumb1", "RightHandThumb2", "RightHandThumb3", "RightHandIndex2", "RightHandIndex3", "RightHandIndex4", "RightHandPinky2", "RightHandPinky3", "RightHandPinky4", "", ""]
+                                    uniform token controlRig:upAxis = "Z"
+                                }
+                            }
+
+                            def Cylinder "worker_proximity_trigger" (
+                                prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsCollisionAPI", "PhysxTriggerAPI"]
+                            )
+                            {
+                                double height = 2
+                                custom string metro:collider:name = "worker_proximity_trigger"
+                                bool physics:kinematicEnabled = 1
+                                bool physics:rigidBodyEnabled = 1
+                                double radius = 0.3
+                                token visibility = "invisible"
+                                float3 xformOp:rotateXYZ
+                                float3 xformOp:scale
+                                double3 xformOp:translate = (0, 0, 1)
+                                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+                            }
+
+                            def Scope "Routines"
+                            {
+                                def CharacterWanderBehavior "behavior"
+                                {
+                                    string[] metro:agentBehavior:idle:animations = ["idle"]
+                                    float2[] metro:agentBehavior:idle:time_ranges = [(2, 5)]
+                                    float[] metro:agentBehavior:idle:weights = [1]
+                                    int metro:agentBehavior:repeat = 1
+                                    float2 metro:agentBehavior:walk:distance_range = (5, 10)
+                                    string[] metro:agentBehavior:walk:navigation_areas = []
+                                    float2 metro:agentBehavior:walk:speed_range = (0.8, 1.5)
+                                    float metro:agentBehavior:weight = 1
+                                }
+                            }
+                        }
+                    }
+                }
+
+                def "warehouse_workers_3" (
+                    prepend payload = @${ISAACSIM_ASSET_ROOT}/Isaac/People/Characters/female_adult_police_03_new/female_adult_police_03_new.usd@
+                )
+                {
+                    quatd xformOp:orient = (6.123233995736766e-17, 0, 0, 1)
+                    double3 xformOp:translate = (1.399999976158142, -7.5, 0)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale", "xformOp:orient"]
+
+                    over "female_adult_police_03"
+                    {
+                        over "ManRoot"
+                        {
+                            over "female_adult_police_03" (
+                                prepend apiSchemas = ["BehaviorAgentAPI", "NavMeshExcludeAPI", "IRACharacterAPI"]
+                                append apiSchemas = ["SemanticsLabelsAPI:class"]
+                            )
+                            {
+                                rel behavior:motionLibrary = </World/CbaseWarehouseMaze/People/HumanMotionLibrary>
+                                string metro:agent:group = "warehouse_workers"
+                                string metro:agent:name = "warehouse_workers_3"
+                                rel metro:agent:routines = </World/CbaseWarehouseMaze/People/warehouse_workers/warehouse_workers_3/female_adult_police_03/ManRoot/female_adult_police_03/Routines/behavior>
+                                int64 metro:agent:seed = 35
+                                token[] semantics:labels:class = ["character"]
+
+                                over "female_adult_police_03"
+                                {
+                                    over "female_adult_police_03"
+                                    {
+                                        uniform token controlRig:forwardAxis = "MINUS Y"
+                                        uniform token[] controlRig:retargetTags = ["", "Hips", "", "LeftLeg", "LeftShin", "LeftFoot", "", "LeftToeBase", "", "", "", "", "", "", "", "", "", "", "RightLeg", "RightShin", "", "RightFoot", "RightToeBase", "", "", "", "", "", "", "", "", "", "", "Spine1", "Spine2", "Chest", "Neck1", "Neck2", "Head", "", "", "", "", "", "", "RightEye", "LeftEye", "", "", "LeftShoulder", "LeftArm", "LeftForeArm", "", "", "", "LeftHand", "LeftHandPinky2", "LeftHandPinky3", "LeftHandPinky4", "LeftHandRing2", "LeftHandRing3", "LeftHandRing4", "LeftHandMiddle2", "LeftHandMiddle3", "LeftHandMiddle4", "LeftHandIndex2", "LeftHandIndex3", "LeftHandIndex4", "LeftHandThumb1", "LeftHandThumb2", "LeftHandThumb3", "", "", "", "", "", "", "RightShoulder", "RightArm", "RightForeArm", "", "", "", "RightHand", "RightHandRing2", "RightHandRing3", "RightHandRing4", "RightHandMiddle2", "RightHandMiddle3", "RightHandMiddle4", "RightHandThumb1", "RightHandThumb2", "RightHandThumb3", "RightHandIndex2", "RightHandIndex3", "RightHandIndex4", "RightHandPinky2", "RightHandPinky3", "RightHandPinky4", "", ""]
+                                        uniform token controlRig:upAxis = "Z"
+                                    }
+                                }
+
+                                def Cylinder "worker_proximity_trigger" (
+                                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsCollisionAPI", "PhysxTriggerAPI"]
+                                )
+                                {
+                                    double height = 2
+                                    custom string metro:collider:name = "worker_proximity_trigger"
+                                    bool physics:kinematicEnabled = 1
+                                    bool physics:rigidBodyEnabled = 1
+                                    double radius = 0.3
+                                    token visibility = "invisible"
+                                    float3 xformOp:rotateXYZ
+                                    float3 xformOp:scale
+                                    double3 xformOp:translate = (0, 0, 1)
+                                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+                                }
+
+                                def Scope "Routines"
+                                {
+                                    def CharacterWanderBehavior "behavior"
+                                    {
+                                        string[] metro:agentBehavior:idle:animations = ["idle"]
+                                        float2[] metro:agentBehavior:idle:time_ranges = [(2, 5)]
+                                        float[] metro:agentBehavior:idle:weights = [1]
+                                        int metro:agentBehavior:repeat = 1
+                                        float2 metro:agentBehavior:walk:distance_range = (5, 10)
+                                        string[] metro:agentBehavior:walk:navigation_areas = []
+                                        float2 metro:agentBehavior:walk:speed_range = (0.8, 1.5)
+                                        float metro:agentBehavior:weight = 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        def Camera "OverviewCamera"
+        {
+            float2 clippingRange = (0.1, 150)
+            float focalLength = 18
+            matrix4d xformOp:transform = ( (0.9061831399952656, -0.4228854653311239, 0, 0), (0.15456844867524092, 0.3312181043040876, 0.9308078008135386, 0), (-0.39362508998087337, -0.8434823356733, 0.36550901212509657, 0), (-7, -8.000000000000002, 7, 1) )
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }
+    }
+
+    over "Nova_Carter_ROS"
+    {
+        over "differential_drive"
+        {
+            over "joint_name_array"
+            {
+                custom token inputs:input0
+                delete token inputs:input0.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_left_name.inputs:value>
+                prepend token inputs:input0.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_left_name.inputs:value>
+                custom token inputs:input1
+                delete token inputs:input1.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_right_name.inputs:value>
+                prepend token inputs:input1.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_right_name.inputs:value>
+            }
+        }
+
+        over "chassis_link"
+        {
+            vector3f physics:angularVelocity = (0.0060070595, 0.00646506, 0.069080725)
+            vector3f physics:velocity = (-0.0007880478, 0.00016409012, -0.00002130204)
+            quatd xformOp:orient = (0.9999996860349974, -3.320596169078528e-7, -0.0007898316820166373, -0.00006399773706082889)
+            double3 xformOp:translate = (0.05064058303833008, -0.000003159046172984681, 8.195638656616211e-7)
+        }
+
+        over "caster_frame_base"
+        {
+            vector3f physics:angularVelocity = (0.0053607067, 0.006465143, 0.069081746)
+            vector3f physics:velocity = (-0.0007908601, 0.00052460365, -0.000054826185)
+            quatd xformOp:orient = (-0.49963792014526226, 0.5004258041241855, 0.5003636960857518, -0.49957195173366625)
+            double3 xformOp:translate = (-0.4216609001159668, 0.00005745887756347656, 0.22214512526988983)
+        }
+
+        over "caster_swivel_left"
+        {
+            vector3f physics:angularVelocity = (0.0041085943, 0.006462186, -0.7235893)
+            vector3f physics:velocity = (-0.0006398351, 0.00025113928, -0.00006967314)
+            quatd xformOp:orient = (-0.7065480562174585, -0.0003124773331938614, 0.7076649279903501, -0.000310331532250754)
+            double3 xformOp:translate = (-0.4215970039367676, 0.1323535442352295, 0.1909576654434204)
+        }
+
+        over "caster_wheel_left"
+        {
+            vector3f physics:angularVelocity = (0.0047330763, -0.7026197, -0.7235875)
+            vector3f physics:velocity = (-0.00064373703, 0.000030182224, -0.00007170668)
+            quatd xformOp:orient = (-0.6678016603096761, 0.6680045545150616, -0.23188082253285724, -0.23246965775399517)
+            double3 xformOp:translate = (-0.4614105224609375, 0.13226866722106934, 0.07550065219402313)
+        }
+
+        over "caster_swivel_right"
+        {
+            vector3f physics:angularVelocity = (0.004345463, 0.0064627044, -0.57367826)
+            vector3f physics:velocity = (-0.00095891644, 0.00030925975, -0.000044920787)
+            quatd xformOp:orient = (-0.7065480302840627, -0.0003034769885784941, 0.7076649617148246, -0.00030127161259174034)
+            double3 xformOp:translate = (-0.4216289520263672, -0.13224244117736816, 0.1909567266702652)
+        }
+
+        over "caster_wheel_right"
+        {
+            vector3f physics:angularVelocity = (0.004882727, -0.62182266, -0.57367665)
+            vector3f physics:velocity = (-0.0009639483, 0.00013483467, -0.000046924164)
+            quatd xformOp:orient = (-0.6678610473838462, 0.6680577427124818, -0.2317273329096671, -0.23229919709682179)
+            double3 xformOp:translate = (-0.46144580841064453, -0.13222616910934448, 0.07550079375505447)
+        }
+
+        over "wheel_left"
+        {
+            vector3f physics:angularVelocity = (0.005952358, -0.42057237, 0.06908054)
+            vector3f physics:velocity = (-0.0005479759, -0.00003873069, -0.000023196599)
+            quatd xformOp:orient = (0.6956646377656001, -0.6956487829302376, 0.12677946568729495, 0.12669036920847554)
+            double3 xformOp:translate = (0.0504460334777832, 0.2065969705581665, 0.140000581741333)
+        }
+
+        over "wheel_right"
+        {
+            vector3f physics:angularVelocity = (0.0059328945, -0.57241625, 0.06908046)
+            vector3f physics:velocity = (-0.0010461654, -0.00003866691, 0.000020118548)
+            quatd xformOp:orient = (0.695693276475108, -0.6956774216404548, 0.12662217826745553, 0.12653305519832667)
+            double3 xformOp:translate = (0.050393104553222656, -0.20660310983657826, 0.14000077545642853)
+        }
+
+        over "joint_caster_base"
+        {
+            float state:angular:physics:position = -0.0002579642
+            float state:angular:physics:velocity = -0.00064635335
+        }
+
+        over "joint_wheel_left"
+        {
+            float state:angular:physics:position = 20.74036
+            float state:angular:physics:velocity = 0.42703742
+        }
+
+        over "joint_wheel_right"
+        {
+            float state:angular:physics:position = 20.714449
+            float state:angular:physics:velocity = 0.5788812
+        }
+
+        over "joint_swing_left"
+        {
+            float state:angular:physics:position = 0.05780161
+            float state:angular:physics:velocity = -0.792672
+        }
+
+        over "joint_swing_right"
+        {
+            float state:angular:physics:position = 0.056335416
+            float state:angular:physics:velocity = -0.6427609
+        }
+
+        over "joint_caster_left"
+        {
+            float state:angular:physics:position = 38.42726
+            float state:angular:physics:velocity = 0.70908207
+        }
+
+        over "joint_caster_right"
+        {
+            float state:angular:physics:position = 38.399475
+            float state:angular:physics:velocity = 0.6282856
+        }
+    }
+}
+
+over "Render"
+{
+    over "OmniverseKit"
+    {
+        over "HydraTextures"
+        {
+            over "omni_kit_widget_viewport_ViewportTexture_0"
+            {
+                rel camera = </OmniverseKit_Persp>
+                bool omni:rtx:material:db:syncLoads = 1
+                bool omni:rtx:rt:ecoMode:enabled = 0
+                bool omni:rtx:scene:hydra:materialSyncLoads = 1
+                rel orderedVars = </Render/Vars/LdrColor>
+                custom bool overrideClipRange = 0
+                uniform int2 resolution = (1920, 1080)
+            }
+
+            def RenderProduct "Replicator" (
+                prepend apiSchemas = ["OmniRtxSettingsCommonAdvancedAPI_1", "OmniRtxSettingsRtAdvancedAPI_1", "OmniRtxSettingsPtAdvancedAPI_1", "OmniRtxSettingsParticleFieldAPI_1", "OmniRtxPostColorGradingAPI_1", "OmniRtxPostChromaticAberrationAPI_1", "OmniRtxPostBloomPhysicalAPI_1", "OmniRtxPostMatteObjectAPI_1", "OmniRtxPostCompositingAPI_1", "OmniRtxPostDofAPI_1", "OmniRtxPostMotionBlurAPI_1", "OmniRtxPostTvNoiseAPI_1", "OmniRtxPostTonemapIrayReinhardAPI_1", "OmniRtxPostDebugSettingsAPI_1", "OmniRtxDebugSettingsAPI_1"]
+                hide_in_stage_window = true
+                no_delete = true
+            )
+            {
+                rel camera = </World/Nova_Carter_ROS/chassis_link/sensors/front_hawk/left/camera_left>
+                bool omni:rtx:material:db:syncLoads = 1
+                bool omni:rtx:rt:ecoMode:enabled = 0
+                bool omni:rtx:scene:hydra:materialSyncLoads = 1
+                rel orderedVars = </Render/Vars/LdrColor>
+                custom bool overrideClipRange = 0
+                uniform int2 resolution = (1920, 1200)
+            }
+
+            def RenderProduct "Replicator_01" (
+                prepend apiSchemas = ["OmniRtxSettingsCommonAdvancedAPI_1", "OmniRtxSettingsRtAdvancedAPI_1", "OmniRtxSettingsPtAdvancedAPI_1", "OmniRtxSettingsParticleFieldAPI_1", "OmniRtxPostColorGradingAPI_1", "OmniRtxPostChromaticAberrationAPI_1", "OmniRtxPostBloomPhysicalAPI_1", "OmniRtxPostMatteObjectAPI_1", "OmniRtxPostCompositingAPI_1", "OmniRtxPostDofAPI_1", "OmniRtxPostMotionBlurAPI_1", "OmniRtxPostTvNoiseAPI_1", "OmniRtxPostTonemapIrayReinhardAPI_1", "OmniRtxPostDebugSettingsAPI_1", "OmniRtxDebugSettingsAPI_1"]
+                hide_in_stage_window = true
+                no_delete = true
+            )
+            {
+                rel camera = </World/Nova_Carter_ROS/chassis_link/sensors/XT_32/PandarXT_32_10hz>
+                bool omni:rtx:material:db:syncLoads = 1
+                bool omni:rtx:rt:ecoMode:enabled = 0
+                bool omni:rtx:scene:hydra:materialSyncLoads = 1
+                rel orderedVars = </Render/Vars/GenericModelOutput>
+                custom bool overrideClipRange = 0
+                uniform int2 resolution = (1280, 720)
+            }
+        }
+    }
+
+    over "Vars"
+    {
+        def RenderVar "GenericModelOutput" (
+            prepend apiSchemas = ["RenderVarChannelsAPI"]
+        )
+        {
+            uniform string sourceName = "GenericModelOutput"
+        }
+    }
+}
+

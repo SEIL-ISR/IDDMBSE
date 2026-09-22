@@ -1,0 +1,33 @@
+{
+  "video": "warehouse_nav_chase.mp4",
+  "output_fps": 24,
+  "frames_captured": 3447,
+  "frames_used": 690,
+  "frame_step": 5,
+  "frames_per_timeline_second": 8.0,
+  "timeline_seconds_per_video_second": 15.0,
+  "timeline_span_s": [
+    13.583,
+    444.333
+  ],
+  "chassis_start_xy_m": [
+    -6.063,
+    -1.0
+  ],
+  "chassis_end_xy_m": [
+    -5.798,
+    6.071
+  ],
+  "chassis_path_m": 27.372,
+  "stills": {
+    "warehouse_nav_chase_start.png": "frame_00000.png",
+    "warehouse_nav_chase_middle.png": "frame_01723.png",
+    "warehouse_nav_chase_end.png": "frame_03446.png"
+  },
+  "viewport_resolution": [
+    1280,
+    720
+  ],
+  "stop_reason": "off",
+  "camera_mode": "high"
+}

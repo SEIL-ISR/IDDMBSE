@@ -1,0 +1,49 @@
+{
+  "schema_version": "cbase-warehouse-clutter-layout-v1",
+  "scene_layer": "carter_warehouse_clutter_v2.usda",
+  "source_layer": "carter_warehouse_animated.usda",
+  "source_layer_sha256": "58725f8706c47b45aadaca95d942757221b18a79b79a08bc2d055fd6d4bbd7f1",
+  "up_axis": "Z",
+  "meters_per_unit": 1.0,
+  "maze_root": "/World/CbaseWarehouseMaze",
+  "deactivated_source_prim": "/World/CbaseWarehouseMaze/StaticProps",
+  "clutter_root": "/World/CbaseWarehouseMaze/ClutterV2",
+  "preserved_roots": [
+    "/World/Nova_Carter_ROS",
+    "/World/CbaseWarehouseMaze/People",
+    "/World/CbaseWarehouseMaze/OverviewCamera"
+  ],
+  "assets": {
+    "pallet_collar_assembly": {
+      "url": "https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/woodpalletcollarasm_a01/woodpalletcollarasm_a01.usd",
+      "catalog_name": "woodpalletcollarasm_a01"
+    },
+    "heavy_crate_assembly": {
+      "url": "https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrateassembly_a01/heavydutywoodcrateassembly_a01.usd",
+      "catalog_name": "heavydutywoodcrateassembly_a01"
+    },
+    "standard_crate_assembly": {
+      "url": "https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/stdwoodcrateasm_a01/stdwoodcrateasm_a01.usd",
+      "catalog_name": "stdwoodcrateasm_a01"
+    }
+  },
+  "groupings": [
+    {"name": "Clutter01", "asset": "pallet_collar_assembly", "translation_m": [-4.71, 3.34, 0.0], "yaw_deg": 18.0},
+    {"name": "Clutter02", "asset": "heavy_crate_assembly", "translation_m": [-0.93, 0.3, 0.0], "yaw_deg": -27.0},
+    {"name": "Clutter03", "asset": "standard_crate_assembly", "translation_m": [4.39, 1.99, 0.0], "yaw_deg": 41.0},
+    {"name": "Clutter04", "asset": "pallet_collar_assembly", "translation_m": [-2.9, 5.9, 0.0], "yaw_deg": -12.0},
+    {"name": "Clutter05", "asset": "heavy_crate_assembly", "translation_m": [-0.91, 6.61, 0.0], "yaw_deg": 31.0},
+    {"name": "Clutter06", "asset": "standard_crate_assembly", "translation_m": [5.2, 7.1, 0.0], "yaw_deg": -46.0},
+    {"name": "Clutter07", "asset": "pallet_collar_assembly", "translation_m": [-3.9, 9.5, 0.0], "yaw_deg": 8.0},
+    {"name": "Clutter08", "asset": "heavy_crate_assembly", "translation_m": [-0.2, 8.8, 0.0], "yaw_deg": -34.0},
+    {"name": "Clutter09", "asset": "standard_crate_assembly", "translation_m": [3.8, 10.0, 0.0], "yaw_deg": 22.0},
+    {"name": "Clutter10", "asset": "pallet_collar_assembly", "translation_m": [6.2, 12.5, 0.0], "yaw_deg": -19.0},
+    {"name": "Clutter11", "asset": "heavy_crate_assembly", "translation_m": [-3.5, 14.2, 0.0], "yaw_deg": 37.0},
+    {"name": "Clutter12", "asset": "standard_crate_assembly", "translation_m": [0.1, 13.8, 0.0], "yaw_deg": -7.0},
+    {"name": "Clutter13", "asset": "pallet_collar_assembly", "translation_m": [4.2, 14.7, 0.0], "yaw_deg": 28.0},
+    {"name": "Clutter14", "asset": "heavy_crate_assembly", "translation_m": [-5.2, -7.6, 0.0], "yaw_deg": -39.0},
+    {"name": "Clutter15", "asset": "standard_crate_assembly", "translation_m": [-2.65, -9.14, 0.0], "yaw_deg": 14.0},
+    {"name": "Clutter16", "asset": "pallet_collar_assembly", "translation_m": [2.62, -7.13, 0.0], "yaw_deg": -25.0},
+    {"name": "Clutter17", "asset": "heavy_crate_assembly", "translation_m": [5.8, -8.7, 0.0], "yaw_deg": 44.0}
+  ]
+}

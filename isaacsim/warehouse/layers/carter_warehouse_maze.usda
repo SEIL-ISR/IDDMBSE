@@ -1,0 +1,1120 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    subLayers = [
+        @carter_warehouse_navigation.usd@
+    ]
+    upAxis = "Z"
+)
+
+over "World"
+{
+    def Xform "CbaseWarehouseMaze"
+    {
+        custom string cbase:base_stage = "carter_warehouse_navigation.usd"
+        custom string cbase:scene_scope = "project-owned loose maze"
+
+        def Scope "StaticProps"
+        {
+            def Xform "Rack01" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_a01/rack_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (-3.2, 4.8, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_a01_inst"
+                {
+                    over "SM_Rack_A01_01"
+                    {
+                        over "opaque__metal__joints" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "opaque__metal__rack" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack02" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_b01/rack_b01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (0.4, 4.8, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_b01_inst"
+                {
+                    over "SM_Rack_B01_01"
+                    {
+                        over "M_Rack_B01_Frame" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_Rack_B01_FrameJoints" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack03" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_c01/rack_c01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (4, 4.8, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_c01_inst"
+                {
+                    over "SM_Rack_C01_01"
+                    {
+                        over "M_Rack_C01_Frame" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_Rack_C01_FrameElements" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack04" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_b01/rack_b01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (-3.4, 7, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_b01_inst"
+                {
+                    over "SM_Rack_B01_01"
+                    {
+                        over "M_Rack_B01_Frame" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_Rack_B01_FrameJoints" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack05" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_c01/rack_c01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (0.2, 7, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_c01_inst"
+                {
+                    over "SM_Rack_C01_01"
+                    {
+                        over "M_Rack_C01_Frame" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_Rack_C01_FrameElements" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack06" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_a01/rack_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (3.8, 7, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_a01_inst"
+                {
+                    over "SM_Rack_A01_01"
+                    {
+                        over "opaque__metal__joints" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "opaque__metal__rack" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack07" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_c01/rack_c01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (-3, 10.4, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_c01_inst"
+                {
+                    over "SM_Rack_C01_01"
+                    {
+                        over "M_Rack_C01_Frame" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_Rack_C01_FrameElements" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack08" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_a01/rack_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (0.6, 10.4, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_a01_inst"
+                {
+                    over "SM_Rack_A01_01"
+                    {
+                        over "opaque__metal__joints" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "opaque__metal__rack" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack09" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_b01/rack_b01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (4.2, 10.4, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_b01_inst"
+                {
+                    over "SM_Rack_B01_01"
+                    {
+                        over "M_Rack_B01_Frame" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_Rack_B01_FrameJoints" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack10" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_a01/rack_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (-3.4, 12.8, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_a01_inst"
+                {
+                    over "SM_Rack_A01_01"
+                    {
+                        over "opaque__metal__joints" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "opaque__metal__rack" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack11" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_b01/rack_b01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (0.2, 12.8, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_b01_inst"
+                {
+                    over "SM_Rack_B01_01"
+                    {
+                        over "M_Rack_B01_Frame" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_Rack_B01_FrameJoints" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Rack12" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/rack_c01/rack_c01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 90
+                double3 xformOp:translate = (3.8, 12.8, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "rack_c01_inst"
+                {
+                    over "SM_Rack_C01_01"
+                    {
+                        over "M_Rack_C01_Frame" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_Rack_C01_FrameElements" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "BulkStorage01" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/bulkstoragerack_a02/bulkstoragerack_a02.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (-4.8, -6.6, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "bulkstoragerack_a02_inst"
+                {
+                    over "SM_BulkStorageRack_A02_01"
+                    {
+                        over "M_BulkStorageRack_A01_Frame" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_BulkStorageRack_A01_Shelf" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_BulkStorageRack_A01_ShelfSide" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "BulkStorage02" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/bulkstoragerack_a02/bulkstoragerack_a02.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (6.3, -6.6, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "bulkstoragerack_a02_inst"
+                {
+                    over "SM_BulkStorageRack_A02_01"
+                    {
+                        over "M_BulkStorageRack_A01_Frame" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_BulkStorageRack_A01_Shelf" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_BulkStorageRack_A01_ShelfSide" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Crate01" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrate_a01/heavydutywoodcrate_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 10
+                double3 xformOp:translate = (-4.7, 2, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrate_a01_inst"
+                {
+                    over "SM_HeavyDutyWoodCrate_A01_01"
+                    {
+                        over "M_HeavyDutyWoodCrate_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Crate02" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrate_a02/heavydutywoodcrate_a02.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = -15
+                double3 xformOp:translate = (-4.6, 11.65, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrate_a02_inst"
+                {
+                    over "SM_HeavyDutyWoodCrate_A02_01"
+                    {
+                        over "M_HeavyDutyWoodCrate_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Crate03" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrate_a01/heavydutywoodcrate_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 20
+                double3 xformOp:translate = (6.7, 5.8, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrate_a01_inst"
+                {
+                    over "SM_HeavyDutyWoodCrate_A01_01"
+                    {
+                        over "M_HeavyDutyWoodCrate_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Crate04" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrate_a02/heavydutywoodcrate_a02.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = -20
+                double3 xformOp:translate = (7.1, 11.4, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrate_a02_inst"
+                {
+                    over "SM_HeavyDutyWoodCrate_A02_01"
+                    {
+                        over "M_HeavyDutyWoodCrate_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Crate05" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrate_a01/heavydutywoodcrate_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (-2.6, -6.4, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "heavydutywoodcrate_a01_inst"
+                {
+                    over "SM_HeavyDutyWoodCrate_A01_01"
+                    {
+                        over "M_HeavyDutyWoodCrate_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Crate06" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrate_a02/heavydutywoodcrate_a02.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 15
+                double3 xformOp:translate = (0.2, -6.4, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrate_a02_inst"
+                {
+                    over "SM_HeavyDutyWoodCrate_A02_01"
+                    {
+                        over "M_HeavyDutyWoodCrate_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Crate07" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrate_a01/heavydutywoodcrate_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = -10
+                double3 xformOp:translate = (3, -6.4, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrate_a01_inst"
+                {
+                    over "SM_HeavyDutyWoodCrate_A01_01"
+                    {
+                        over "M_HeavyDutyWoodCrate_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Crate08" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrate_a02/heavydutywoodcrate_a02.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                float xformOp:rotateZ = 10
+                double3 xformOp:translate = (4.8, -6.4, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrate_a02_inst"
+                {
+                    over "SM_HeavyDutyWoodCrate_A02_01"
+                    {
+                        over "M_HeavyDutyWoodCrate_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrate_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Cone01" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutytrafficcone_a01/heavydutytrafficcone_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (-4.8, 3.7, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "heavydutytrafficcone_a01_inst"
+                {
+                    over "HeavyDutyTrafficCone_A01_01"
+                    {
+                        over "M_HeavyDutyTrafficCone_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyTrafficCone_A01_Stand" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Cone02" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutytrafficcone_a01/heavydutytrafficcone_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (-5.3, 10.5, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "heavydutytrafficcone_a01_inst"
+                {
+                    over "HeavyDutyTrafficCone_A01_01"
+                    {
+                        over "M_HeavyDutyTrafficCone_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyTrafficCone_A01_Stand" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Cone03" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutytrafficcone_a01/heavydutytrafficcone_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (6.7, 4.5, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "heavydutytrafficcone_a01_inst"
+                {
+                    over "HeavyDutyTrafficCone_A01_01"
+                    {
+                        over "M_HeavyDutyTrafficCone_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyTrafficCone_A01_Stand" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Cone04" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutytrafficcone_a01/heavydutytrafficcone_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (6.7, 12.8, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "heavydutytrafficcone_a01_inst"
+                {
+                    over "HeavyDutyTrafficCone_A01_01"
+                    {
+                        over "M_HeavyDutyTrafficCone_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyTrafficCone_A01_Stand" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Cone05" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutytrafficcone_a01/heavydutytrafficcone_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (-1.6, -5.7, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "heavydutytrafficcone_a01_inst"
+                {
+                    over "HeavyDutyTrafficCone_A01_01"
+                    {
+                        over "M_HeavyDutyTrafficCone_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyTrafficCone_A01_Stand" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Cone06" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutytrafficcone_a01/heavydutytrafficcone_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (-0.8, -5.7, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "heavydutytrafficcone_a01_inst"
+                {
+                    over "HeavyDutyTrafficCone_A01_01"
+                    {
+                        over "M_HeavyDutyTrafficCone_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyTrafficCone_A01_Stand" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Cone07" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutytrafficcone_a01/heavydutytrafficcone_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (3.9, -5.1, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "heavydutytrafficcone_a01_inst"
+                {
+                    over "HeavyDutyTrafficCone_A01_01"
+                    {
+                        over "M_HeavyDutyTrafficCone_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyTrafficCone_A01_Stand" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Cone08" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutytrafficcone_a01/heavydutytrafficcone_a01.usd@
+                variants = {
+                    string PhysicsVariant = "None"
+                }
+            )
+            {
+                double3 xformOp:translate = (5.8, -4.9, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                over "heavydutytrafficcone_a01_inst"
+                {
+                    over "HeavyDutyTrafficCone_A01_01"
+                    {
+                        over "M_HeavyDutyTrafficCone_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyTrafficCone_A01_Stand" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+        }
+
+        def Scope "People"
+        {
+        }
+    }
+
+    over "Nova_Carter_ROS"
+    {
+        over "back_hawk"
+        {
+            over "left_camera_publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+
+            over "right_camera_publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+        }
+
+        over "back_owl"
+        {
+            over "publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+        }
+
+        over "front_hawk"
+        {
+            over "right_camera_publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+
+            over "left_camera_publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+        }
+
+        over "front_owl"
+        {
+            over "publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+        }
+
+        over "left_hawk"
+        {
+            over "right_camera_publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+
+            over "left_camera_publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+        }
+
+        over "left_owl"
+        {
+            over "publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+        }
+
+        over "right_hawk"
+        {
+            over "left_camera_publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+
+            over "right_camera_publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+        }
+
+        over "right_owl"
+        {
+            over "publish_image"
+            {
+                custom token inputs:type (
+                    allowedTokens = ["rgb", "depth", "depth_pcl", "instance_segmentation", "semantic_segmentation", "bbox_2d_tight", "bbox_2d_loose", "bbox_3d", "camera_info", "rgb_h264", "rgb_hevc"]
+                )
+            }
+        }
+
+        over "differential_drive"
+        {
+            over "joint_name_array"
+            {
+                custom token inputs:input0
+                delete token inputs:input0.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_left_name.inputs:value>
+                prepend token inputs:input0.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_left_name.inputs:value>
+                custom token inputs:input1
+                delete token inputs:input1.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_right_name.inputs:value>
+                prepend token inputs:input1.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_right_name.inputs:value>
+            }
+        }
+    }
+
+    over "maze_overview_camera"
+    {
+        float exposure:fStop = 5
+        float exposure:responsivity = 1.1026709
+        float exposure:time = 0.02
+    }
+
+    over "maze_aisle_camera"
+    {
+        float exposure:fStop = 5
+        float exposure:responsivity = 1.1026709
+        float exposure:time = 0.02
+    }
+}
+
+over "Render"
+{
+    over "OmniverseKit"
+    {
+        over "HydraTextures"
+        {
+            over "omni_kit_widget_viewport_ViewportTexture_0" (
+                prepend apiSchemas = ["OmniRtxSettingsParticleFieldAPI_1"]
+            )
+            {
+                rel camera = </World/maze_aisle_camera>
+                rel orderedVars = </Render/Vars/LdrColor>
+                custom bool overrideClipRange = 0
+                uniform int2 resolution = (1920, 1080)
+            }
+        }
+    }
+}
+

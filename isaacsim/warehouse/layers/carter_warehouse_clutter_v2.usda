@@ -1,0 +1,674 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary navmeshSettings = {
+            double agentMaxFloorSlope = 20
+            double agentMaxRadius = 0.5
+            double agentMaxStepHeight = 0.25
+            double agentMinHeight = 2
+            double agentMinIslandRadius = 2
+            double agentMinRadius = 0.2
+            double agentSamplingDistance = 0.2
+            dictionary areas = {
+                dictionary "0" = {
+                    string areaName = "Walkable"
+                    float3 color = (0.2, 0.8, 1)
+                    double defaultCost = 1
+                }
+                dictionary "1" = {
+                    string areaName = "NotWalkable"
+                    float3 color = (1, 0, 0)
+                    double defaultCost = -1
+                }
+            }
+            bool excludeRigidBodies = 1
+        }
+    }
+    defaultPrim = "World"
+    endTimeCode = 86400
+    metersPerUnit = 1
+    subLayers = [
+        @carter_warehouse_animated.usda@
+    ]
+    upAxis = "Z"
+)
+
+over "World"
+{
+    over "CbaseWarehouseMaze"
+    {
+        custom string cbase:scene_scope = "irregular warehouse clutter field"
+        custom string cbase:source_scene = "carter_warehouse_animated.usda"
+
+        over "StaticProps" (
+            active = false
+        )
+        {
+        }
+
+        def Scope "ClutterV2"
+        {
+            custom string cbase:layout = "clutter_layout.json"
+            custom string cbase:placement_intent = "irregular loaded-pallet and crate groupings with broad meandering gaps"
+
+            def Xform "Clutter01" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/woodpalletcollarasm_a01/woodpalletcollarasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 18
+                double3 xformOp:translate = (-4.71, 3.34, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "woodpalletcollarasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "Aluminium_Brushed_B" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "WoodPalletCollar_A_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter02" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrateassembly_a01/heavydutywoodcrateassembly_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = -27
+                double3 xformOp:translate = (-0.9299999999999999, 0.30000000000000004, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrateassembly_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter03" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/stdwoodcrateasm_a01/stdwoodcrateasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 41
+                double3 xformOp:translate = (4.390000000000001, 1.99, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "stdwoodcrateasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_StandardWoodCrateAssembly_A01_Bolts" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Corners" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Tiling" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter04" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/woodpalletcollarasm_a01/woodpalletcollarasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = -12
+                double3 xformOp:translate = (-2.9, 5.9, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "woodpalletcollarasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "Aluminium_Brushed_B" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "WoodPalletCollar_A_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter05" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrateassembly_a01/heavydutywoodcrateassembly_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 31
+                double3 xformOp:translate = (-0.9099999999999999, 6.61, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrateassembly_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter06" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/stdwoodcrateasm_a01/stdwoodcrateasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = -46
+                double3 xformOp:translate = (5.2, 7.1, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "stdwoodcrateasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_StandardWoodCrateAssembly_A01_Bolts" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Corners" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Tiling" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter07" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/woodpalletcollarasm_a01/woodpalletcollarasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 8
+                double3 xformOp:translate = (-3.9, 9.5, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "woodpalletcollarasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "Aluminium_Brushed_B" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "WoodPalletCollar_A_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter08" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrateassembly_a01/heavydutywoodcrateassembly_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = -34
+                double3 xformOp:translate = (-0.2, 8.8, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrateassembly_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter09" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/stdwoodcrateasm_a01/stdwoodcrateasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 22
+                double3 xformOp:translate = (3.8, 10, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "stdwoodcrateasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_StandardWoodCrateAssembly_A01_Bolts" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Corners" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Tiling" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter10" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/woodpalletcollarasm_a01/woodpalletcollarasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = -19
+                double3 xformOp:translate = (6.2, 12.5, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "woodpalletcollarasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "Aluminium_Brushed_B" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "WoodPalletCollar_A_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter11" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrateassembly_a01/heavydutywoodcrateassembly_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 37
+                double3 xformOp:translate = (-3.5, 14.2, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrateassembly_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter12" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/stdwoodcrateasm_a01/stdwoodcrateasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = -7
+                double3 xformOp:translate = (0.1, 13.8, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "stdwoodcrateasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_StandardWoodCrateAssembly_A01_Bolts" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Corners" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Tiling" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter13" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/woodpalletcollarasm_a01/woodpalletcollarasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 28
+                double3 xformOp:translate = (4.2, 14.7, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "woodpalletcollarasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "Aluminium_Brushed_B" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "WoodPalletCollar_A_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter14" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrateassembly_a01/heavydutywoodcrateassembly_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = -39
+                double3 xformOp:translate = (-5.2, -7.6, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrateassembly_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter15" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/stdwoodcrateasm_a01/stdwoodcrateasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 14
+                double3 xformOp:translate = (-2.65, -9.14, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "stdwoodcrateasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_StandardWoodCrateAssembly_A01_Bolts" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Corners" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Tiling" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_StandardWoodCrateAssembly_A01_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter16" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/woodpalletcollarasm_a01/woodpalletcollarasm_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = -25
+                double3 xformOp:translate = (2.62, -7.13, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "woodpalletcollarasm_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "Aluminium_Brushed_B" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "WoodPalletCollar_A_Trim" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+
+            def Xform "Clutter17" (
+                prepend references = @https://omniverse-content-staging.s3.us-west-2.amazonaws.com/Assets/simready_content/common_assets/props/heavydutywoodcrateassembly_a01/heavydutywoodcrateassembly_a01.usd@
+            )
+            {
+                float xformOp:rotateZ = 44
+                double3 xformOp:translate = (5.8, -8.7, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+                over "heavydutywoodcrateassembly_a01_inst"
+                {
+                    over "Geometry"
+                    {
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Body" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_BodyJoint" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+
+                        over "M_HeavyDutyWoodCrateAssembly_A01_Pallet" (
+                            prepend apiSchemas = ["PhysicsCollisionAPI"]
+                        )
+                        {
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    over "Nova_Carter_ROS"
+    {
+        over "differential_drive"
+        {
+            over "joint_name_array"
+            {
+                custom token inputs:input0
+                delete token inputs:input0.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_left_name.inputs:value>
+                prepend token inputs:input0.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_left_name.inputs:value>
+                custom token inputs:input1
+                delete token inputs:input1.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_right_name.inputs:value>
+                prepend token inputs:input1.connect = </World/Nova_Carter_ROS/differential_drive/joint_wheel_right_name.inputs:value>
+            }
+        }
+    }
+}
+
+over "Render"
+{
+    over "OmniverseKit"
+    {
+        over "HydraTextures"
+        {
+            over "omni_kit_widget_viewport_ViewportTexture_0"
+            {
+                rel camera = </OmniverseKit_Persp>
+                bool omni:rtx:material:db:syncLoads = 1
+                bool omni:rtx:rt:ecoMode:enabled
+                bool omni:rtx:scene:hydra:materialSyncLoads = 1
+                rel orderedVars = </Render/Vars/LdrColor>
+                custom bool overrideClipRange = 0
+                uniform int2 resolution = (1280, 720)
+            }
+
+            over "Replicator"
+            {
+                rel camera = </World/Nova_Carter_ROS/chassis_link/sensors/front_hawk/left/camera_left>
+                bool omni:rtx:material:db:syncLoads = 1
+                bool omni:rtx:rt:ecoMode:enabled
+                bool omni:rtx:scene:hydra:materialSyncLoads = 1
+                rel orderedVars = </Render/Vars/LdrColor>
+                custom bool overrideClipRange = 0
+                uniform int2 resolution = (1920, 1200)
+            }
+
+            over "Replicator_01"
+            {
+                rel camera = </World/Nova_Carter_ROS/chassis_link/sensors/XT_32/PandarXT_32_10hz>
+                bool omni:rtx:material:db:syncLoads = 1
+                bool omni:rtx:rt:ecoMode:enabled
+                bool omni:rtx:scene:hydra:materialSyncLoads = 1
+                rel orderedVars = </Render/Vars/LdrColor>
+                custom bool overrideClipRange = 0
+                uniform int2 resolution = (1280, 720)
+            }
+        }
+    }
+}
+
+over "OmniverseKit_Persp"
+{
+    custom uniform vector3d omni:kit:centerOfInterest = (2.3841516971588135, 1.3147789239883423, 0.3500000238418579)
+}
+

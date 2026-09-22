@@ -1,0 +1,10 @@
+{
+  "frame": "map",
+  "initial_pose": {"x": -6.05, "y": -1.0, "yaw_deg": 180.0},
+  "min_clearance_m": 1.0,
+  "waypoints": [
+    {"name": "field_east", "x": 1.5, "y": 4.5, "yaw_deg": 90.0},
+    {"name": "field_north", "x": -1.5, "y": 11.5, "yaw_deg": 180.0},
+    {"name": "west_aisle", "x": -6.0, "y": 6.0, "yaw_deg": -90.0}
+  ]
+}

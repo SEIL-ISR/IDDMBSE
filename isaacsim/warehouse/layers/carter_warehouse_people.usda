@@ -1,0 +1,26 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+    subLayers = [
+        @carter_warehouse_maze.usda@
+    ]
+)
+
+over "World"
+{
+    over "CbaseWarehouseMaze"
+    {
+        def NavMeshVolume "NavMeshVolume" (
+            prepend apiSchemas = ["NavMeshAreaAPI"]
+        )
+        {
+            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+            token nav:volume:type = "Include"
+            double3 xformOp:translate = (-0.5, 2.5, 1.5)
+            float3 xformOp:scale = (17, 26, 4)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+}

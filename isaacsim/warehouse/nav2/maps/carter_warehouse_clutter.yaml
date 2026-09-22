@@ -1,0 +1,13 @@
+# Occupancy map of the cluttered warehouse (generated/carter_warehouse_clutter_v2.usda),
+# baked by tools/bake_map.py with isaacsim.asset.gen.omap in Isaac Sim 6.0:
+# cell 0.05 m, height band 0.1-0.62 m, start (-4.0, -1.0),
+# x -12.0..12.0 m, y -18.0..20.85 m;
+# the parked Carter's footprint (r 0.65 m around (-6.145, -1.0)) marked free,
+# and the 4 workers' proximity triggers (r 0.36 m) marked free.
+image: carter_warehouse_clutter.pgm
+mode: trinary
+resolution: 0.05
+origin: [-12.0, -18.0, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

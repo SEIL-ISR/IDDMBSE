@@ -9,3 +9,5 @@ __pycache__/
 .pytest_cache/
 # one run directory per PERFECT trial: the design point, the trajectory and the metrics
 range/doe/runs/
+# built by warehouse/fetch_warehouse.py from the Isaac Sim asset root and warehouse/layers/
+warehouse/generated/

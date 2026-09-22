@@ -59,18 +59,19 @@ of design points through PERFECT instead, see [The campaign](#the-campaign).
 | `showcases/warehouse_iros_v1.usd` | 3 167 398 | a warehouse showcase scene |
 | `showcases/warehouse_nvblox.usd` | 5 751 | a warehouse showcase set up for nvblox |
 | `thumbnails/*.png` | 378 644 | three viewport captures |
+| `warehouse/` | 8 816 972 | the cluttered warehouse with the Nova Carter and Nav2: layers, map, scripts, the recorded run. See [The warehouse](#the-warehouse) |
 | `tools/*.py` | 115 922 | the scripts this file documents |
 | `.gitignore`, `MANIFEST.json` | | what the tools write, and sizes and hashes of everything above |
 
-50 files, 27.9 MB. `MANIFEST.json` gives the size and SHA-256 of 47 of them --
+Without `warehouse/`, 50 files, 27.9 MB. `MANIFEST.json` gives the size and SHA-256 of 47 of them --
 it does not describe itself, `README.md`, or the download manifest -- and adds
 up to 25 586 434 bytes. Largest shipped file: `range/terrain/heightmap.npz`,
 14 804 748 bytes. Nothing shipped here is over 20 MB.
 
 Not in git, written by the tools, listed in `.gitignore`:
 `range/assets/` (4.9 GiB downloaded), `range/HDRI/` (183 MB downloaded),
-`range/generated/` (129 MB built) and `range/doe/runs/` (one directory per
-PERFECT trial).
+`range/generated/` (129 MB built), `range/doe/runs/` (one directory per
+PERFECT trial) and `warehouse/generated/` (built by `warehouse/fetch_warehouse.py`).
 
 ---
 
@@ -493,6 +494,38 @@ The DOE script, the campaign driver, the heightmap pipeline, the asset manifest
 and the fetch and relink tooling were built for this release. The scene, the
 terrain and the showcases are the lab's earlier authoring, compacted and
 relinked.
+
+---
+
+## The warehouse
+
+`warehouse/` is a second scene, for demonstrations of the autonomy stack inside
+Isaac Sim: NVIDIA's Isaac Sim 6.0 ROS 2 navigation sample -- the simple
+warehouse and a Nova Carter with its ROS 2 graphs -- under the authors' own
+layers, which add four walking workers and 17 loaded-pallet and crate groups
+from NVIDIA's SimReady catalogue, with an occupancy map baked from the scene, a
+Nav2 configuration for ROS 2 Jazzy, and scripts that run it all in a headless
+Isaac Sim streamed over WebRTC. [warehouse/README.md](warehouse/README.md) has
+the commands and the full record of the run; in short:
+
+```bash
+cd warehouse
+uv run --project ../tools python fetch_warehouse.py   # builds generated/ from ISAACSIM_ASSET_ROOT or NVIDIA's cloud copy
+./launch_stream.sh                                    # Isaac Sim in tmux iddmbse-kit, WebRTC on port 49100
+python3 tools/open_scene.py
+./nav2/start_nav2.sh                                  # Nav2 in tmux iddmbse-nav2, ROS 2 domain 87, rmw_fastrtps_cpp
+python3 nav2/send_goal.py --initial-pose X Y YAW_DEG
+./stop.sh
+```
+
+`fetch_warehouse.py` reads the two NVIDIA sample files from the asset root and
+rewrites their four relative asset paths, so the repository carries only the
+authored layers. Run here on Isaac Sim 6.0.1-rc.7: the scene opened with 7 002
+prims and all 17 groups composed; the Occupancy Map Generator gave a 479 x 776
+map at 0.05 m; Nav2 took the Carter to all three waypoints -- three SUCCEEDED
+results, 27.4 m of odometry in 335 simulated seconds -- and
+`warehouse/results/warehouse_nav_chase.mp4` (28.75 s) shows the drive from a
+following camera.
 
 ---
 

@@ -1,0 +1,4 @@
+goal,name,goal_x,goal_y,goal_yaw_deg,status,status_code,error_code,error_msg,sim_start_s,sim_end_s,sim_duration_s,wall_duration_s,odom_samples,odom_path_m,end_amcl_x,end_amcl_y,end_amcl_yaw_deg,end_distance_to_goal_m
+1,field_east,1.5,4.5,90.0,SUCCEEDED,4,0,,15.233,170.567,155.333,290.4,4661,11.371,1.575,4.543,111.2,0.087
+2,field_north,-1.5,11.5,180.0,SUCCEEDED,4,0,,170.6,285.833,115.233,216.8,3458,8.553,-1.496,11.486,-160.1,0.015
+3,west_aisle,-6.0,6.0,-90.0,SUCCEEDED,4,0,,285.867,350.667,64.8,123.0,1945,7.457,-6.027,5.968,-114.9,0.042
