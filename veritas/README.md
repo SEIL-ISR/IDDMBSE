@@ -513,9 +513,8 @@ Synthesis*, arXiv:2604.12092, 2026 — so that is most likely its companion pape
 * **RTAMT** — BSD-3-Clause, installed by `uv sync` from PyPI. pyuppaal, matplotlib,
   stable-baselines3, sb3-contrib, panda-gym, gymnasium and moviepy are all MIT or
   BSD-compatible.
-* **The vendored code itself** — the code is used here with the author's agreement as a
-  coauthor of the IDDMBSE paper; anyone wanting to reuse it beyond that should ask him. See
-  [`ATTRIBUTION.md`](ATTRIBUTION.md).
+* **The code in this directory** — MIT with the rest of the repository
+  ([`../LICENSE`](../LICENSE)); its authorship is recorded in [`ATTRIBUTION.md`](ATTRIBUTION.md).
 
 ## Citations
 

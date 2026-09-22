@@ -531,12 +531,9 @@ following camera.
 
 ## Licensing
 
-- The scene layers, the heightmap, `terrain_meta.json`, the DOE layers and
-  everything in `tools/` are the lab's, under the repository's licence.
-- The three rock meshes came from a free asset pack the authoring machine had.
-  Their origin is recorded as the directory names in the original file:
-  `uploads_files_2886016_Free+rock`, `uploads_files_2372587_Rock_5`,
-  `uploads_files_2372785_Rock_9`. No licence text travelled with them.
+- The scene layers, the heightmap, `terrain_meta.json`, the rock meshes, the DOE layers,
+  the warehouse layers and everything in `tools/` are the authors' own, MIT with the rest of
+  the repository ([`../LICENSE`](../LICENSE)).
 - Everything `fetch_assets.py` downloads from
   `omniverse-content-production.s3-us-west-2.amazonaws.com` is NVIDIA's and
   stays under NVIDIA's own terms. Nothing of it is redistributed here; the

@@ -41,7 +41,7 @@ the edits made to fit this layout are listed at the end.
   README instead), the rendered figures `trajectory_plot*.pdf`, `queue.pdf`, `queue.png`,
   `test.png`, the one-line `temp.sh`, and `__pycache__/`.
 
-Neither upstream repository carries a LICENSE file.
+The code is released here under the repository's MIT license.
 
 ## Third-party dependencies
 

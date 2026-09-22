@@ -30,8 +30,8 @@ paper, and is copied here from his two research repositories at the commits name
 `formal/bt2automata/` and `runtime/tbt-monitor/` from `github.com/rymatheu/hscc25-rp` at commit
 `e63fa448b4b06cf137b9f0f462a4ae1021e19c4a`, and `synthesis/ltbt/` from
 `github.com/rymatheu/ltbt` at commit `6f2be3f9dc521dc075131ed01fce20c79b8fc797`
-(`veritas/ATTRIBUTION.md`). Neither upstream repository carries a LICENSE file; the code is
-used here with the author's agreement as a coauthor of the IDDMBSE paper.
+(`veritas/ATTRIBUTION.md`). The code is MIT with the rest of the repository; its author is a
+coauthor of the paper.
 
 The demo commands, from `veritas/README.md`:
 
