@@ -1,0 +1,37 @@
+# The campaign grid.  Four noise levels and three risk levels match the sweep in
+# Enwerem et al. (2024), Table I; the plain RRT* baseline and the risk-neutral
+# CVaR_0 planner are the two reference policies.
+environments:
+  - [easy, 0.08]
+  - [medium, 0.16]
+  - [hard, 0.26]
+noise_levels: [0.01, 0.05, 0.1, 0.5]
+policies:
+  - [rrtstar, null]
+  - [neutral, 0.0]
+  - [cvar0.1, 0.1]
+  - [cvar0.5, 0.5]
+  - [cvar0.9, 0.9]
+runs: 50
+
+iterations: 1500
+step: 3.0
+goal_bias: 0.05
+half_width: 32.0
+
+# 2048 common random numbers per run: at 512 the per-run spread of the edge cost
+# was about 2.0 on values of 2-15 (20 seeds, clearances 0 to 8 m at sigma 0.5).
+n_samples: 2048
+kappa: 20.0
+d_hazard: 2.0
+p_max: 0.15
+
+n_exec: 400
+budget_factor: 1.5
+
+crn_seed: 1000
+plan_seed: 50000
+exec_seed: 90000
+
+# pool size: kept below the core count so the campaign shares the workstation
+processes: 16
