@@ -1,0 +1,102 @@
+# What a test range configuration has to satisfy, split the way the IDDMBSE
+# trade-off stage asks for before anything runs.
+#
+# A range configuration is the five knobs isaacsim/tools/range_doe.py takes:
+# obstacle coverage, the 99th-percentile slope target, a static/dynamic friction
+# pair and a restitution. The range has to be contested enough to tell robot
+# designs apart and traversable enough that a run produces data.
+#
+# Fields
+#   class      model-based  checkable from the knobs and the heightmap, before
+#                           any trial runs (tradesx/range_model.py)
+#              data-driven  only a trial can say (the PERFECT campaign table,
+#                           isaacsim/results/campaign.csv)
+#   stage      MBO or DDO
+#   metric     null: none of the sensor-suite oracles bears on these
+#   attribute  the column the check reads
+#   bound      the threshold, in the attribute's units
+#
+# The data-driven thresholds are the ones the range already uses: the progress
+# floor of 5 m in 30 s, the 0.35 rad attitude bound of
+# veritas/runtime/stl-observer/specs/range_safety.yaml, and the stuck and
+# unstable flags as perfect/examples/isaacsim-range/sim_trial.py defines them.
+
+- id: RR.1
+  name: Start-area grade
+  text: The 90th-percentile wheel-scale grade of the start area shall stay within the 0.35 rad attitude bound.
+  class: model-based
+  stage: MBO
+  metric: null
+  attribute: grade_p90_deg
+  bound: "<= 20.05"
+  reason: The slope target fixes the height scale, and the height scale fixes every grade on the heightmap, so the grade is known before a trial.
+
+- id: RR.2
+  name: Obstacle coverage band
+  text: The obstacle coverage shall lie between 0.1 and 0.6 of the terrain footprint.
+  class: model-based
+  stage: MBO
+  metric: null
+  attribute: obstacle_density
+  bound: "0.1 .. 0.6"
+  reason: Below 0.1 the chance of meeting a rock over the commanded 18 m is under 0.7; at 0.6 the predicted mean free path between blocking rocks is down to 3.1 m. Both follow from the rock statistics range_doe.py draws.
+
+- id: RR.3
+  name: Traction on the start area
+  text: The static friction shall hold the start area's 90th-percentile grade without sliding.
+  class: model-based
+  stage: MBO
+  metric: null
+  attribute: no_slip_margin
+  bound: ">= 0"
+  reason: A wheel holds on grade theta while mu_s >= tan(theta); both sides are knobs or heightmap numbers.
+
+- id: RR.4
+  name: Progress
+  text: The AGR shall cover at least 5 m in the 30 s trial.
+  class: data-driven
+  stage: DDO
+  metric: null
+  attribute: distance_m
+  bound: ">= 5"
+  reason: How far the AGR gets depends on how its contacts with the rocks play out, which only the physics run settles.
+
+- id: RR.5
+  name: Roll attitude
+  text: The AGR's roll shall stay within 0.35 rad for the whole trial.
+  class: data-driven
+  stage: DDO
+  metric: null
+  attribute: max_roll_deg
+  bound: "<= 20.05"
+  reason: Roll comes from the terrain under each wheel and from climbing onto rocks, along the path the run actually took.
+
+- id: RR.6
+  name: Pitch attitude
+  text: The AGR's pitch shall stay within 0.35 rad for the whole trial.
+  class: data-driven
+  stage: DDO
+  metric: null
+  attribute: max_pitch_deg
+  bound: "<= 20.05"
+  reason: As for roll.
+
+- id: RR.7
+  name: Not stuck
+  text: The AGR shall not spend more than 2 s below 0.05 m/s.
+  class: data-driven
+  stage: DDO
+  metric: null
+  attribute: stuck
+  bound: "== 0"
+  reason: Whether a rock traps the AGR is a contact outcome.
+
+- id: RR.8
+  name: Stable simulation
+  text: The AGR's speed shall never exceed 10 m/s.
+  class: data-driven
+  stage: DDO
+  metric: null
+  attribute: unstable
+  bound: "== 0"
+  reason: A speed that high on a 0.6 m/s command is a solver blow-up, which only the run shows.

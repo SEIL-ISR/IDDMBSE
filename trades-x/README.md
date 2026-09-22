@@ -31,10 +31,12 @@ and the recommended design.
 | `tradesx/bag_metrics.py` | path length, time to completion, cumulative elevation gradient from a trajectory |
 | `tradesx/sensitivity.py` | the four local oracles in Python (numpy batch, JAX derivatives) and the requirement-sensitivity ranking |
 | `tradesx/requirements.py` | loads the model-based / data-driven requirement split |
+| `tradesx/range_model.py` | the analytic model of the Isaac Sim test range: rock statistics, start-area grade, traction, contestedness and predicted traversability, numpy or JAX |
 | `mbo/` | the Julia MBO package: sensor oracles, enumeration, sensitivity, plots |
 | `mbo-matlab-alt/` | MATLAB alternates of the same MBO, kept as reference |
 | `pyjulia-example/` | minimal PyJulia call-through stub |
 | `case-studies/sensor-suite/` | the ISSE 2024 sensor-suite study and its recorded data |
+| `case-studies/range/` | the test range's own configuration as the design under trade |
 | `tests/` | pytest suite |
 
 ## Install
@@ -48,7 +50,7 @@ uv sync
 uv run pytest -q
 ```
 
-57 tests pass as of 2026-09-22. The JAX derivatives are an optional extra; add
+66 tests pass as of 2026-09-22. The JAX derivatives are an optional extra; add
 them with `uv sync --extra ad`. Without it `tests/test_sensitivity.py` skips and
 the rest still runs.
 
@@ -170,10 +172,37 @@ weighted by how many requirements it holds.
 `case-studies/sensor-suite/README.md` records a 180-trial campaign against
 the `perfect/examples/sensor-suite-sim` example.
 
+## Case study: the test range
+
+The same two stages, run on the Isaac Sim test range itself. A range
+configuration is the five knobs `isaacsim/tools/range_doe.py` takes (obstacle
+coverage, 99th-percentile slope target, static/dynamic friction, restitution),
+and it has to be contested enough to tell robot designs apart and traversable
+enough that a run produces data.
+
+```
+uv run python case-studies/range/run_range_study.py
+```
+
+The model-based stage scores all 5616 configurations of the DOE grid with
+`tradesx/range_model.py` (encounter chance, mean free path, start-area grade
+from the shipped heightmap under the slope target's height scale, no-slip
+margin against static friction), prunes them with three model-based
+requirements and keeps 68 non-dominated configurations over contestedness and
+predicted traversability. The data-driven stage takes the eight trials PERFECT
+ran on the range in Isaac Sim (`isaacsim/results/campaign.csv`), checks five
+data-driven requirements (distance, roll, pitch, stuck, unstable) and ranks the
+eight configurations by MAVF: the terrain's authored relief ranks first on the
+model's scores and seventh once the measured attributes are in, since the AGR
+rolled to 179° on it. JAX gives the frontier's sensitivity to each knob, and the
+eight frontier configurations picked for the next campaign come out as a
+`range_campaign.py` command line. `case-studies/range/README.md` has the
+tables.
+
 ## Built for this release
 
-Four things the IDDMBSE paper describes had no code in the repository. They were
-written on 2026-09-22 and are marked as such wherever they appear:
+Four things the IDDMBSE paper describes were written for this release on
+2026-09-22 and are marked as such wherever they appear:
 
 - **`mbo/src/greedy_submodular.jl`** — the greedy submodular search. The
   environment carried a `SubmodularGreedy.jl` dependency that no source file

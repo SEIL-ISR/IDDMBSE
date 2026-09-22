@@ -1,0 +1,10 @@
+kind,name,requirement,mean_abs_rel_dC,mean_abs_rel_dT,frontier_change_minus10,frontier_change_plus10
+knob,obstacle_density,RR.2,0.09679,0.263868,,
+knob,max_slope_deg,RR.1,0.105671,0.041403,,
+knob,friction_static,RR.3,0.011635,0.013768,,
+knob,friction_dynamic,,0.0,0.0,,
+knob,restitution,,0.0,0.0,,
+requirement,RR.1 (<= 20.05),RR.1,,,0.542169,0.571429
+requirement,RR.2 lower (0.1 .. 0.6),RR.2,,,0.0,0.573171
+requirement,RR.2 upper (0.1 .. 0.6),RR.2,,,0.029412,0.014493
+requirement,RR.3 (>= 0),RR.3,,,0.481013,0.418367

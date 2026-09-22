@@ -1,0 +1,5 @@
+cd isaacsim/tools
+python range_campaign.py --submit --project-root ../../perfect/examples/isaacsim-range \
+    --densities 0.1 --slopes 12.5 --frictions 0.4/0.3 --restitutions 0.0 --seeds 7 --duration 30 \
+    --robots "Carter v2.4" --tag range-next \
+    --extra ../../trades-x/case-studies/range/results/next_campaign_points.json
