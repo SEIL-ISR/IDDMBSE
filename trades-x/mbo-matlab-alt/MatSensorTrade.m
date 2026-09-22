@@ -36,7 +36,8 @@ las2d_dict = struct("update_rate", Crate, "max_range", Cmax)
 lidar_dict = struct("model", Dmodel_tag, "update_rate", Drate)
 
 
-uri = matlab.net.URI("http://10.229.43.134:5000/run");
+server = string(getenv("PERFECT_SERVER_URL"));   % e.g. http://127.0.0.1:5001
+uri = matlab.net.URI(server + "/api/v1/run");
 method = matlab.net.http.RequestMethod.POST;
 %s = struct("launch_file", "<AUTO_STACK_WS>/src/hardware_launch/launch/navigation.launch", "timeout", 600, "launch_args", struct("rtabmap_viz", "true", "camera", "true", "lidar3d", "true", "slam2d", "true", "icp_odometry", "true"));
 

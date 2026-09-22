@@ -1,5 +1,6 @@
-check_uri = matlab.net.URI("http://10.229.43.134:5000/check");
-get_uri = matlab.net.URI("http://10.229.43.134:5000/get");
+server = string(getenv("PERFECT_SERVER_URL"));   % e.g. http://127.0.0.1:5001
+check_uri = matlab.net.URI(server + "/check");
+get_uri = matlab.net.URI(server + "/get");
 %get = matlab.net.http.RequestMethod.GET;
 %post = matlab.net.http.RequestMethod.POST;
 s.topics = ["stamped_linear_vel", "stamped_angular_vel"];

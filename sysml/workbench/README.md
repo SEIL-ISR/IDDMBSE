@@ -51,7 +51,7 @@ endpoint has been exercised with `curl` against the `dummy` example (see
 
 ## Substitutions made here
 
-The originals hard-coded the lab's server (a host on the 10.229 subnet, port 5000) and
+The originals hard-coded the lab's server address and port, and
 one user's absolute workspace path. Both were replaced with environment variables, in
 `bridge/MatSensorTrade.m`, `bridge/roslaunchtrade.m`, `bridge/testhttpPost.m` and (inside
 the commented-out block) `bridge/DemoMatFun.m`:
