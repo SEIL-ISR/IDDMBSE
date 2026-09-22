@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="robot_x" default="6.0"/>
+    <arg name="robot_y" default="-18.0"/>
+    <arg name="robot_z" default="1.0"/>
+    <arg name="robot_yaw" default="0" />
+
+    <arg name="domain" default="inspection" doc="inspection | agriculture | orchard | playpen"/>
+
+    <arg name="name" default=""/>
+
+    <arg name="navigation"   default="true"/>
+    <arg name="localization" default="false"/>
+    <arg name="icp_odometry" default="false"/>
+    <arg name="rtabmap_viz"  default="false"/>
+    <arg name="camera"       default="false"/>
+    <arg name="lidar2d"      default="false"/>
+    <arg name="lidar3d"      default="false"/>
+    <arg name="lidar3d_ray_tracing" default="true"/>
+    <arg name="slam2d"       default="true"/>
+    <arg name="depth_from_lidar" default="false"/>
+  
+    <arg name="imu_topic" default="/$(arg name)/imu/data"/>
+    <arg name="odom_topic" default="/odometry/filtered"/>
+    <arg name="gps_topic" default="/$(arg name)/navsat/fix"/>
+    <arg name="scan_topic" default="/$(arg name)/front/scan"/>
+    <arg name="scan_cloud_topic" default="/$(arg name)/velodyne_points"/>
+    <arg name="rgb_topic"         default="/$(arg name)/realsense/color/image_raw"/>
+    <arg name="camera_info_topic" default="/$(arg name)/realsense/color/camera_info"/>
+    <arg name="depth_topic"       default="/$(arg name)/realsense/depth/image_rect_raw"/>
+  
+    <arg name="frame_id" default="$(arg name)/base_link"/>  
+    <arg name="odom_id" default="$(arg name)/odom"/>
+
+    <arg name="base_global_planner" default="global_planner/GlobalPlanner" doc="navfn/NavfnROS | global_planner/GlobalPlanner"/>
+    <arg name="base_local_planner" default="teb_local_planner/TebLocalPlannerROS" doc="dwa_local_planner/DWAPlannerROS | teb_local_planner/TebLocalPlannerROS | base_local_planner/TrajectoryPlannerROS"/>
+
+
+    <include if="$(eval domain == 'inspection')" file="$(find cpr_inspection_gazebo)/launch/inspection_world.launch">
+      <arg name="robot_x" value="$(arg robot_x)"/>
+      <arg name="robot_y" value="$(arg robot_y)"/>
+      <arg name="robot_z" value="$(arg robot_z)"/>
+      <arg name="robot_yaw" value="$(arg robot_yaw)"/>
+    </include> 
+
+    <include if="$(eval domain == 'agriculture')" file="$(find cpr_agriculture_gazebo)/launch/agriculture_world.launch">
+      <arg name="robot_x" value="$(arg robot_x)"/>
+      <arg name="robot_y" value="$(arg robot_y)"/>
+      <arg name="robot_z" value="$(arg robot_z)"/>
+      <arg name="robot_yaw" value="$(arg robot_yaw)"/>
+    </include> 
+
+    <include if="$(eval domain == 'orchard')" file="$(find cpr_orchard_gazebo)/launch/orchard_world.launch">
+      <arg name="robot_x" value="$(arg robot_x)"/>
+      <arg name="robot_y" value="$(arg robot_y)"/>
+      <arg name="robot_z" value="$(arg robot_z)"/>
+      <arg name="robot_yaw" value="$(arg robot_yaw)"/>
+    </include> 
+
+    <include if="$(eval domain == 'playpen')" file="$(find cpr_playpen_gazebo)/launch/playpen_world.launch">
+      <arg name="robot_x" value="$(arg robot_x)"/>
+      <arg name="robot_y" value="$(arg robot_y)"/>
+      <arg name="robot_z" value="$(arg robot_z)"/>
+      <arg name="robot_yaw" value="$(arg robot_yaw)"/>
+    </include> 
+
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hardware_viz)/rviz/model.rviz" /> -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hardware_viz)/rviz/robot.rviz" />
+
+
+    <include file="$(find hardware_navigation)/launch/rtabmap_slam.launch">
+        <arg name="navigation"   value="$(arg navigation)"/>
+        <arg name="localization" value="$(arg localization)"/>
+        <arg name="icp_odometry" value="$(arg icp_odometry)"/>
+        <arg name="rtabmap_viz"  value="$(arg rtabmap_viz)"/>
+        <arg name="camera"       value="$(arg camera)"/>
+        <arg name="lidar2d"      value="$(arg lidar2d)"/>
+        <arg name="lidar3d"      value="$(arg lidar3d)"/>
+        <arg name="lidar3d_ray_tracing" value="$(arg lidar3d_ray_tracing)"/>
+        <arg name="slam2d"       value="$(arg slam2d)"/>
+        <arg name="depth_from_lidar" value="$(arg depth_from_lidar)"/>
+        <arg name="imu_topic" value="$(arg imu_topic)"/>
+        <arg name="odom_topic" value="$(arg odom_topic)"/>
+        <arg name="gps_topic" value="$(arg gps_topic)"/>
+        <arg name="scan_topic" value="$(arg scan_topic)"/>
+        <arg name="scan_cloud_topic" value="$(arg scan_cloud_topic)"/>
+        <arg name="rgb_topic"         value="$(arg rgb_topic)"/>
+        <arg name="camera_info_topic" value="$(arg camera_info_topic)"/>
+        <arg name="depth_topic"       value="$(arg depth_topic)"/>
+        <arg name="frame_id" value="$(arg frame_id)"/>    
+        <arg name="odom_id" value="$(arg odom_id)"/>  
+        <arg name="base_global_planner" value="$(arg base_global_planner)"/>
+        <arg name="base_local_planner" value="$(arg base_local_planner)"/> 
+    </include>
+
+
+
+</launch>
