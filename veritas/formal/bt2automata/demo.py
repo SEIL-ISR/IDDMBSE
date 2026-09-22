@@ -100,4 +100,14 @@ model.queries = [
 # it can now be opened in UPPAAL!
 model.save()
 
+# pyuppaal's writer emits no DOCTYPE, so the flat-system 1.1 declaration is put back here --
+# the same line sysml2uppaal writes, and the one UPPAAL's own files carry. Everything else in
+# the file is exactly what the composition above produced.
+DOCTYPE = ("<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' "
+           "'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'>")
+text = out.read_text()
+if "<!DOCTYPE" not in text:
+    head, sep, rest = text.partition("?>")
+    out.write_text(head + sep + "\n" + DOCTYPE + rest)
+
 print("wrote", out)

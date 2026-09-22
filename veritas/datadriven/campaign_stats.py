@@ -103,6 +103,26 @@ def trials_for_upper_bound(target, delta=0.05, failures=0, n_max=1_000_000):
     return int(grid[np.argmax(clopper_pearson_upper(failures, grid, delta) <= target)])
 
 
+def trials_for_upper_bound_array(target, delta=0.05, failures=0, n_max=1_000_000):
+    """`trials_for_upper_bound` for a whole column of failure counts at once.
+
+    Same definition -- the smallest n with `clopper_pearson_upper(k, n, delta) <= target`, or
+    -1 when n_max is not enough -- evaluated for every k in `failures` with two array passes:
+    a shared geometric ladder to bracket each answer, then one grid over the brackets.
+    """
+    k = np.atleast_1d(np.asarray(failures, dtype=np.int64))
+    ladder = np.unique(np.geomspace(1, n_max, 2000).astype(np.int64))
+    ok = clopper_pearson_upper(k[:, None], ladder[None, :], delta) <= target
+    found = ok.any(axis=1)
+    j = ok.argmax(axis=1)
+    lo = np.where(j > 0, ladder[np.maximum(j - 1, 0)] + 1, 1)
+    hi = ladder[j]
+    grid = lo[:, None] + np.arange(int((hi - lo).max()) + 1)[None, :]
+    good = (grid <= hi[:, None]) & (clopper_pearson_upper(k[:, None], grid, delta) <= target)
+    first = grid[np.arange(k.size), good.argmax(axis=1)]
+    return np.where(found & good.any(axis=1), first, -1)
+
+
 # ------------------------------------------------------------------
 # post-hoc robustness
 
@@ -146,6 +166,58 @@ def robustness_stats(rho, level=0.05, delta=0.05):
         "quantile_dkw": float(np.quantile(rho, shifted)) if n and shifted > 0 else -np.inf,
         "violated_dkw": float(min(1.0, np.count_nonzero(rho < 0) / n + eps)) if n else np.nan,
     }
+
+
+def robustness_stats_by_group(rho, group, n_groups, level=0.05, delta=0.05):
+    """`robustness_stats` for every group of a campaign at once.
+
+    `group` is an integer group index per trial and `n_groups` how many there are, so this is
+    the same summary as above evaluated per design and environment without splitting the
+    campaign into per-group arrays.  Sorting once by (group, rho) puts every group's values in
+    a contiguous, ordered block, which makes min, max and both quantiles plain indexing.
+    Returns a dict of arrays of length `n_groups`; empty groups are nan.
+    """
+    rho = np.asarray(rho, dtype=float)
+    g = np.asarray(group, dtype=np.int64)
+    counts = np.bincount(g, minlength=n_groups)[:n_groups]
+    nz = counts > 0
+    if rho.size == 0:
+        nan = np.full(n_groups, np.nan)
+        return {"n": counts, "mean": nan, "min": nan, "max": nan, "violated": nan,
+                "quantile": nan, "quantile_dkw": nan, "violated_dkw": nan}
+
+    rs = rho[np.lexsort((rho, g))]
+    starts = np.concatenate([[0], np.cumsum(counts)[:-1]])
+    last = starts + np.maximum(counts - 1, 0)
+    safe_n = np.maximum(counts, 1)
+
+    eps = dkw_epsilon(safe_n, delta)
+    shifted = level - eps
+    n_violated = np.bincount(g, weights=(rho < 0).astype(float), minlength=n_groups)[:n_groups]
+    return {
+        "n": counts,
+        "mean": np.where(nz, np.bincount(g, weights=rho, minlength=n_groups)[:n_groups] / safe_n,
+                         np.nan),
+        "min": np.where(nz, rs[np.minimum(starts, rs.size - 1)], np.nan),
+        "max": np.where(nz, rs[np.minimum(last, rs.size - 1)], np.nan),
+        "violated": np.where(nz, n_violated / safe_n, np.nan),
+        "quantile": np.where(nz, _grouped_quantile(rs, starts, counts, level), np.nan),
+        "quantile_dkw": np.where(nz & (shifted > 0),
+                                 _grouped_quantile(rs, starts, counts, np.maximum(shifted, 0.0)),
+                                 -np.inf),
+        "violated_dkw": np.where(nz, np.minimum(1.0, n_violated / safe_n + eps), np.nan),
+    }
+
+
+def _grouped_quantile(rs, starts, counts, level):
+    """Linear-interpolation quantile inside each contiguous block of the sorted array `rs`."""
+    counts = np.maximum(counts, 1)
+    pos = np.clip(np.asarray(level, dtype=float), 0.0, 1.0) * (counts - 1)
+    i = np.floor(pos).astype(np.int64)
+    frac = pos - i
+    lo = np.minimum(starts + np.minimum(i, counts - 1), rs.size - 1)
+    hi = np.minimum(starts + np.minimum(i + 1, counts - 1), rs.size - 1)
+    return rs[lo] + frac * (rs[hi] - rs[lo])
 
 
 # ------------------------------------------------------------------

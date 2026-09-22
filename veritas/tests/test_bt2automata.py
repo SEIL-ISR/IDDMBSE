@@ -15,6 +15,11 @@ def test_demo_writes_nta(tmp_path):
     assert r.returncode == 0, r.stderr
     assert out.is_file()
 
+    # the flat-system 1.1 declaration the demo puts back after pyuppaal's writer
+    head = out.read_text().splitlines()[:2]
+    assert head[1] == ("<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' "
+                       "'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'>")
+
     nta = ET.parse(out).getroot()
     assert nta.tag == "nta"
 

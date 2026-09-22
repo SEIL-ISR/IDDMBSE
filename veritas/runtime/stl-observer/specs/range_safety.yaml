@@ -1,0 +1,49 @@
+# VERITAS runtime obligations over a contested-terrain range trajectory.
+#
+# Written against the trajectory CSV the Isaac Sim range trial writes, whose header is
+# `t,x,y,z,roll,pitch,yaw,v`: t in seconds, the pose in metres and radians, v the forward
+# speed in m/s.  `replay_observer.py` samples that trace onto the rate below.  Each signal
+# names the CSV column it reads, so this is a replay spec; `agr_safety.yaml` is the one the
+# live ROS 2 node runs, and its signals name a topic, a message type and a field instead.
+#
+# The rate is 20 Hz rather than the trajectory's own 60 Hz because RTAMT requires an operator
+# bound to be a whole number of sampling periods, and 50 ms divides the 20 s bound below.
+#
+# The thresholds:
+#   * 0.35 rad = 20 degrees of roll or pitch. Beyond that the robot is on terrain steep
+#     enough that a ground vehicle of this class is at risk of sliding or rolling over, so
+#     both attitude obligations are safety obligations and are written with `historically`.
+#   * 0.2 m/s over the first 20 s of the run is the progress obligation: the range trial
+#     commands 0.6 m/s, so a robot that never reaches a third of its commanded speed is stuck
+#     on an obstacle rather than driving. `warmup` holds the flag down until the 20 s window
+#     has actually elapsed.
+
+rate: 20.0
+
+monitors:
+
+  - name: roll_safety
+    requirement: ""
+    # Attitude safety: keep the roll angle inside 20 degrees for the whole run.
+    formula: "historically (abs(roll) <= 0.35)"
+    signals:
+      roll:
+        column: roll
+
+  - name: pitch_safety
+    requirement: ""
+    # Attitude safety: keep the pitch angle inside 20 degrees on the slopes of the range.
+    formula: "historically (abs(pitch) <= 0.35)"
+    signals:
+      pitch:
+        column: pitch
+
+  - name: progress
+    requirement: ""
+    # Progress: the robot reached at least 0.2 m/s somewhere in the last 20 seconds.
+    formula: "eventually[0,20] (v >= 0.2)"
+    pastify: true
+    warmup: 20.0
+    signals:
+      v:
+        column: v

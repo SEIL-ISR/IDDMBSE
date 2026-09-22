@@ -126,3 +126,101 @@ def test_warmup_suppresses_a_violation_until_its_time():
     out = [m.step({"x": 0.0})[1] for _ in range(8)]
     # samples at t = 0.0 .. 0.4 are inside the warmup, t = 0.5 onwards is not
     assert out == [False] * 5 + [True] * 3
+
+
+# ------------------------------------------------------------------
+# the range spec, over a trajectory in the range trial's CSV format
+
+range_spec = root / "runtime" / "stl-observer" / "specs" / "range_safety.yaml"
+
+RANGE_RATE = 60.0          # the range trial writes one row per physics step, at 60 Hz
+SPEC_RATE = 20.0           # and the spec samples at 20 Hz
+
+
+def range_trace(duration=40.0):
+    """A run in the range trial's column order: t,x,y,z,roll,pitch,yaw,v."""
+    t = np.arange(0.0, duration, 1.0 / RANGE_RATE)
+    v = np.where(t >= 15.0, 0.02, 0.6)                    # stuck from 15 s on
+    roll = 0.10 * np.sin(2 * np.pi * t / 7.0)             # never past 0.35
+    pitch = 0.40 * np.exp(-((t - 10.0) / 1.0) ** 2)       # one excursion past 0.35
+    yaw = np.zeros_like(t)
+    x = np.cumsum(v / RANGE_RATE)
+    return {"t": t, "x": x, "y": np.zeros_like(t), "z": np.zeros_like(t),
+            "roll": roll, "pitch": pitch, "yaw": yaw, "v": v}
+
+
+@pytest.fixture(scope="module")
+def range_csv(tmp_path_factory):
+    s = range_trace()
+    p = tmp_path_factory.mktemp("range") / "trajectory.csv"
+    cols = ["t", "x", "y", "z", "roll", "pitch", "yaw", "v"]
+    np.savetxt(p, np.column_stack([s[c] for c in cols]), delimiter=",", fmt="%.6f",
+               header=",".join(cols), comments="")
+    return p
+
+
+def test_the_range_spec_parses_and_names_its_three_obligations():
+    cfg = yaml.safe_load(range_spec.read_text())
+    assert cfg["rate"] == SPEC_RATE
+    rate, ms, _ = mon.load_spec(str(range_spec))
+    assert [m.name for m in ms] == ["roll_safety", "pitch_safety", "progress"]
+    assert rate == SPEC_RATE
+
+
+def test_a_60hz_trace_is_sampled_onto_the_spec_rate(range_csv):
+    from replay_observer import read_csv, resample
+    raw = read_csv(str(range_csv))
+    assert len(raw["t"]) == 2400                      # 40 s at 60 Hz
+    s = resample(raw, SPEC_RATE)
+    assert len(s["t"]) == 800                         # 40 s at 20 Hz
+    # every third row of the original, because 60 Hz decimates 3:1 onto 20 Hz
+    assert np.allclose(s["v"], np.asarray(raw["v"])[::3])
+    assert np.allclose(s["t"], np.asarray(raw["t"])[::3])
+
+
+def test_a_trace_already_at_the_spec_rate_is_passed_through(trace_csv):
+    from replay_observer import read_csv, resample
+    raw = read_csv(str(trace_csv))
+    s = resample(raw, RATE)
+    assert len(s["soc"]) == len(raw["soc"])
+    assert np.allclose(s["soc"], raw["soc"])
+
+
+def test_the_attitude_obligations_are_the_running_minimum_of_the_margin(range_csv):
+    from replay_observer import read_csv, resample
+    s = resample(read_csv(str(range_csv)), SPEC_RATE)
+    res = replay(str(range_spec), str(range_csv))
+
+    r = res["roll_safety"]
+    assert np.allclose(r["rho"], np.minimum.accumulate(0.35 - np.abs(s["roll"])), atol=1e-9)
+    assert r["first_violation_index"] is None
+
+    p = res["pitch_safety"]
+    assert np.allclose(p["rho"], np.minimum.accumulate(0.35 - np.abs(s["pitch"])), atol=1e-9)
+    # the excursion peaks at 0.40 rad at t = 10 s, so the margin goes negative on the way up
+    k = p["first_violation_index"]
+    assert k is not None
+    assert abs(s["pitch"][k]) > 0.35
+    assert abs(s["pitch"][k - 1]) <= 0.35
+    assert p["first_violation_time"] == pytest.approx(k / SPEC_RATE)
+    assert all(p["violated"][k:])
+
+
+def test_the_progress_obligation_fires_one_window_after_the_robot_stops(range_csv):
+    r = replay(str(range_spec), str(range_csv))["progress"]
+    # v drops to 0.02 at t = 15 s and the window is 20 s, so the last fast sample leaves the
+    # window at t = 35 s; warmup is 20 s, which is already past by then
+    k = r["first_violation_index"]
+    assert r["first_violation_time"] == pytest.approx(35.0, abs=1.0 / SPEC_RATE)
+    assert r["rho"][k] == pytest.approx(0.02 - 0.2)
+    assert not any(r["violated"][:k])
+
+
+def test_the_range_trace_writer_uses_the_trial_column_order(tmp_path):
+    import demo_range_trace
+    p = demo_range_trace.write(str(tmp_path / "out" / "range_trajectory.csv"))
+    header = open(p).readline().strip()
+    assert header == "t,x,y,z,roll,pitch,yaw,v"
+    table = np.loadtxt(p, delimiter=",", skiprows=1)
+    assert table.shape == (3600, 8)
+    assert table[1, 0] == pytest.approx(1.0 / 60.0, abs=1e-6)
