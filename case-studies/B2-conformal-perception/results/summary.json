@@ -1,0 +1,154 @@
+{
+  "seed": 20260922,
+  "campaign": {
+    "episodes": 90,
+    "calibration_episodes": 60,
+    "frame_every": 4,
+    "detection_rows": 2039,
+    "calibration_rows": 1312,
+    "holdout_rows": 727,
+    "score_median": 0.182472619537966,
+    "score_mean": 0.2693499807947138,
+    "score_max": 1.247937279361782
+  },
+  "detector": {
+    "sigma0": 0.04,
+    "sigma_range": 0.01,
+    "mu_easy": 0.95,
+    "sd_easy": 0.02,
+    "mu_hard": 0.5,
+    "sd_hard": 0.1,
+    "p_hard": 0.15,
+    "max_range": 10.0
+  },
+  "world": {
+    "size_m": 20.0,
+    "grid_resolution_m": 0.5,
+    "robot_half_side_m": 0.35,
+    "obstacles_per_world": [
+      5,
+      9
+    ]
+  },
+  "operating_point": {
+    "alpha": 0.1,
+    "q_m": 0.6804527362549031,
+    "holdout_coverage": 0.9037138927097662,
+    "holdout_coverage_interval": [
+      0.8562652447093987,
+      0.9429464063792422
+    ],
+    "closed_loop_coverage": 0.9482065035199464
+  },
+  "test_episodes": 200,
+  "nominal": {
+    "q": 0.0,
+    "success_rate": 0.16,
+    "collision_rate": 0.84,
+    "stall_rate": 0.0,
+    "mean_path_length": 26.53734665440987,
+    "mean_waits": 0.0
+  },
+  "conformalized": {
+    "q": 0.6804527362549031,
+    "success_rate": 0.915,
+    "collision_rate": 0.08,
+    "stall_rate": 0.005,
+    "mean_path_length": 29.764144151452083,
+    "mean_waits": 0.03
+  },
+  "sweep": [
+    {
+      "q": 0.24385953824083018,
+      "success_rate": 0.7,
+      "collision_rate": 0.3,
+      "stall_rate": 0.0,
+      "mean_path_length": 27.635099181548874,
+      "mean_waits": 0.02,
+      "alpha": 0.3,
+      "target_coverage": 0.7,
+      "holdout_coverage": 0.6850068775790922,
+      "holdout_coverage_lo": 0.6428450636173297,
+      "holdout_coverage_hi": 0.7302685871860883
+    },
+    {
+      "q": 0.3251545185137159,
+      "success_rate": 0.74,
+      "collision_rate": 0.255,
+      "stall_rate": 0.005,
+      "mean_path_length": 27.894215294766912,
+      "mean_waits": 0.02,
+      "alpha": 0.2,
+      "target_coverage": 0.8,
+      "holdout_coverage": 0.7881705639614855,
+      "holdout_coverage_lo": 0.7355334206583299,
+      "holdout_coverage_hi": 0.8422538712454679
+    },
+    {
+      "q": 0.5380770944599496,
+      "success_rate": 0.84,
+      "collision_rate": 0.16,
+      "stall_rate": 0.0,
+      "mean_path_length": 29.045819782073902,
+      "mean_waits": 0.005,
+      "alpha": 0.15,
+      "target_coverage": 0.85,
+      "holdout_coverage": 0.8514442916093535,
+      "holdout_coverage_lo": 0.7975421293779607,
+      "holdout_coverage_hi": 0.9028364655071787
+    },
+    {
+      "q": 0.6804527362549031,
+      "success_rate": 0.915,
+      "collision_rate": 0.08,
+      "stall_rate": 0.005,
+      "mean_path_length": 29.764144151452083,
+      "mean_waits": 0.03,
+      "alpha": 0.1,
+      "target_coverage": 0.9,
+      "holdout_coverage": 0.9037138927097662,
+      "holdout_coverage_lo": 0.8562652447093987,
+      "holdout_coverage_hi": 0.9429464063792422
+    },
+    {
+      "q": 0.8387099627133381,
+      "success_rate": 0.965,
+      "collision_rate": 0.005,
+      "stall_rate": 0.03,
+      "mean_path_length": 30.36458700336949,
+      "mean_waits": 0.375,
+      "alpha": 0.05,
+      "target_coverage": 0.95,
+      "holdout_coverage": 0.9422283356258597,
+      "holdout_coverage_lo": 0.9164236241812844,
+      "holdout_coverage_hi": 0.9672488755622188
+    },
+    {
+      "q": 0.963253322633506,
+      "success_rate": 0.945,
+      "collision_rate": 0.005,
+      "stall_rate": 0.05,
+      "mean_path_length": 30.658291129515458,
+      "mean_waits": 1.01,
+      "alpha": 0.02,
+      "target_coverage": 0.98,
+      "holdout_coverage": 0.9807427785419532,
+      "holdout_coverage_lo": 0.9690042616690061,
+      "holdout_coverage_hi": 0.9903859325605902
+    },
+    {
+      "q": 1.0339544132281624,
+      "success_rate": 0.915,
+      "collision_rate": 0.01,
+      "stall_rate": 0.075,
+      "mean_path_length": 30.734707712370646,
+      "mean_waits": 1.39,
+      "alpha": 0.01,
+      "target_coverage": 0.99,
+      "holdout_coverage": 0.9903713892709766,
+      "holdout_coverage_lo": 0.98239838790932,
+      "holdout_coverage_hi": 0.996319018404908
+    }
+  ],
+  "figure_episode": 0
+}
