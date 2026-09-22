@@ -1,0 +1,254 @@
+[
+    {
+        "name": "Velodyne Puck (15 Hz)",
+        "type": "laser_3d",
+        "specification": {
+            "model": "vlp16",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 0.0",
+            "update_rate": 15,
+            "h_fov": 6.283,
+            "v_fov": 0.526,
+            "channels": 16,
+            "samples": 1875,
+            "max_range": 100.0,
+            "cost": 10000,
+            "power": 80
+        }
+    },
+    {
+        "name": "Velodyne Puck (20 Hz)",
+        "type": "laser_3d",
+        "specification": {
+            "model": "vlp16",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 0.0",
+            "update_rate": 20,
+            "h_fov": 6.283,
+            "v_fov": 0.526,
+            "channels": 16,
+            "samples": 1875,
+            "max_range": 100.0,
+            "cost": 12000,
+            "power": 80
+        }
+    },
+    {
+        "name": "Velodyne HDL-32E (15 Hz)",
+        "type": "laser_3d",
+        "specification": {
+            "model": "hdl32e",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 0.0",
+            "update_rate": 15,
+            "h_fov": 6.283,
+            "v_fov": 0.526,
+            "channels": 32,
+            "samples": 2187,
+            "max_range": 120.0,
+            "cost": 15000,
+            "power": 100
+        }
+    },
+    {
+        "name": "Velodyne HDL-32E (20 Hz)",
+        "type": "laser_3d",
+        "specification": {
+            "model": "hdl32e",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 0.0",
+            "update_rate": 20,
+            "h_fov": 6.283,
+            "v_fov": 0.526,
+            "channels": 32,
+            "samples": 2187,
+            "max_range": 120.0,
+            "cost": 16000,
+            "power": 100
+        }
+    },
+    {
+        "name": "SICK LMS111 (25 Hz)",
+        "type": "laser_2d",
+        "specification": {
+            "model": "lms1xx",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 -1.57",
+            "update_rate": 25,
+            "h_fov": 4.71,
+            "v_fov": 1.57,
+            "min_range": 0.1,
+            "max_range": 20.0,
+            "cost": 1000,
+            "power": 30
+        }
+    },
+    {
+        "name": "SICK LMS111 (50 Hz)",
+        "type": "laser_2d",
+        "specification": {
+            "model": "lms1xx",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 -1.57",
+            "update_rate": 50,
+            "h_fov": 4.71,
+            "v_fov": 1.57,
+            "min_range": 0.1,
+            "max_range": 20.0,
+            "cost": 1500,
+            "power": 30
+        }
+    },
+    {
+        "name": "SICK LMS151 (25 Hz)",
+        "type": "laser_2d",
+        "specification": {
+            "model": "lms1xx",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 -1.57",
+            "update_rate": 25,
+            "h_fov": 4.71,
+            "v_fov": 1.57,
+            "min_range": 0.1,
+            "max_range": 50.0,
+            "cost": 1500,
+            "power": 50
+        }
+    },
+    {
+        "name": "SICK LMS151 (50 Hz)",
+        "type": "laser_2d",
+        "specification": {
+            "model": "lms1xx",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 -1.57",
+            "update_rate": 50,
+            "h_fov": 4.71,
+            "v_fov": 1.57,
+            "min_range": 0.1,
+            "max_range": 50.0,
+            "cost": 2000,
+            "power": 50
+        }
+    },
+    {
+        "name": "Intel RealSense Depth Camera D415",
+        "type": "depth_camera",
+        "specification": {
+            "model": "d415",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 0.0",
+            "width": 540,
+            "height": 360,
+            "update_rate": 60,
+            "h_fov": 1.1345,
+            "v_fov": 0.6981,
+            "max_range": 6.0,
+            "cost": 2000,
+            "power": 8
+        }
+    },
+    {
+        "name": "Intel RealSense Depth Camera D435",
+        "type": "depth_camera",
+        "specification": {
+            "model": "d435",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 0.0",
+            "width": 1280,
+            "height": 720,
+            "update_rate": 30,
+            "h_fov": 1.5184,
+            "v_fov": 1.0122,
+            "max_range": 6.0,
+            "cost": 2500,
+            "power": 8
+        }
+    },
+    {
+        "name": "Intel RealSense Depth Camera D455",
+        "type": "depth_camera",
+        "specification": {
+            "model": "d455",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 0.0",
+            "width": 1920,
+            "height": 1080,
+            "update_rate": 15,
+            "h_fov": 1.501,
+            "v_fov": 0.9948,
+            "max_range": 6.0,
+            "cost": 3000,
+            "power": 10
+        }
+    },
+    {
+        "name": "FLIR Blackfly (720x540)",
+        "type": "camera",
+        "specification": {
+            "name": "blackfly",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 0.0",
+            "width": 720,
+            "height": 540,
+            "update_rate": 30,
+            "h_fov": 1.047,
+            "min_range": 0.5,
+            "max_range": 50.0,
+            "cost": 1500,
+            "power": 3
+        }
+    },
+    {
+        "name": "FLIR Blackfly (1540x1080)",
+        "type": "camera",
+        "specification": {
+            "name": "blackfly",
+            "position": "0.0 0.0 0.0",
+            "orientation": "0.0 0.0 0.0",
+            "width": 1540,
+            "height": 1080,
+            "update_rate": 15,
+            "h_fov": 1.047,
+            "min_range": 0.5,
+            "max_range": 60.0,
+            "cost": 3000,
+            "power": 6
+        }
+    },
+    {
+        "name": "global_planner/GlobalPlanner",
+        "type": "planner",
+        "specification": {
+            "base_global_planner": "global_planner/GlobalPlanner"
+        }
+    },
+    {
+        "name": "navfn/NavfnROS",
+        "type": "planner",
+        "specification": {
+            "base_global_planner": "navfn/NavfnROS"
+        }
+    },
+    {
+        "name": "teb_local_planner/TebLocalPlannerROS",
+        "type": "controller",
+        "specification": {
+            "base_local_planner": "teb_local_planner/TebLocalPlannerROS"
+        }
+    },
+    {
+        "name": "dwa_local_planner/DWAPlannerROS",
+        "type": "controller",
+        "specification": {
+            "base_local_planner": "dwa_local_planner/DWAPlannerROS"
+        }
+    },
+    {
+        "name": "base_local_planner/TrajectoryPlannerROS",
+        "type": "controller",
+        "specification": {
+            "base_local_planner": "base_local_planner/TrajectoryPlannerROS"
+        }
+    }
+]

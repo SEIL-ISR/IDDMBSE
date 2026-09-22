@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Create {{ template.name }}{% endblock %}
+{% block style %}
+<!-- https://www.w3schools.com/howto/howto_css_two_columns.asp -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+<div class="column">
+<h2>{{ template.name }}</h2>
+<p>
+  {{ template.description|safe }}
+</p>
+<form id="design-form" action="" method="POST">
+{% for group in template.components %}
+<div id="{{ group.id }}">
+  {% for i in range(1, 1+group.maximum) %}
+  <div id="{{ group.id }}-{{ i }}">
+    <label for="{{ group.id }}-{{ i }}-select" onclick="showComponentInfo('{{ group.id }}', '{{ i }}')">{{ group.name }}{% if group.maximum > 1 %} {{ i }}/{{ group.maximum }}{% endif %}</label>
+    <select id="{{ group.id }}-{{ i }}-select" name="{{ group.id }}-{{ i }}-select" form="design-form" onchange="showComponentInfo('{{ group.id }}', '{{ i }}')">
+      {% if i > group.minimum %}<option value="0">None</option>{% endif %}
+      {% for c_id, c in components.items() %}
+        {% if c.type in group.component_types %}
+          {% if c.name in group.defaults[i-1] %}
+          <option value="{{ c_id }}" selected>{{ c.brand }} {{ c.name }}</option>
+          {% else %}
+          <option value="{{ c_id }}">{{ c.brand }} {{ c.name }}</option>
+          {% endif %}
+        {% endif %}
+      {% endfor %}  <!-- c_id, c in components.items() -->
+    </select>
+    {% for c_id, c in components.items() %}
+      {% if c.type in group.component_types %}
+        {% if c.name in group.defaults[i-1] %}
+          <div id="{{ group.id }}-{{ i }}-{{ c_id }}-parameters">
+        {% else %}
+          <div id="{{ group.id }}-{{ i }}-{{ c_id }}-parameters" style="display: none;">
+        {% endif %}
+            <!-- <p>Slot {{ i }} {{ c.name }} parameters:</p> -->
+            <ul>
+        {% for parameter in c.implementation.implementation.parameters %}
+          {% if ('$'+parameter.name) not in group.implementation_parameters[i-1] %}
+              <li>
+              <label for='{{ group.id }}-{{ i }}-{{ c_id }}-parameter-{{ parameter.name }}'>{{ parameter.name }}</label>
+              <input id='{{ group.id }}-{{ i }}-{{ c_id }}-parameter-{{ parameter.name }}' name='{{ group.id }}-{{ i }}-{{ c_id }}-parameter-{{ parameter.name }}' form="design-form" value='{{ parameter.default }}'>
+              </li>
+          {% endif %}
+        {% endfor %}
+            </ul>
+          </div>
+      {% endif %}
+    {% endfor %}  <!-- c_id, c in components.items() -->
+  </div>
+  {% endfor %}  <!-- i -->
+</div>
+{% endfor %}  <!-- group in template.components -->
+<label for="design-name-input-label">Name: </label>
+<input type="text" id="design-name-input" name="name" form="design-form">
+<input type="submit" value="Submit">
+</form>
+</div>
+<div class="column">
+  <h2>Component details</h2>
+  <div id="selected-component-image"></div>
+  <h3 id="selected-component-brand-name"></h3>
+  <p id="selected-component-reference"></p>
+  <p id="selected-component-description"></p>
+  <div id="selected-component-data"></div>
+</div>
+</div>
+{% block javascript %}
+<script>
+  // TODO: instead of getting the entire component table at once, considering making calls for individual datasheets (e.g., see get_template_args in environments.html)
+  components = JSON.parse('{{ components| tojson }}');
+  function showComponentInfo(group_id, i) {
+    select_id = group_id + '-' + i + '-select';
+    select_entity = document.getElementById(select_id);
+    component_id = parseInt(select_entity.value);
+    brand_name_entity = document.getElementById('selected-component-brand-name');
+    image_entity = document.getElementById('selected-component-image');
+    reference_entity = document.getElementById('selected-component-reference');
+    description_entity = document.getElementById('selected-component-description');
+    data_entity = document.getElementById('selected-component-data');
+    component = components[component_id];
+    if (component_id == 0) {
+      brand_name_entity.innerText = "";
+      image_entity.innerText = "";
+      reference_entity.innerText = "";
+      description_entity.innerText = "";
+      data_entity.innerText = "";
+    } else {
+      if ("brand" in component){
+        brand_name_entity.innerText = `${component["brand"]} ${component["name"]}`;
+      } else {
+        brand_name_entity.innerText = component["name"];
+      }
+      if ("image" in component) {
+        image_entity.innerHTML = "<img src=\"" + component["image"] + "\" height=\"300\">";
+      } else {
+        image_entity.innerHTML = "";
+      }
+      if ("reference" in component) {
+        reference_entity.innerHTML = "<a href=\"" + component["reference"] + "\">" + component["reference"] + "</a>";
+      } else {
+        reference_entity.innerHTML = "";
+      }
+      if ("description" in component) {
+        description_entity.innerText = component["description"];
+      } else {
+        description_entity.innerText = "";
+      }
+      data_entity.innerText = "";
+      ignored = ["name", "brand", "type", "image", "implementation", "reference", "description"];
+      for (const [k, v] of Object.entries(component)) {
+        if (ignored.includes(k)) { continue; }
+        data_entity.innerText += `${k}: ${v}\n`;
+      }
+    }
+
+    for (const c_id of Object.keys(components)) {
+      parameters_entity = document.getElementById(`${group_id}-${i}-${c_id}-parameters`);
+      if (parameters_entity) {
+        if (c_id == component_id) {
+          parameters_entity.style.display = "block";
+        } else {
+          parameters_entity.style.display = "none";
+        }
+      }
+    }
+  }
+</script>
+{% endblock %}
+{% endblock %}

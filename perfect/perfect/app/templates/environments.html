@@ -1,0 +1,64 @@
+{% extends "table_base.html" %}
+{% block title %}Environments{% endblock %}
+{% block table %}
+<div>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Specification</th>
+      <th>Tags</th>
+    </tr>
+    {% for environment in environments %}
+    <tr>
+      <td>{{ environment.id }}</td>
+      <td>{{ environment.name }}</td>
+      <td>
+        <div class="tooltip">Details
+          <span class="tooltiptext">
+            {{ environment.pretty_print_specification()|safe }}
+          </span>
+        </div>
+      </td>
+      <td>{{ environment.tag }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}
+{% block create_form %}
+<form action="" method="post">
+  <p>
+    <label for="template_selection">Create from template: </label>
+    <select name="template_selection" onchange="get_template_args(this.value)">
+      {% for template_id, template_name in templates %}
+      <option value="{{ template_id }}">{{ template_name }}</option>
+      {% endfor %}
+    </select>
+    <span id="template_form" name="template_form"></span>
+  </p>
+</form>
+<script>
+  async function get_template_args(template_id) {
+    const response = await fetch('/environments/get_template_args', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({
+        template_id: template_id
+      })
+    })
+    const data = await response.json();
+    if (data.args.length > 0) {
+      document.getElementById("template_form").innerHTML = "<p><label for='name'>Name</label>: <input id='name' name='name' type='text' value=''>"
+      document.getElementById("template_form").innerHTML += "<label for='tag'>Tag</label>: <input id='tag' name='tag' type='text' value=''></p>"
+      for (var i in data.args) {
+        const arg = data.args[i];
+        document.getElementById("template_form").innerHTML += `<label for='${arg}'>${arg}</label>: <input id='${arg}' name='${arg}' type='text' value=''></p>`
+      }
+      document.getElementById("template_form").innerHTML += "<input id='submit' name='submit' type='submit' value='Save'>";
+    } else {
+      document.getElementById("template_form").innerHTML = "";
+    }
+  }
+</script>
+{% endblock %}

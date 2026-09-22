@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "/perfect/robot_template",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "components": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/components_category"
+            },
+            "$defs": {
+                "components_category": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "component_types": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "defaults": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "/perfect/component"
+                            }
+                        },
+                        "minimum": {
+                            "type": "number"
+                        },
+                        "maxmium": {
+                            "type": "number"
+                        },
+                        "required": [
+                            "name",
+                            "component_types"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "name",
+        "components"
+    ]
+}

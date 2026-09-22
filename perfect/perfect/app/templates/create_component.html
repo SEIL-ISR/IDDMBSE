@@ -1,0 +1,55 @@
+{% extends "table_base.html" %}
+{% block title %}
+  Create Component
+{% endblock %}
+
+{% block create_form %}
+  <form method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <p>
+    {{ form.name.label }}: {{ form.name() }}
+    {{ form.type.label }}: {{ form.type() }}
+    </p>
+    <p>
+    {% for envvar in form.envvars %}
+      <p>
+        {{ envvar.envvar.label }}: {{ envvar.envvar() }}
+        {{ envvar.value.label }}: {{ envvar.value() }}
+      </p>
+    {% endfor %}
+    {{ form.add_envvar }}
+    {% if form.envvars %}
+      {{ form.remove_envvar }}
+    {% endif %}
+    </p>
+
+    <p>
+    {% for arg in form.args %}
+      <p>
+        {{ arg.arg.label }}: {{ arg.arg() }}
+        {{ arg.value.label }}: {{ arg.value() }}
+      </p>
+    {% endfor %}
+    {{ form.add_arg }}
+    {% if form.args %}
+      {{ form.remove_arg }}
+    {% endif %}
+    </p>
+
+    <p>
+    {% for change in form.file_changes %}
+      <p>
+        {{ change.file.label }}: {{ change.file() }}
+        {{ change.keys.label }}: {{ change.keys() }}
+        {{ change.value.label }}: {{ change.value() }}
+      </p>
+    {% endfor %}
+    {{ form.add_file_change }}
+    {% if form.file_changes %}
+      {{ form.remove_file_change }}
+    {% endif %}
+    </p>
+
+    {{ form.submit() }}
+  </form>
+{% endblock %}

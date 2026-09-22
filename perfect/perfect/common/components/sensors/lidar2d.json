@@ -1,0 +1,33 @@
+[
+    {
+        "name": "LMS111",
+        "brand": "SICK",
+        "type": "lidar2d",
+        "update_rate": 25,
+        "min_range": 0.1,
+        "max_range": 20.0,
+        "power": 30,
+        "image": "https://cdn.sick.com/media/pim/0/70/870/IM0025870.png",
+        "reference": "https://www.sick.com/br/en/catalog/products/lidar-and-radar-sensors/lidar-sensors/lms1xx/lms111-10100/p/p109842"
+    },
+    {
+        "name": "LMS151",
+        "brand": "SICK",
+        "type": "lidar2d",
+        "update_rate": 25,
+        "min_range": 0.1,
+        "max_range": 50.0,
+        "power": 50,
+        "image": "https://cdn.sick.com/media/pim/0/70/870/IM0025870.png",
+        "reference": "https://www.sick.com/ae/en/catalog/products/lidar-and-radar-sensors/lidar-sensors/lms1xx/lms151-10100/p/p141840"
+    },
+    {
+        "name": "UST",
+        "brand": "Hokuyo",
+        "type": "lidar2d",
+        "field_of_view_vertical_down": -135,
+        "field_of_view_vertical_up": 135,
+        "image": "https://www.hokuyo-aut.jp/p/product/20170120133126_863.jpg",
+        "reference": "https://www.hokuyo-aut.jp/search/single.php?serial=167"
+    }
+]

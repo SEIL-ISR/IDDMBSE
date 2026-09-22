@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Design {{ design.id }} Simulations Status{% endblock %}
+{% block content %}
+<div>
+  {{ design.design }}
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>State</th>
+    </tr>
+    {% with simulations = design.get_simulations() %}
+    {% if simulations %}
+      {% for simulation in simulations %}
+        <tr>
+          <td>{{ simulation.id }}</td>
+          <td id="{{ simulation.id }}-state">{{ simulation.state }}</td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+    {% endwith %}
+  </table>
+</div>
+<script>
+  function update_state(simulation_id, state) {
+    const stateElement = document.getElementById(simulation_id + '-state');
+    stateElement.innerText = state;
+  }
+  function initialize_updates() {
+    setInterval(async function() {
+      const response = await fetch("{{ url_for('simulations.updates') }}");
+      const updates = await response.json();
+      for (let i = 0; i < updates.length; i++) {
+        update_state(
+          updates[i].data.simulation_id,
+          updates[i].data.simulation_state);
+      }
+    }, 1000);
+  }
+  document.addEventListener('DOMContentLoaded', initialize_updates);
+</script>
+{% endblock %}

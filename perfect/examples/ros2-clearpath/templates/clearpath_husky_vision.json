@@ -1,0 +1,88 @@
+{
+    "name": "Clearpath Husky, Vision Package",
+    "description": "https://clearpathrobotics.com/husky-unmanned-ground-vehicle-robot/",
+    "components": [
+        {
+            "name": "LiDAR 3D",
+            "id": "lidar3d",
+            "component_types": [
+                "lidar_3d",
+                "lidar3d",
+                "laser_3d",
+                "laser3d"
+            ],
+            "defaults": [
+            ],
+            "minimum": 0,
+            "maximum": 1,
+            "implementation_parameters": [
+                {"$parent_frame": "sensor_arch_mount"}
+            ]
+        },
+        {
+            "name": "LiDAR 2D",
+            "id": "lidar2d",
+            "component_types": [
+                "lidar_2d",
+                "lidar2d",
+                "laser_2d",
+                "laser2d"
+            ],
+            "defaults": [
+                "Hokuyo UST"
+            ],
+            "minimum": 1,
+            "maximum": 1,
+            "implementation_parameters": [
+                {"$parent_frame": "bracket_$i_mount"}
+            ]
+        },
+        {
+            "name": "Camera",
+            "id": "camera",
+            "component_types": [
+                "camera"
+            ],
+            "defaults": [
+                "FLIR Blackfly S",
+                ""
+            ],
+            "minimum": 1,
+            "maximum": 2,
+            "implementation_parameters": [
+                {"$parent_frame": "fath_pivot_$i_mount"},
+                {"$parent_frame": "fath_pivot_$i_mount"}
+            ]
+        },
+        {
+            "name": "Planner",
+            "id": "planner",
+            "component_types": [
+                "global_planner"
+            ],
+            "defaults": [
+                "NavFn"
+            ],
+            "minimum": 1,
+            "maximum": 1,
+            "implementation_parameters": [
+                {}
+            ]
+        },
+        {
+            "name": "Controller",
+            "id": "controller",
+            "component_types": [
+                "local_planner"
+            ],
+            "defaults": [
+                "DWB"
+            ],
+            "minimum": 1,
+            "maximum": 1,
+            "implementation_parameters": [
+                {}
+            ]
+        }
+    ]
+}

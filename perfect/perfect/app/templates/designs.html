@@ -1,0 +1,42 @@
+{% extends "table_base.html" %}
+{% block title %}Designs{% endblock %}
+{% block table %}
+<div>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Components</th>
+      <th>Tags</th>
+      <th>Cost #FIXME</th>
+    </tr>
+    {% for design in designs %}
+      <tr>
+        <td>{{ design.id }}</td>
+        <td>{{ design.name }}</td>
+        <td>
+          <div class="tooltip">Details
+            <span class="tooltiptext">
+              {% for c in design.components %}
+                {{ c.name }}<br>
+              {% endfor %}
+            </span>
+          </div>
+        </td>
+        <td>{{ design.tag }}</td>
+        <td>{{ design.cost }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}
+{% block create_form %}
+{% if templates %}
+  <p>
+    <h3>Create Design from Robot Template</h3>
+    {% for template_name, template_id in templates.items() %}
+    <a href="{{ url_for('designs.design_from_template', template_name=template_id) }}">{{ template_name }}</a><br>
+    {% endfor %}
+  </p>
+{% endif %}
+{% endblock %}

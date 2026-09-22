@@ -1,0 +1,15 @@
+<!--
+  Simplest tree with controller selector functionality
+-->
+
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <PipelineSequence name="Navigate">
+        <RateController hz="1.0">
+          <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+        </RateController>
+        <ControllerSelector selected_controller="{selected_controller}" default_controller="FollowPath_DWB" topic_name="controller_selector"/>
+        <FollowPath path="{path}" controller_id="{selected_controller}"/>
+    </PipelineSequence>
+  </BehaviorTree>
+</root>

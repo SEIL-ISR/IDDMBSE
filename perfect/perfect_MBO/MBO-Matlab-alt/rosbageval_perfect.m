@@ -1,0 +1,403 @@
+clear all
+close all
+
+
+
+%%
+% Base-configuration, multiple runs
+
+bag_dir = 'SensorBags';
+filePattern = fullfile(bag_dir, '*.bag');
+theFiles = dir(filePattern);
+
+
+%%
+% Read all Pose Topics, BAG 8 has an issue Lidar-HARD, Skipped
+
+for k = 1 : length(theFiles)
+    run_bag = rosbag(theFiles(k).name);
+    runs_poseTopics = select(run_bag, 'Topic','/odometry/filtered');
+    runs_pose_bags(k) = runs_poseTopics;    
+end
+
+
+%%
+
+% % Read as message structs
+% for k = 1 : length(theFiles)
+%     runs_pose_msgStructs(k) = readMessages(runs_pose_bags(k),'DataFormat','struct');
+% end
+
+%pos_time_stmps = cellfun(@(m) double(m.Header.Stamp.Sec),runs_pose_msgs);
+
+%%
+% Plot the trajectories from auto runs
+
+for k = 1 : length(theFiles)
+    runs_pose_msgs= readMessages(runs_pose_bags(k),'DataFormat','struct');
+    xPoints = cellfun(@(m) double(m.Pose.Pose.Position.X),runs_pose_msgs);
+    yPoints = cellfun(@(m) double(m.Pose.Pose.Position.Y),runs_pose_msgs);
+    zPoints = cellfun(@(m) double(m.Pose.Pose.Position.Z),runs_pose_msgs);
+    plot3(xPoints,yPoints,zPoints,'LineWidth',0.5)
+    hold on
+end
+
+grid on
+
+title('3-D Trajectory Plots of Varios Design Configurations')
+xlabel('x')
+ylabel('y')
+zlabel('z')
+
+
+hold off
+
+%% Metrics
+
+
+pathlen = zeros(length(theFiles),1);
+TTCs = zeros(length(theFiles),1);
+CEGs = zeros(length(theFiles),1);
+
+for k = 1 : length(theFiles)
+    runs_pose_msgs= readMessages(runs_pose_bags(k),'DataFormat','struct');
+    xPoints = cellfun(@(m) double(m.Pose.Pose.Position.X),runs_pose_msgs);
+    yPoints = cellfun(@(m) double(m.Pose.Pose.Position.Y),runs_pose_msgs);
+    zPoints = cellfun(@(m) double(m.Pose.Pose.Position.Z),runs_pose_msgs);
+    [arclen, seglen] = arclength(xPoints,yPoints,zPoints);
+    pathlen(k) = arclen;
+    pos_time_stmps = cellfun(@(m) double(m.Header.Stamp.Sec),runs_pose_msgs);
+    TTCs(k) = pos_time_stmps(length(pos_time_stmps))- pos_time_stmps(1);
+    CEGs(k) = sum(abs(gradient(zPoints)));
+end
+
+%%
+
+
+
+las= [1000 1500 1500 2000]
+lid= [2200 2500 1500 1800]
+cam= [1500 2000]
+dep = [540 800 1920]
+
+cost = zeros(71,1);
+p=1;
+for i =1:4
+    for j=1:4
+        for k= 1:2
+            for l= 1:3
+                cost(p) = las(i)+lid(j)+cam(k)+dep(l)
+                p=p+1
+            end
+        end
+    end
+end
+
+cost2= cost(1:71)
+
+
+cost3= cost(1:68)
+
+RESULTS= horzcat(TTCs,pathlen,cost2);
+
+
+
+[A b]=prtp(RESULTS)
+[Acopy bcopy]= prtp(RESULTSCopy)
+%%
+figure (2)
+
+scatter3(pathlen,TTCs,cost2,'filled')   % draw the scatter plot
+ax = gca;
+ax.XDir = 'reverse';
+view(-31,14)
+xlabel('Path Length (m)')
+ylabel('Time To Completion(s)')
+zlabel('Sensor Suite Total Cost($)')
+
+hold on
+
+%%
+par_path = A(:,1)
+par_ttc= A(:,2)
+par_cost = A(:,3)
+scatter3(par_path,par_ttc,par_cost, 80, "filled") 
+
+
+
+%legend('Design12','Design13','Design16','Design19','Design21','Design25','Design41','Design49','Design55','Design63')
+
+%%
+par_path2 = RESULTSCopy(:,1)
+par_ttc2= RESULTSCopy(:,2)
+cost3 = RESULTSCopy(:,3)
+
+figure (4)
+scatter3(par_path2,par_ttc2,cost3,'filled')   % draw the scatter plot
+ax = gca;
+ax.XDir = 'reverse';
+view(-31,14)
+xlabel('Path Length (m)')
+ylabel('Time To Completion(s)')
+zlabel('Sensor Suite Total Cost($)')
+zlim([0 20])
+hold on
+
+
+par_path2 = Acopy(:,1)
+par_ttc2= Acopy(:,2)
+par_cost2 = Acopy(:,3)
+scatter3(par_path2,par_ttc2,par_cost2, 80, "filled") 
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function [arclen,seglen] = arclength(px,py,varargin)
+
+
+
+% arclength: compute arc length of a space curve, or any curve represented as a sequence of points
+% usage: [arclen,seglen] = arclength(px,py)         % a 2-d curve
+% usage: [arclen,seglen] = arclength(px,py,pz)      % a 3-d space curve
+% usage: [arclen,seglen] = arclength(px,py,method)  % specifies the method used
+%
+% Computes the arc length of a function or any
+% general 2-d, 3-d or higher dimensional space
+% curve using various methods.
+%
+% arguments: (input)
+%  px, py, pz, ... - vectors of length n, defining points
+%        along the curve. n must be at least 2. Replicate
+%        points should not be present in the curve.
+%
+%  method - (OPTIONAL) string flag - denotes the method
+%        used to compute the arc length of the curve.
+%
+%        method may be any of 'linear', 'spline', or 'pchip',
+%        or any simple contraction thereof, such as 'lin',
+%        'sp', or even 'p'.
+%        
+%        method == 'linear' --> Uses a linear chordal
+%               approximation to compute the arc length.
+%               This method is the most efficient.
+%
+%        method == 'pchip' --> Fits a parametric pchip
+%               approximation, then integrates the
+%               segments numerically.
+%
+%        method == 'spline' --> Uses a parametric spline
+%               approximation to fit the curves, then
+%               integrates the segments numerically.
+%               Generally for a smooth curve, this
+%               method may be most accurate.
+%
+%        DEFAULT: 'linear'
+%
+%
+% arguments: (output)
+%  arclen - scalar total arclength of all curve segments
+%
+%  seglen - arclength of each independent curve segment
+%           there will be n-1 segments for which the
+%           arc length will be computed.
+%
+%
+% Example:
+% % Compute the length of the perimeter of a unit circle
+% theta = linspace(0,2*pi,10);
+% x = cos(theta);
+% y = sin(theta);
+%
+% % The exact value is
+% 2*pi
+% % ans =
+% %          6.28318530717959
+%
+% % linear chord lengths
+% arclen = arclength(x,y,'l')
+% % arclen =
+% %           6.1564
+%
+% % Integrated pchip curve fit
+% arclen = arclength(x,y,'p')
+% % arclen =
+% %          6.2782
+%
+% % Integrated spline fit
+% arclen = arclength(x,y,'s')
+% % arclen =
+% %           6.2856
+%
+% Example:
+% % A (linear) space curve in 5 dimensions
+% x = 0:.25:1;
+% y = x;
+% z = x;
+% u = x;
+% v = x;
+%
+% % The length of this curve is simply sqrt(5)
+% % since the "curve" is merely the diagonal of a
+% % unit 5 dimensional hyper-cube.
+% [arclen,seglen] = arclength(x,y,z,u,v,'l')
+% % arclen =
+% %           2.23606797749979
+% % seglen =
+% %         0.559016994374947
+% %         0.559016994374947
+% %         0.559016994374947
+% %         0.559016994374947
+%
+%
+% See also: interparc, spline, pchip, interp1
+%
+% Author: John D'Errico
+% e-mail: woodchips@rochester.rr.com
+% Release: 1.0
+% Release date: 3/10/2010
+% unpack the arguments and check for errors
+if nargin < 2
+  error('ARCLENGTH:insufficientarguments', ...
+    'at least px and py must be supplied')
+end
+n = length(px);
+% are px and py both vectors of the same length?
+if ~isvector(px) || ~isvector(py) || (length(py) ~= n)
+  error('ARCLENGTH:improperpxorpy', ...
+    'px and py must be vectors of the same length')
+elseif n < 2
+  error('ARCLENGTH:improperpxorpy', ...
+    'px and py must be vectors of length at least 2')
+end
+% compile the curve into one array
+data = [px(:),py(:)];
+% defaults for method and tol
+method = 'linear';
+% which other arguments are included in varargin?
+if numel(varargin) > 0
+  % at least one other argument was supplied
+  for i = 1:numel(varargin)
+    arg = varargin{i};
+    if ischar(arg)
+      % it must be the method
+      validmethods = {'linear' 'pchip' 'spline'};
+      ind = strmatch(lower(arg),validmethods);
+      if isempty(ind) || (length(ind) > 1)
+        error('ARCLENGTH:invalidmethod', ...
+          'Invalid method indicated. Only ''linear'',''pchip'',''spline'' allowed.')
+      end
+      method = validmethods{ind};
+      
+    else
+      % it must be pz, defining a space curve in higher dimensions
+      if numel(arg) ~= n
+        error('ARCLENGTH:inconsistentpz', ...
+          'pz was supplied, but is inconsistent in size with px and py')
+      end
+      
+      % expand the data array to be a 3-d space curve
+      data = [data,arg(:)]; %#ok
+    end
+  end
+  
+end
+% what dimension do we live in?
+nd = size(data,2);
+% compute the chordal linear arclengths
+seglen = sqrt(sum(diff(data,[],1).^2,2));
+arclen = sum(seglen);
+% we can quit if the method was 'linear'.
+if strcmpi(method,'linear')
+  % we are now done. just exit
+  return
+end
+% 'spline' or 'pchip' must have been indicated,
+% so we will be doing an integration. Save the
+% linear chord lengths for later use.
+chordlen = seglen;
+% compute the splines
+spl = cell(1,nd);
+spld = spl;
+diffarray = [3 0 0;0 2 0;0 0 1;0 0 0];
+for i = 1:nd
+  switch method
+    case 'pchip'
+      spl{i} = pchip([0;cumsum(chordlen)],data(:,i));
+    case 'spline'
+      spl{i} = spline([0;cumsum(chordlen)],data(:,i));
+      nc = numel(spl{i}.coefs);
+      if nc < 4
+        % just pretend it has cubic segments
+        spl{i}.coefs = [zeros(1,4-nc),spl{i}.coefs];
+        spl{i}.order = 4;
+      end
+  end
+  
+  % and now differentiate them
+  xp = spl{i};
+  xp.coefs = xp.coefs*diffarray;
+  xp.order = 3;
+  spld{i} = xp;
+end
+% numerical integration along the curve
+polyarray = zeros(nd,3);
+for i = 1:spl{1}.pieces
+  % extract polynomials for the derivatives
+  for j = 1:nd
+    polyarray(j,:) = spld{j}.coefs(i,:);
+  end
+  
+  % integrate the arclength for the i'th segment
+  % using quadgk for the integral. I could have
+  % done this part with an ode solver too.
+  seglen(i) = quadgk(@(t) segkernel(t),0,chordlen(i));
+end
+% and sum the segments
+arclen = sum(seglen);
+% ==========================
+%   end main function
+% ==========================
+%   begin nested functions
+% ==========================
+  function val = segkernel(t)
+    % sqrt((dx/dt)^2 + (dy/dt)^2)
+    
+    val = zeros(size(t));
+    for k = 1:nd
+      val = val + polyval(polyarray(k,:),t).^2;
+    end
+    val = sqrt(val);
+    
+  end % function segkernel
+end % function arclength
+
+
+
+function [A varargout]=prtp(B)
+A=[]; varargout{1}=[];
+sz1=size(B,1);
+jj=0; kk(sz1)=0;
+c(sz1,size(B,2))=0;
+bb=c;
+for k=1:sz1
+  j=0;
+  ak=B(k,:);
+  for i=1:sz1
+    if i~=k
+      j=j+1;
+      bb(j,:)=ak-B(i,:);
+    end
+  end
+  if any(bb(1:j,:)'<0)
+    jj=jj+1;
+    c(jj,:)=ak;
+    kk(jj)=k;
+  end
+end
+if jj
+  A=c(1:jj,:);
+  varargout{1}=kk(1:jj);
+else
+  warning('Points:Pareto',...
+    'There are no Pareto points. The result is an empty matrix.')
+end
+
+end

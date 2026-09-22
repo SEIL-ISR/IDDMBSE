@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head %}
+  <title>{% block title %}{% endblock %} - PERFECT</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% endblock %}
+  {% block style %}
+  {% endblock %}
+</head>
+<body>
+  <h1>PERFECT Project {{ config.PERFECT_PROJECT_NAME }}</h1>
+  <div id="content">{% block content %}{% endblock %}</div>
+  <div id="footer">
+    {% block footer %}
+    <p>
+      <a href="{{ url_for('main.home') }}">Home</a>
+      |
+      <a href="{{ url_for('components.home') }}">Components</a>
+      |
+      <a href="{{ url_for('designs.home') }}">Designs</a>
+      |
+      <a href="{{ url_for('environments.home') }}">Environments</a>
+      |
+      <a href="{{ url_for('experiments.home') }}">Experiments</a>
+      |
+      <a href="https://code.umd.edu/drhunter/perfect">GitLab</a>
+    </p>
+    {% endblock %}
+  </div>
+</body>
+</html>

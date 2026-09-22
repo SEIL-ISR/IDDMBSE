@@ -1,0 +1,80 @@
+[
+    {
+        "name": "Burger",
+        "type": "turtlebot3_model",
+        "implementation": {
+            "envvars": [
+                {
+                    "envvar": "TURTLEBOT3_MODEL",
+                    "value": "burger"
+                },
+                {
+                    "envvar": "GAZEBO_MODEL_PATH",
+                    "value": "/opt/ros/humble/share/turtlebot3_gazebo/models"
+                }
+            ]
+        }
+    },
+    {
+        "name": "Waffle",
+        "type": "turtlebot3_model",
+        "implementation": {
+            "envvars": [
+                {
+                    "envvar": "TURTLEBOT3_MODEL",
+                    "value": "waffle"
+                },
+                {
+                    "envvar": "GAZEBO_MODEL_PATH",
+                    "value": "/opt/ros/humble/share/turtlebot3_gazebo/models"
+                }
+            ]
+        }
+    },
+    {
+        "name": "SLAM",
+        "type": "behavior",
+        "implementation": {
+            "launchargs": [
+                {
+                    "arg": "slam",
+                    "value": "True"
+                }
+            ]
+        }
+    },
+    {
+        "name": "Navigate to Pose w/Consistent Replanning",
+        "type": "behavior_tree",
+        "implementation": {
+            "files": [
+                {
+                    "file": "nav2_params.yaml",
+                    "updates": [
+                        {
+                            "keys": "bt_navigator.ros__parameters.default_nav_to_pose_bt_xml",
+                            "value": "nav_to_pose_with_consistent_replanning_and_if_path_becomes_invalid.xml"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "Navigate to Pose w/Replanning and Recovery",
+        "type": "behavior_tree",
+        "implementation": {
+            "files": [
+                {
+                    "file": "nav2_params.yaml",
+                    "updates": [
+                        {
+                            "keys": "bt_navigator.ros__parameters.default_nav_to_pose_bt_xml",
+                            "value": "navigate_to_pose_w_replanning_and_recovery.xml"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+]

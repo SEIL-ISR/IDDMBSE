@@ -1,0 +1,7 @@
+<library path="selector_panel">
+  <class name="selector_panel/SelectorPanel"
+         type="selector_panel::SelectorPanel"
+         base_class_type="rviz_common::Panel">
+  <description>A panel to select controller and planner plugins</description>
+  </class>
+</library>

@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!-- Adapted from
+  /opt/ros/noetic/share/husky_description/urdf/husky.urdf.xacro
+  /opt/ros/noetic/share/husky_description/urdf/accessories/vlp16_mount.urdf.xacro
+
+  To use, set the following environment variables:
+    HUSKY_LASER_3D_ENABLED=0  # this will disable the VLP-16
+    HUSKY_HDL32E_ENABLED=1    # this will enable the HDL-32E
+    HUSKY_URDF_EXTRAS=/path/to/hdl32e.urdf.xacro
+  The other HUSKY_LASER_3D_* environment variables are used the same as with the VLP-16.
+  For now, since the VLP-16 and HDL-32E don't have their separate set of environment variables, trying to use both simultaneously will cause problems.
+-->
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:include filename="$(find velodyne_description)/urdf/HDL-32E.urdf.xacro" />
+  <xacro:macro name="hdl32_mount" params="prefix parent_link topic height:=0.12 *origin">
+    <link name="${prefix}hdl32_mount_base_link" />
+    <link name="${prefix}hdl32_mount_plate">
+      <visual>
+        <geometry>
+          <box size="0.04 0.141 0.0063" />
+        </geometry>
+        <material name="black">
+          <color rgba="1 1 1 1" />
+        </material>
+        <origin xyz="0 0 0.00315" rpy="0 0 0" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.04 0.02 ${height}" />
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </collision>
+    </link>
+    <link name="${prefix}hdl32_mount_left_support">
+      <visual>
+        <geometry>
+          <box size="0.04 0.02 ${height}" />
+        </geometry>
+        <material name="black">
+          <color rgba="1 1 1 1" />
+        </material>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.04 0.02 ${height}" />
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </collision>
+    </link>
+    <link name="${prefix}hdl32_mount_right_support">
+      <visual>
+        <geometry>
+          <box size="0.04 0.02 ${height}" />
+        </geometry>
+        <material name="black">
+          <color rgba="1 1 1 1" />
+        </material>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.04 0.02 ${height}" />
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </collision>
+    </link>
+
+    <joint name="${prefix}hdl32_mount_base_link_joint" type="fixed">
+      <parent link="${parent_link}" />
+      <child link="${prefix}hdl32_mount_base_link" />
+      <xacro:insert_block name="origin" />
+    </joint>
+    <joint name="${prefix}hdl32_mount_left_support_joint" type="fixed">
+      <parent link="${prefix}hdl32_mount_base_link" />
+      <child link="${prefix}hdl32_mount_left_support" />
+      <origin xyz="0 0.06 ${height/2}" rpy="0 0 0"/>
+    </joint>
+    <joint name="${prefix}hdl32_mount_right_support_joint" type="fixed">
+      <parent link="${prefix}hdl32_mount_base_link" />
+      <child link="${prefix}hdl32_mount_right_support" />
+      <origin xyz="0 -0.06 ${height/2}" rpy="0 0 0"/>
+    </joint>
+    <joint name="${prefix}hdl32_mount_plate_joint" type="fixed">
+      <parent link="${prefix}hdl32_mount_base_link" />
+      <child link="${prefix}hdl32_mount_plate" />
+      <origin xyz="0 0 ${height}" rpy="0 0 0"/>
+    </joint>
+
+    <xacro:HDL-32E parent="${prefix}hdl32_mount_plate" topic="${topic}" name="${prefix}velodyne" gpu="true">
+      <origin xyz="0 0 0.0063" rpy="0 0 0" />
+    </xacro:HDL-32E>
+  </xacro:macro>
+
+  <xacro:arg name="laser_hdl32e_enabled" default="$(optenv HUSKY_HDL32E_ENABLED 0)"/>
+  <xacro:property name="laser_hdl32e_enabled" value="$(arg laser_hdl32e_enabled)"/>
+
+  <xacro:if value="$(arg laser_hdl32e_enabled)">
+    <xacro:if value="$(arg laser_3d_tower)">
+      <xacro:hdl32_mount prefix="$(arg laser_3d_prefix)" parent_link="$(arg laser_3d_parent)" topic="$(arg laser_3d_topic)">
+        <origin xyz="$(arg laser_3d_xyz)" rpy="$(arg laser_3d_rpy)" />
+      </xacro:hdl32_mount>
+    </xacro:if>
+    <xacro:unless value="$(arg laser_3d_tower)">
+      <xacro:HDL-32E parent="$(arg laser_3d_parent)" topic="$(arg laser_3d_topic)" name="$(arg laser_3d_prefix)velodyne" gpu="true">
+        <origin xyz="$(arg laser_3d_xyz)" rpy="$(arg laser_3d_rpy)" />
+      </xacro:HDL-32E>
+    </xacro:unless>
+  </xacro:if>
+
+</robot>

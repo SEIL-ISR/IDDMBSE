@@ -1,0 +1,78 @@
+{% extends "table_base.html" %}
+{% block title %}Experiments{% endblock %}
+{% block table %}
+<div>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Design</th>
+      <th>Environment</th>
+      <th>Tags</th>
+      <th>Last Run</th>
+      <th>URL</th>
+      <th>State</th>
+      <th>Run Time</th>
+      <th></th>
+      <th></th>
+    </tr>
+    {% for experiment in experiments %}
+    <tr>
+      <td>
+        <a href="{{ url_for('experiments.details', id=experiment.id)}}">{{ experiment.id }}</a>
+      </td>
+      <td>
+        <a href="{{ url_for('designs.status', id=experiment.design_id)}}">{{ experiment.design.name or
+          experiment.design.id }}</a>
+      </td>
+      <td>{{ experiment.environment.name or experiment.environment.id }}</td>
+      <td>{{ experiment.tag }}</td>
+      <td>{{ experiment.last_trial_datetime }}</td>
+      <td id="{{ experiment.last_trial_id }}-uri">{{ experiment.last_trial_uri }}</td>
+      <td id="{{ experiment.last_trial_id }}-state">{{ experiment.last_trial_state }}</td>
+      <td id="{{ experiment.last_trial_id }}-start_age">{% if experiment.last_trial_start_age %} {{ experiment.last_trial_start_age|round(3) }} {% endif %}</td>
+      <td>
+        <a href="{{ url_for('experiments.run', id=experiment.id) }}">RUN</a>
+      </td>
+      <td>
+        <a href="{{ url_for('experiments.cancel', id=experiment.id) }}">CANCEL</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+<script>
+  function update(trial_id, update, data) {
+    if ((typeof data) == "number") {
+      data = Math.round(data*1000.0)/1000.0
+    }
+    try {
+      const stateElement = document.getElementById(trial_id + '-' + update);
+      stateElement.innerText = data;
+    }
+    catch(err) {}
+  }
+  function initialize_updates() {
+    setInterval(async function () {
+      const response = await fetch("{{ url_for('experiments.updates') }}");
+      const updates = await response.json();
+      for (let i = 0; i < updates.length; i++) {
+        update(
+          updates[i].data.trial_id,
+          updates[i].data.update,
+          updates[i].data.data,
+        )
+      }
+    }, 1000);
+  }
+  document.addEventListener('DOMContentLoaded', initialize_updates);
+</script>
+
+{% endblock %}
+{% block create_form %}
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  {{ form.design_selection }}
+  {{ form.environment_selection }}
+  <button type="submit">Create new</button>
+</form>
+{% endblock %}

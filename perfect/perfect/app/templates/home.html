@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Project Home{% endblock %}
+
+{% block content %}
+<p>PERFECT_PROJECT_ROOT: {{ config.PERFECT_PROJECT_ROOT }}</p>
+<p>REDIS_URL: {{ config.REDIS_URL }}</p>
+<p>SQLALCHEMY_DATABASE_URI: {{ config.SQLALCHEMY_DATABASE_URI }}</p>
+{% endblock %}

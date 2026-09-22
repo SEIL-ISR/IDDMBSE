@@ -1,0 +1,39 @@
+[
+    {
+        "name": "ZED X",
+        "brand": "Stereolabs",
+        "type": "camera",
+        "focal_length": 2.2,
+        "field_of_view_horizontal": 110,
+        "field_of_view_vertical": 80,
+        "field_of_view_diagonal": 120,
+        "aperture": 2.2
+    },
+    {
+        "name": "Blackfly S",
+        "brand": "FLIR",
+        "type": "camera",
+        "resolution_horizontal": 720,
+        "resolution_vertical": 540,
+        "max_frame_rate": 522,
+        "pixel_size": 6.9,
+        "mass": 0.36
+    },
+    {
+        "name": "Realsense D415",
+        "brand": "Intel",
+        "type": "camera",
+        "image": "https://www.intelrealsense.com/wp-content/uploads/2019/02/stereo_DT_d415_front-crop1a-1.png",
+        "reference": "https://www.intelrealsense.com/depth-camera-d415/"
+    },
+    {
+        "name": "Realsense D435",
+        "brand": "Intel",
+        "type": "camera"
+    },
+    {
+        "name": "Realsense D455",
+        "brand": "Intel",
+        "type": "camera"
+    }
+]

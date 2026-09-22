@@ -1,0 +1,47 @@
+{
+    "name": "Navigate to Goal Pose",
+    "specification": {
+        "goal": {
+            "action_type": "nav2_msgs.action.NavigateToPose",
+            "action_name": "/navigate_to_pose",
+            "goal_msg": {
+                "cls": "nav2_msgs.action.NavigateToPose.Goal",
+                "kwargs": {
+                    "pose": {
+                        "cls": "geometry_msgs.msg.PoseStamped",
+                        "kwargs": {
+                            "header": {
+                                "cls": "std_msgs.msg.Header",
+                                "kwargs": {
+                                    "frame_id": "map"
+                                }
+                            },
+                            "pose": {
+                                "cls": "geometry_msgs.msg.Pose",
+                                "kwargs": {
+                                    "position": {
+                                        "cls": "geometry_msgs.msg.Point",
+                                        "kwargs": {
+                                            "x": "$x_goal",
+                                            "y": "$y_goal",
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "orientation": {
+                                        "cls": "geometry_msgs.msg.Quaternion",
+                                        "kwargs": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0,
+                                            "w": 1.0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

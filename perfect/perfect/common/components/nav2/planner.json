@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Dynamic Window Approach",
+        "type": "local_planner"
+    },
+    {
+        "name": "DWB",
+        "type": "local_planner",
+        "reference": "https://docs.nav2.org/configuration/packages/configuring-dwb-controller.html",
+        "description": "The default Nav2 controller. A modification of the Dynamic Window Approach."
+    },
+    {
+        "name": "MPPI",
+        "type": "local_planner",
+        "reference": "https://docs.nav2.org/configuration/packages/configuring-mppic.html",
+        "description": "Model Predictive Path Integral controller. The new Nav2 MPPI Controller is a predictive controller - a successor to TEB and pure path tracking MPC controllers. It uses a sampling based approach to select optimal trajectories, optimizing between successive iterations. It contains plugin-based objective functions for customization and extension for various behaviors and behavioral attributes."
+    },
+    {
+        "name": "Trajectory Rollout",
+        "type": "local_planner"
+    },
+    {
+        "name": "Teb",
+        "type": "local_planner"
+    },
+    {
+        "name": "NavFn",
+        "type": "global_planner",
+        "reference": "https://docs.nav2.org/configuration/packages/configuring-navfn.html",
+        "description": "This NavFn planner implements a wavefront Dijkstra expanded holonomic planner."
+    },
+    {
+        "name": "A*",
+        "type": "global_planner",
+        "reference": "https://docs.nav2.org/configuration/packages/configuring-navfn.html",
+        "description": "This NavFn planner implements a wavefront A* expanded holonomic planner."
+    }
+]

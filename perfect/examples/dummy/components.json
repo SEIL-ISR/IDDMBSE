@@ -1,0 +1,28 @@
+[
+    {
+        "name": "Widget A",
+        "type": "widget",
+        "specification": {
+            "flange_depth": 123,
+            "gewgaw_frequency": -5
+        }
+    },
+    {
+        "name": "Widget B",
+        "type": "widget",
+        "specification": {
+            "flange_depth": 456,
+            "gewgaw_frequency": 2
+        }
+    },
+    {
+        "name": "Dijkstra",
+        "type": "ppa",
+        "specification": {}
+    },
+    {
+        "name": "A*",
+        "type": "ppa",
+        "specification": {}
+    }
+]

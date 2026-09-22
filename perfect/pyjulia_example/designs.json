@@ -1,0 +1,48 @@
+{
+    "1": {
+        "name": "Lidar",
+        "model": "vlp16",
+        "position": [0.0, 0.0, 0.0, 0.0],
+        "orientation": [0.0, 0.0, 0.0, 0.0],
+        "update_rate": 10,
+        "h_fov": 6.283,
+        "v_fov": 0.526,
+        "channels": 16,
+        "max_range": 100
+    },
+    "2": {
+        "name": "Laser_2d",
+        "model": "lms1xx",
+        "position": [0.0, 0.0, 0.0, 0.0],
+        "orientation": [0.0, 0.0, -1.57],
+        "update_rate": 50,
+        "h_fov": 4.71,
+        "v_fov": 1.57,
+        "min_range": 0.1,
+        "max_range": 20.0
+    },
+    "3": {
+        "name": "depth_camera",
+        "model": "d435",
+        "position": [0.0, 0.0, 0.0],
+        "orientation": [0.0, 0.0, 0.0],
+        "width": 1280,
+        "height": 720,
+        "update_rate": 30,
+        "h_fov": 1.5184,
+        "v_fov": 1.0122,
+        "max_range": 6
+    },
+    "4": {
+        "name": "camera",
+        "model": "blackfly",
+        "position": [0.22, 0.1, 0.0],
+        "orientation": [0.0, 0.0, 0.0],
+        "width": 720,
+        "height": 540,
+        "update_rate": 30,
+        "h_fov": 1.047,
+        "min_range": 0.5,
+        "max_range": 50
+    }
+}

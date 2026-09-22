@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="robot_x" default="0.0"/>
+    <arg name="robot_y" default="0.0"/>
+    <arg name="robot_z" default="0.0"/>
+    <arg name="robot_yaw" default="0.0"/>
+    <arg name="world" default="playpen" doc="agriculture | inspection | obstacle | office | orchard | playpen (default)"/>
+
+    <arg name="gui" default="true"/>
+
+    <arg name="base_global_planner" default="navfn/NavfnROS" doc="navfn/NavfnROS (default)"/>
+    <arg name="base_local_planner" default="dwa_local_planner/DWAPlannerROS" doc="base_local_planner/TrajectoryPlannerROS | dwa_local_planner/DWAPlannerROS (default)"/>
+
+    <!-- Adapted from husky_gazebo/launch/husky_playpen.launch -->
+    <group if="$(eval world == 'playpen')">
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="world_name" value="$(find husky_gazebo)/worlds/clearpath_playpen.world"/>
+            <arg name="paused" value="false"/>
+            <arg name="use_sim_time" value="true"/>
+            <arg name="gui" value="$(arg gui)"/>
+            <arg name="debug" value="false"/>
+        </include>
+        <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+            <arg name="x" value="$(arg robot_x)"/>
+            <arg name="y" value="$(arg robot_y)"/>
+            <arg name="z" value="$(arg robot_z)"/>
+            <arg name="yaw" value="$(arg robot_yaw)"/>
+            <arg name="joystick" value="false"/>
+        </include>
+    </group>  <!-- playpen -->
+
+    <group if="$(eval world == 'kashif-difficult')">
+        <arg name="world_name" default="$(env GAZEBO_WORLD_MINI)/difficult/terrain_mini.world" />
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="use_sim_time" value="true" />
+            <arg name="headless" value="false" />
+            <arg name="world_name" value="$(arg world_name)" />
+        </include>
+
+        <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+            <arg name="x" value="$(arg robot_x)"/>
+            <arg name="y" value="$(arg robot_y)"/>
+            <arg name="z" value="$(arg robot_z)"/>
+            <arg name="yaw" value="$(arg robot_yaw)"/>
+            <arg name="joystick" value="false"/>
+        </include>
+    </group>
+
+    <group if="$(eval world == 'kashif-medium')">
+        <arg name="world_name" default="$(env GAZEBO_WORLD_MINI)/medium/terrain_mini.world" />
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="use_sim_time" value="true" />
+            <arg name="headless" value="false" />
+            <arg name="world_name" value="$(arg world_name)" />
+        </include>
+
+        <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+            <arg name="x" value="$(arg robot_x)"/>
+            <arg name="y" value="$(arg robot_y)"/>
+            <arg name="z" value="$(arg robot_z)"/>
+            <arg name="yaw" value="$(arg robot_yaw)"/>
+            <arg name="joystick" value="false"/>
+        </include>
+    </group>
+
+    <group if="$(eval world == 'kashif-easy')">
+        <arg name="world_name" default="$(env GAZEBO_WORLD_MINI)/easy/terrain_mini.world" />
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="use_sim_time" value="true" />
+            <arg name="headless" value="false" />
+            <arg name="world_name" value="$(arg world_name)" />
+        </include>
+
+        <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+            <arg name="x" value="$(arg robot_x)"/>
+            <arg name="y" value="$(arg robot_y)"/>
+            <arg name="z" value="$(arg robot_z)"/>
+            <arg name="yaw" value="$(arg robot_yaw)"/>
+            <arg name="joystick" value="false"/>
+        </include>
+    </group>
+
+    <!-- cpr_gazebo (Clearpath Additional Simulation Worlds)-->
+    <group if="$(eval world == 'agriculture' or world == 'inspection' or world == 'obstacle' or world == 'office' or world == 'orchard')">
+        <arg name="cpr_world_package" value="$(eval 'cpr_' + world + '_gazebo')" />
+        <arg name="cpr_world_launchfile" value="$(eval 'cpr_' + world + '_world.launch')" />
+        <include file="$(eval find(cpr_world_package) + '/launch/' + cpr_world_launchfile)">
+            <arg name="platform" value="husky"/>
+            <arg name="robot_x" value="$(arg robot_x)"/>
+            <arg name="robot_y" value="$(arg robot_y)"/>
+            <arg name="robot_z" value="$(arg robot_z)"/>
+            <arg name="robot_yaw" value="$(arg robot_yaw)"/>
+            <arg name="gui" value="$(arg gui)"/>
+        </include>
+    </group>  <!-- cpr_gazebo -->
+
+    <arg name="rviz" default="true"/>
+    <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(env PERFECT_PROJECT_ROOT)/launch/robot.rviz" output="screen"/>
+
+<!--     <include file="$(find husky_navigation)/launch/amcl_demo.launch" />
+ -->
+
+    <!-- These arguments are set by sensor components -->
+    <arg name="rtabmap_camera"       default="false"/>
+    <arg name="rtabmap_lidar2d"      default="false"/>
+    <arg name="rtabmap_lidar3d"      default="false"/>
+
+    <arg name="rtabmap_rgb_topic"/>
+    <arg name="rtabmap_camera_info_topic"/>
+    <arg name="rtabmap_depth_topic" default="/depth_not_used"/>
+    <arg name="rtabmap_depth_from_lidar"/>
+
+    <!-- These arguments are set by the rtabmap navigation component -->
+    <arg name="rtabmap_viz"                 default="true"/>
+    <arg name="rtabmap_icp_odometry"        default="false"/>
+    <arg name="rtabmap_lidar3d_ray_tracing" default="true"/>
+    <arg name="rtabmap_slam2d"              default="true"/>
+
+    <include file="$(env PERFECT_PROJECT_ROOT)/launch/rtabmap.launch">
+        <arg name="camera"              value="$(arg rtabmap_camera)"/>
+        <arg name="lidar2d"             value="$(arg rtabmap_lidar2d)"/>
+        <arg name="lidar3d"             value="$(arg rtabmap_lidar3d)"/>
+
+        <arg name="depth_from_lidar"    value="$(arg rtabmap_depth_from_lidar)"/>
+        <arg name="icp_odometry"        value="$(arg rtabmap_icp_odometry)"/>
+        <arg name="lidar3d_ray_tracing" value="$(arg rtabmap_lidar3d_ray_tracing)"/>
+        <arg name="rtabmap_viz"         value="$(arg rtabmap_viz)"/>
+        <arg name="slam2d"              value="$(arg rtabmap_slam2d)"/>
+
+        <arg name="base_global_planner" value="$(arg base_global_planner)"/>
+        <arg name="base_local_planner"  value="$(arg base_local_planner)"/>
+
+        <arg name="rgb_topic"           value="$(arg rtabmap_rgb_topic)" />
+        <arg name="camera_info_topic"   value="$(arg rtabmap_camera_info_topic)" />
+        <arg name="depth_topic"         value="$(arg rtabmap_depth_topic)" />
+
+<!--        <arg name="scan_topic"           value="$(arg scan_topic)"/>
+        <arg name="scan_cloud_topic"     value="$(arg scan_cloud_topic)"/>
+        <arg name="frame_id"             value="$(arg frame_id)"/>
+        <arg name="odom_id"              value="$(arg odom_id)"/>
+        <arg name="no_static_map"        value="$(arg no_static_map)"/>
+ -->
+    </include>
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+</launch>

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Experiment {{ experiment.id }} Status{% endblock %}
+{% block content %}
+<div>
+  <h3>Experiment details:</h3>
+  <table>
+    <tr>
+      <td>ID</td>
+      <td>{{ experiment.id }}</td>
+    </tr>
+    <tr>
+      <td>Design</td>
+      <td>{{ experiment.design }}</td>
+    </tr>
+    <tr>
+      <td>Environment</td>
+      <td>{{ experiment.environment }}</td>
+    </tr>
+    <tr>
+      <td>Tags</td>
+      <td>{{ experiment.tag }}</td>
+    </tr>
+  </table>
+</div>
+<div>
+  <h3>Current run:</h3>
+  <table>
+    <tr>
+      <td>/cmd_vel</td>
+      <td id="{{ experiment.last_trial_id }}-/cmd_vel"></td>
+    </tr>
+    <tr>
+      <td>/odom</td>
+      <td id="{{ experiment.last_trial_id }}-/odom"></td>
+    </tr>  </table>
+</div>
+<div>
+  <h3>Trials</h3>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Datetime</th>
+      <th>URL</th>
+      <th>State</th>
+      <th>Run Time</th>
+      <th>Sim. Time</th>
+      <th></th>
+    </tr>
+    {% if experiment.trials %}
+      {% for trial in experiment.trials %}
+      <tr>
+        <td>{{ trial.id }}</td>
+        <td>{{ trial.datetime }}</td>
+        <td id="{{ trial.id }}-uri">{{ trial.uri }}</td>
+        <td id="{{ trial.id }}-state">{{ trial.state }}</td>
+        <td id="{{ trial.id }}-start_age">{% if trial.start_age %} {{ trial.start_age|round(3) }} {% endif %}</td>
+        <td id="{{ trial.id }}-sim_time">{% if trial.sim_time %} {{ trial.sim_time|round(3) }} {% endif %}</td>
+        <td>
+          <a href="{{ url_for('experiments.cancel', id=trial.id) }}">CANCEL</a>
+        </td>
+      </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+</div>
+<br>
+<a href="{{ url_for('experiments.run', id=experiment.id) }}">RUN</a> | <a href="{{ url_for('experiments.cancel', id=experiment.id) }}">CANCEL</a>
+
+<script>
+  function update(trial_id, update, data) {
+    if ((typeof data) == "number") {
+      data = Math.round(data*1000.0)/1000.0
+    }
+    try {
+      const stateElement = document.getElementById(trial_id + '-' + update);
+      stateElement.innerText = data;
+    }
+    catch(err) {}
+  }
+  function initialize_updates() {
+    setInterval(async function() {
+      const response = await fetch("{{ url_for('experiments.updates') }}");
+      const updates = await response.json();
+      for (let i = 0; i < updates.length; i++) {
+        update(
+          updates[i].data.trial_id,
+          updates[i].data.update,
+          updates[i].data.data,
+        )
+      }
+    }, 1000);
+  }
+  document.addEventListener('DOMContentLoaded', initialize_updates);
+</script>
+{% endblock %}
