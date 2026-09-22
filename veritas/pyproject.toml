@@ -1,0 +1,38 @@
+[project]
+name = "veritas"
+version = "0.1.0"
+description = "VERITAS: verification tools for trusted autonomous systems (IDDMBSE)"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "pyuppaal",
+    "rtamt==0.3.5",
+    "antlr4-python3-runtime==4.7",
+    "numpy==1.26.4",
+]
+
+[project.optional-dependencies]
+rl = [
+    "stable-baselines3==2.5.0",
+    "sb3-contrib==2.5.0",
+    "panda-gym==3.0.7",
+    "gymnasium==0.29.1",
+    "moviepy==1.0.3",
+]
+milp = [
+    "gurobipy",
+    # gurobipy's matrix API (MVar, used throughout ltbt) imports scipy, and ltbt.ternary
+    # and ltbt.boolean import matplotlib at module level; scienceplots is the style the
+    # plot scripts select. None of these are in the upstream ltbt requirements.txt.
+    "scipy",
+    "matplotlib",
+    "scienceplots",
+]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
