@@ -1,5 +1,10 @@
 # IDDMBSE
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/export/IDDMBSE-mark-dark-bg.svg">
+  <img align="right" width="120" alt="IDDMBSE logo" src="assets/export/IDDMBSE-mark.svg">
+</picture>
+
 This repository accompanies the paper **IDDMBSE: Integrating Data-Driven and Model-Based Systems
 Engineering for Trusted Autonomous Cyber-Physical Systems** (John S. Baras, Sai Sandeep Damera, Ryan
 Matheu, Clinton Enwerem and Praveen M. S. Kumar; Institute for Systems Research, University of
