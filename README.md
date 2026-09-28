@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/export/IDDMBSE-mark-dark-bg.svg">
-  <img align="right" width="120" alt="IDDMBSE logo" src="assets/export/IDDMBSE-mark.svg">
+  <img align="right" width="180" alt="IDDMBSE logo" src="assets/export/IDDMBSE-mark.svg">
 </picture>
 
 This repository accompanies the paper **IDDMBSE: Integrating Data-Driven and Model-Based Systems
